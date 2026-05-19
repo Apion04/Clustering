@@ -1,0 +1,10 @@
+{
+  "supplier_name": "Name",
+  "address": "Address_Line1",
+  "city": "Address_City",
+  "country": "Address_CountryCode",
+  "tax_ids": ["vatid", "taxid"],
+  "secondary_names": ["Family Name"],
+  "metadata_json_columns": ["metadata"],
+  "json_tax_keys": ["vatNumber", "taxNumber"]
+}
