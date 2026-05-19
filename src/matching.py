@@ -503,6 +503,10 @@ def _core_is_safe_for_identity(core: str, row: Dict[str, Any], *, allow_short_ex
             return True
         if allow_short_exact_phrase and len(token) >= 3 and len(str(row.get("name_norm", "") or "").split()) >= 2:
             return True
+        # 4-char tokens that are the leading brand root of a multi-word name are safe.
+        # Example: "bell" in "bell canada" or "bell aliant" is a brand identity, not noise.
+        if len(token) >= 4 and len(str(row.get("name_norm", "") or "").split()) >= 2:
+            return True
         return False
     return True
 
@@ -1009,7 +1013,12 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
     if name_sim >= config.fuzzy_name_threshold_strong:
         if address_supported or addr_sim >= 0.80 or same_city_country or same_domain:
             return R(MatchResult(True, 91.0, "name_fuzzy_supported", {"name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)}))
-        return R(MatchResult(False, 0.0, "name_fuzzy_strong_review_only", {"name_sim": round(name_sim, 3)}, needs_review=True, review_reason="Strong name similarity but no address/domain/city support"))
+        # High name similarity with no location/domain/address support → LLM review candidate.
+        # Previously blank; now routes to 70 so plausible name variants reach the review queue.
+        return R(MatchResult(True, 70.0, "name_fuzzy_review_candidate",
+                             {"name_sim": round(name_sim, 3), "candidate_type": "fuzzy_brand_core"},
+                             needs_review=True,
+                             review_reason="High name similarity but no address/domain/city support; LLM review required"))
 
     # PASS 5: domain plus related name/secondary/acronym evidence.
     if same_domain:
@@ -1072,6 +1081,10 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             "secondary_bridge": secondary_bridge,
         }
         if risky and not supported:
+            # Risky alias without any corroborating evidence: keep blank.
+            # Prevents "metro logistics" DE vs "metro bank" GB from clustering via
+            # a single risky generic word. Same-brand families with additional
+            # evidence (address, domain, country) are still promoted above.
             return R(MatchResult(False, 0.0, "known_brand_family_risky_needs_support", evidence, needs_review=True, review_reason="Risky/ambiguous alias requires tax, domain, address, secondary/family, known config, or LLM support"))
         score = float(getattr(config, "known_brand_family_default_confidence", 76.0))
         if address_supported and (known_brand_family_alias.get("exact_alias_overlap") or name_sim >= 0.65):
@@ -1104,9 +1117,48 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         return R(MatchResult(True, 68.0, "known_family_bridge", evidence, needs_review=True, review_reason="Known family/brand bridge; manual or LLM review"))
 
     if config.enable_family_bridge and related_root:
+        _root_evidence = {
+            "root_a": row_a.get("root_brand"),
+            "root_b": row_b.get("root_brand"),
+            "name_sim": round(name_sim, 3),
+            "addr_sim": round(addr_sim, 3),
+        }
         if same_city_country or same_domain or addr_sim >= 0.75:
-            return R(MatchResult(True, 76.0, "family_bridge_supported", {"name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)}, needs_review=True, review_reason="Parent/family bridge"))
+            return R(MatchResult(True, 76.0, "family_bridge_supported", _root_evidence, needs_review=True, review_reason="Parent/family bridge"))
         if country_a and country_b and country_a != country_b:
-            return R(MatchResult(False, 0.0, "family_cross_country_rejected", {"root_a": row_a.get("root_brand"), "root_b": row_b.get("root_brand")}, needs_review=True, review_reason="Cross-country root-only match rejected; requires address/domain/tax support"))
+            # Cross-country: was blank, now 70 LLM candidate so cross-border brands are reviewed.
+            return R(MatchResult(True, 70.0, "family_cross_country",
+                                 {**_root_evidence, "candidate_type": "possible_parent_family"},
+                                 needs_review=True,
+                                 review_reason="Cross-country root-brand relation; requires LLM review before clustering"))
+        # Same-country or unknown-country with shared brand root but no city/domain/address support.
+        # Previously fell through to no_match; now 70 so same-brand sub-brands reach review queue.
+        # Examples: Bell Canada vs Bell Aliant, Rogers Communications vs Rogers Cable.
+        return R(MatchResult(True, 70.0, "weak_brand_root_candidate",
+                             {**_root_evidence, "candidate_type": "possible_sub_brand"},
+                             needs_review=True,
+                             review_reason="Shared brand root without address/domain/city support; LLM review required"))
+
+    # PASS 9: sub-brand prefix safety net.
+    # One name is a distinctive prefix of the other (≥5 chars) but shared root ≥4 chars
+    # didn't fire above (e.g. different root brands but one contains the other as a brand stem).
+    if not row_a.get("is_likely_individual") and not row_b.get("is_likely_individual"):
+        _n_a, _n_b = str(row_a.get("name_norm", "") or ""), str(row_b.get("name_norm", "") or "")
+        if _n_a and _n_b and _n_a != _n_b:
+            _short_n, _long_n = (_n_a, _n_b) if len(_n_a) <= len(_n_b) else (_n_b, _n_a)
+            if (
+                len(_short_n) >= 5
+                and _long_n.startswith(_short_n)
+                and not all(t in GENERIC_ROOT_TOKENS or t in LOCATION_ROOT_TOKENS
+                            for t in _short_n.split() if t)
+            ):
+                return R(MatchResult(True, 70.0, "possible_sub_brand_candidate",
+                                     {
+                                         "brand_prefix": _short_n,
+                                         "name_sim": round(name_sim, 3),
+                                         "candidate_type": "supplier_name_abbreviated",
+                                     },
+                                     needs_review=True,
+                                     review_reason="One supplier name is a brand-prefix of the other; LLM review required"))
 
     return R(MatchResult(False, 0.0, "no_match", {}))

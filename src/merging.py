@@ -14,6 +14,11 @@ WEAK_EDGE_TYPES = {
     "family_cross_country", "known_family_bridge", "name_fuzzy_address_weak",
     "secondary_or_acronym_bridge", "acronym_review_candidate",
     "known_brand_family_alias",
+    # Recall-improvement 70-score LLM candidates — weak by design, chain-blocked.
+    "weak_brand_root_candidate",       # same root_brand, no city/domain/address support
+    "name_fuzzy_review_candidate",     # high name sim, no location/domain support
+    "known_brand_family_weak_candidate",  # known family alias, risky, no support
+    "possible_sub_brand_candidate",    # one name is a prefix of the other
 }
 
 DOMAIN_SUPPORTED_EDGE_TYPES = {"address_domain", "domain_name_related"}

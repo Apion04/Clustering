@@ -26,6 +26,12 @@ LLM_REVIEW_PASS_TYPES = {
     "regulatory_or_task_force_related",
     "tax_exact_low_similarity_review",
     "operational_status_review",
+    # Recall-improvement 70-score candidates — always LLM_REVIEW, never auto-cluster.
+    "weak_brand_root_candidate",
+    "name_fuzzy_review_candidate",
+    "known_brand_family_weak_candidate",
+    "possible_sub_brand_candidate",
+    "family_cross_country",
 }
 
 

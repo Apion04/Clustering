@@ -44,6 +44,13 @@ REVIEW_ONLY_PASS_TYPES = frozenset({
     "tax_exact_low_similarity_review",
     "tax_exact_institutional_ecosystem_review",
     "operational_status_review",
+    # Recall-improvement LLM candidates enter union-find as 70-score clusters
+    # rather than review_candidates so they appear in output when
+    # allow_unresolved_llm_candidates_in_final_output=True.
+    # They are NOT in REVIEW_ONLY_PASS_TYPES by design.
+    # Types kept here only to document explicitly what is NOT here:
+    #   weak_brand_root_candidate, name_fuzzy_review_candidate,
+    #   known_brand_family_weak_candidate, possible_sub_brand_candidate
 })
 
 
