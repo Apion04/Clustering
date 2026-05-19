@@ -292,7 +292,12 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
     ):
         return _reject(result, "Protected compound supplier identity requires explicit tax/domain support before merging with parent or sibling core")
 
-    # Tax exact is strongest and should pass even for individuals/hotels.
+    # Tax exact is the strongest signal and must pass even for individuals/hotels.
+    # This check MUST come before the operational_status check so that a valid
+    # same-tax match is never demoted by an instructional name fragment.
+    if pass_type == "tax_exact":
+        return result
+
     if row_a.get("has_operational_status_hint") or row_b.get("has_operational_status_hint"):
         return _review_candidate(
             result,
@@ -300,10 +305,6 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
             86.0,
             "Operational blocked/inactive/use-instruction text present; manual review before clustering",
         )
-
-    # Tax exact is strongest and should pass even for individuals/hotels.
-    if pass_type == "tax_exact":
-        return result
 
     # Loose tax (country prefix stripped) is only allowed with name/address/domain support.
     if pass_type == "tax_loose_supported":
@@ -432,11 +433,18 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
             fuzz.token_set_ratio(row_a.get("name_norm", ""), row_b.get("name_norm", "")),
             fuzz.token_sort_ratio(row_a.get("name_norm", ""), row_b.get("name_norm", "")),
         ) / 100.0
-        if addr_sim >= 0.88 and name_sim >= 0.75:
+        # Same legal owner: when the match was explicitly confirmed as a non-generic
+        # same-legal-name match, the franchise/brand-only block does not apply.
+        # Confirmed via same_legal_owner_confirmed pass (which already excludes names
+        # that are entirely generic/hospitality tokens such as "subway" or "hotel").
+        if pass_type == "same_legal_owner_confirmed":
+            pass  # fall through — same legal owner, not brand-only clustering
+        elif addr_sim >= 0.88 and name_sim >= 0.75:
             return replace(result, match_pct=min(result.match_pct, 90.0), needs_review=result.needs_review or addr_sim < 0.95)
-        if same_domain and city_country and name_sim >= 0.80:
+        elif same_domain and city_country and name_sim >= 0.80:
             return replace(result, match_pct=min(result.match_pct, 86.0), needs_review=True, review_reason="Hospitality/franchise match needs property/location verification")
-        return _reject(result, "Hotel/restaurant/franchise names need same property/address/tax/domain evidence; brand/root alone is not enough")
+        else:
+            return _reject(result, "Hotel/restaurant/franchise names need same property/address/tax/domain evidence; brand/root alone is not enough")
 
     # Generic root words cannot drive family/parent bridges.
     if pass_type in {"family_bridge_supported", "family_cross_country"} and shared_root_is_generic(row_a, row_b):

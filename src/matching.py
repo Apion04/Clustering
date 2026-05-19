@@ -9,6 +9,7 @@ from src.config import (
     ClusteringConfig,
     COMMON_FIRST_NAMES,
     GENERIC_ROOT_TOKENS,
+    HOSPITALITY_TERMS,
     KNOWN_ADDRESS_FAMILY_BRIDGE_GROUPS,
     KNOWN_DISTINCTIVE_FAMILY_ROOTS,
     KNOWN_FAMILY_TOKEN_GROUPS,
@@ -25,6 +26,16 @@ from src.config import (
 from src.matching_types import MatchResult
 from src.guardrails import apply_guardrails
 from src.preprocessing import extract_supplier_identity_core
+
+# Stopwords and legal stops for acronym generation (not the same as generic root tokens)
+_ACRONYM_STOPWORDS: frozenset = frozenset({
+    "the", "of", "for", "and", "in", "at", "by", "to", "as", "a", "an", "or",
+    "with", "from", "on", "under", "into", "over", "between", "its", "de", "la", "le",
+})
+_ACRONYM_LEGAL_STOPS: frozenset = frozenset({
+    "inc", "ltd", "llc", "corp", "co", "plc", "gmbh", "sa", "ag", "bv", "nv",
+    "spa", "sas", "srl", "oy", "ab", "kk", "pte", "pvt", "lp",
+})
 
 
 def _numeric_tokens(text: str) -> Set[str]:
@@ -182,6 +193,104 @@ def _acronym_bridge(row_a: Dict, row_b: Dict) -> bool:
             if {a, b} & {"ppc"} and ("potasse" in a or "produits" in a or "vynova" in a or "potasse" in b or "produits" in b or "vynova" in b):
                 return True
     return False
+
+
+def _generate_acronym(text: str) -> str:
+    """Generate acronym from a long name using stopword-aware filtering.
+
+    Takes the first letter of each significant token (not a stopword, not a legal
+    suffix, and at least 2 chars). Returns empty string when fewer than 3 significant
+    tokens remain (too few to form a reliable acronym).
+    """
+    if not text:
+        return ""
+    tokens = str(text).lower().split()
+    significant = [
+        t for t in tokens
+        if t not in _ACRONYM_STOPWORDS
+        and t not in _ACRONYM_LEGAL_STOPS
+        and len(t) >= 2
+    ]
+    if len(significant) < 3:
+        return ""
+    return "".join(t[0] for t in significant)
+
+
+def _full_name_for_acronym(row: Dict) -> str:
+    """Concatenate the first two name fields to reconstruct names split across columns."""
+    parts = []
+    for name in _all_match_names(row)[:2]:
+        if name and name not in parts:
+            parts.append(name)
+    return " ".join(parts)
+
+
+def _acronym_bridge_full(row_a: Dict, row_b: Dict) -> bool:
+    """Check whether any short alphabetic token from one row is an acronym of the
+    other row's full (possibly multi-field) name, using stopword-aware generation.
+
+    This catches cases like NAACP ↔ National Association for the Advancement of
+    Colored People and FICCI ↔ Federation of Indian Chambers of Commerce and Industry
+    where the name is split across multiple name fields.
+    """
+    def _acronym_candidate_tokens(row: Dict) -> set:
+        toks: set = set()
+        for name in _all_match_names(row):
+            for tok in name.split():
+                if 3 <= len(tok) <= 7 and tok.isalpha():
+                    toks.add(tok)
+        return toks
+
+    tokens_a = _acronym_candidate_tokens(row_a)
+    tokens_b = _acronym_candidate_tokens(row_b)
+
+    # Check each individual name field plus the first-two-fields concatenation
+    names_b_to_check = list(_all_match_names(row_b)) + [_full_name_for_acronym(row_b)]
+    for long_name in names_b_to_check:
+        gen = _generate_acronym(long_name)
+        if gen and gen in tokens_a:
+            return True
+
+    names_a_to_check = list(_all_match_names(row_a)) + [_full_name_for_acronym(row_a)]
+    for long_name in names_a_to_check:
+        gen = _generate_acronym(long_name)
+        if gen and gen in tokens_b:
+            return True
+
+    return False
+
+
+def _compact_names_match(row_a: Dict, row_b: Dict) -> bool:
+    """Return True when any pair of (short) names from the two rows match after
+    removing all whitespace — e.g. 'MER JAN' vs 'MERJAN'.
+
+    Only tested for names whose compact form is 4–12 characters to avoid
+    accidentally bridging long generic names.
+    """
+    names_a = _all_match_names(row_a)
+    names_b = _all_match_names(row_b)
+    for a in names_a:
+        ca = a.replace(" ", "")
+        if len(ca) < 4 or len(ca) > 12:
+            continue
+        for b in names_b:
+            if a == b:
+                continue  # already handled by direct equality
+            cb = b.replace(" ", "")
+            if ca == cb:
+                return True
+    return False
+
+
+def _distinctive_address_tokens(name_a: str, name_b: str) -> set:
+    """Shared name tokens that are distinctive (not generic/location/person/hospitality)."""
+    NON_BRIDGE = GENERIC_ROOT_TOKENS | LOCATION_ROOT_TOKENS | COMMON_FIRST_NAMES | HOSPITALITY_TERMS
+    return {
+        t for t in (set(name_a.split()) & set(name_b.split()))
+        if len(t) >= 4
+        and t not in NON_BRIDGE
+        and not any(ch.isdigit() for ch in t)
+    }
 
 
 def _distinctive_tokens(row: Dict) -> Set[str]:
@@ -636,14 +745,24 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             and not support_is_tax_only
         )
         if name_sim < 0.50 and not same_domain and not trusted_support:
-            return R(MatchResult(
-                True,
-                90.0,
-                "tax_exact_low_similarity_review",
-                {"tax_overlap": list(overlap), "name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)},
-                needs_review=True,
-                review_reason="Exact tax match but names are unrelated/low similarity; review before supplier identity clustering",
-            ))
+            # Before routing to review, check secondary name overlap, acronym
+            # equivalence (e.g. NAACP / FICCI), and compact name variants
+            # (e.g. MERJAN / MER JAN). Any of these are strong enough to
+            # proceed to the standard 98% tax_exact path.
+            alias_supported = (
+                secondary_name_match(row_a, row_b)
+                or _acronym_bridge_full(row_a, row_b)
+                or _compact_names_match(row_a, row_b)
+            )
+            if not alias_supported:
+                return R(MatchResult(
+                    True,
+                    90.0,
+                    "tax_exact_low_similarity_review",
+                    {"tax_overlap": list(overlap), "name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)},
+                    needs_review=True,
+                    review_reason="Exact tax match but names are unrelated/low similarity; review before supplier identity clustering",
+                ))
         score = 98.0
         if name_sim >= 0.75:
             score = 99.0
@@ -798,17 +917,32 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             score += 8.0
         return R(MatchResult(True, min(score, 90.0), "support_field_review", evidence, needs_review=True, review_reason="Shared support/canonical/family field; review-only unless configured as trusted same-entity evidence"))
 
-    # PASS 3: exact normalized name without address/tax/domain support is a
-    # review candidate only. It must not enter union-find auto clustering.
+    # PASS 3: exact normalized name without address/tax/domain support.
+    # For non-generic distinctive names this is same-legal-owner evidence at
+    # 85% and goes directly into union-find. Generic or location-only names
+    # still go to review only.
     if name_a and name_a == name_b:
-        score = 86.0 if (country_a == country_b or not country_a or not country_b) else 75.0
+        _weak = GENERIC_ROOT_TOKENS | LOCATION_ROOT_TOKENS | HOSPITALITY_TERMS
+        name_tokens = set(name_a.split())
+        name_is_generic = bool(name_tokens) and all(t in _weak or len(t) <= 2 for t in name_tokens)
+        if name_is_generic:
+            score = 86.0 if (country_a == country_b or not country_a or not country_b) else 75.0
+            return R(MatchResult(
+                True,
+                score,
+                "name_exact_review",
+                {"name": name_a, "country_a": country_a, "country_b": country_b},
+                needs_review=True,
+                review_reason="Same normalized name without address, tax, or domain support",
+            ))
+        score = 85.0
         return R(MatchResult(
             True,
             score,
-            "name_exact_review",
-            {"name": name_a, "country_a": country_a, "country_b": country_b},
-            needs_review=True,
-            review_reason="Same normalized name without address, tax, or domain support",
+            "same_legal_owner_confirmed",
+            {"name": name_a, "country_a": country_a, "country_b": country_b, "name_sim": 1.0},
+            needs_review=False,
+            review_reason="",
         ))
 
     # PASS 4: strong fuzzy name match.
@@ -833,6 +967,13 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         if known_address_family_bridge:
             return R(MatchResult(True, 80.0, "known_family_bridge", evidence | {"known_address_family_bridge": True}, needs_review=True, review_reason="Known distinctive family/address bridge; manual review"))
         if name_sim >= 0.70 or distinctive_prefix_related:
+            dtokens = _distinctive_address_tokens(name_a or "", name_b or "")
+            if dtokens and name_sim >= 0.65:
+                return R(MatchResult(
+                    True, 85.0, "address_distinctive_shared",
+                    evidence | {"name_sim": round(name_sim, 3), "distinctive_shared_tokens": sorted(dtokens)[:5], "distinctive_prefix_related": distinctive_prefix_related},
+                    needs_review=True, review_reason="Same/similar address with distinctive shared name tokens; review for different tax IDs",
+                ))
             return R(MatchResult(True, 78.0, "address_name_related", evidence | {"name_sim": round(name_sim, 3), "distinctive_prefix_related": distinctive_prefix_related}, needs_review=True, review_reason="Same/similar address + related names; review required"))
         if secondary_name_match(row_a, row_b) or _acronym_bridge(row_a, row_b) or known_related_pair:
             return R(MatchResult(True, 80.0, "address_secondary_or_acronym", evidence | {"known_related_name_pair": known_related_pair}, needs_review=True, review_reason="Same/similar address + secondary/acronym/known relationship evidence"))

@@ -21,6 +21,7 @@ DOMAIN_SUPPORTED_EDGE_TYPES = {"address_domain", "domain_name_related"}
 STRONG_EDGE_TYPES = {
     "tax_exact", "tax_loose_supported", "name_address_exact", "name_exact",
     "name_fuzzy_supported", "professional_name_address", "distinctive_supplier_identity",
+    "same_legal_owner_confirmed",  # exact non-generic name, different tax/address allowed
 }
 
 
@@ -187,6 +188,8 @@ class ClusterMerger:
                 "address_secondary_or_acronym", "name_address_exact",
                 "known_family_bridge", "professional_name_address",
                 "known_brand_family_alias", "distinctive_supplier_identity",
+                "same_legal_owner_confirmed",   # same legal name, different tax records
+                "address_distinctive_shared",   # distinctive token + address, different tax
             }
             if not (self.config.allow_parent_family_tax_conflicts and family_edge):
                 return "BLOCKED_TAX_CONFLICT"
