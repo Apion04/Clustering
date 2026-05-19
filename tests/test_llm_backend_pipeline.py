@@ -45,8 +45,8 @@ def _fake_result() -> dict:
             pl.Series("Match Percentage", ["98%", "98%", "85%", "85%", "", "", "", ""]),
         ]),
         "cluster_map": {0: 0, 1: 0, 2: 2, 3: 2, 4: 4, 5: 4},
-        "output_cluster_map": {0: 0, 1: 0, 2: 2, 3: 2},
-        "output_match_pcts": {0: 98.0, 2: 85.0},
+        "output_cluster_map": {0: 0, 1: 0, 2: 2, 3: 2, 4: 4, 5: 4},
+        "output_match_pcts": {0: 98.0, 2: 85.0, 4: 70.0},
         "pre_llm_match_pcts": {0: 98.0, 2: 85.0, 4: 70.0},
         "llm_review_groups": [
             {
@@ -121,23 +121,22 @@ def test_mock_llm_backend_flow_produces_clean_complete_final_output(tmp_path):
     assert flow["job_status"] == "COMPLETE"
     final = pl.read_csv(out)
     assert final.columns == ["Supplier Name", "Address", "Country", "Cluster Number", "Match Percentage"]
-    assert set(final["Match Percentage"].to_list()) <= {"98%", "85%", ""}
-    assert "70%" not in final["Match Percentage"].to_list()
+    assert set(final["Match Percentage"].to_list()) <= {"98%", "85%", "70%", ""}
     assert flow["decision_application_report"]["cluster_numbers_contiguous"] is True
     assert os.path.exists(tmp_path / "llm_review_requests.jsonl")
     assert os.path.exists(tmp_path / "llm_review_responses.jsonl")
     assert os.path.exists(tmp_path / "llm_decision_application_report.json")
 
 
-def test_disabled_llm_backend_writes_exception_and_no_70_leak(tmp_path):
+def test_disabled_llm_backend_is_complete_review_pending_with_70s_visible(tmp_path):
     cfg = ClusteringConfig(llm_execution_mode="disabled", openai_model="gpt-5.5")
     result = _fake_result()
     out = tmp_path / "final_supplier_clustered.csv"
     flow = run_llm_backend_flow(result, cfg, str(out), str(tmp_path))
 
-    assert flow["job_status"] == "INCOMPLETE_UNRESOLVED_LLM_CANDIDATES"
+    assert flow["job_status"] == "COMPLETE_REVIEW_PENDING"
     final = pl.read_csv(out)
-    assert "70%" not in final["Match Percentage"].to_list()
+    assert "70%" in final["Match Percentage"].to_list()
     exception = pl.read_csv(tmp_path / "unresolved_llm_exception_report.csv")
     assert exception.height == 2
 
@@ -158,6 +157,7 @@ def test_cost_cap_prevents_live_execution(tmp_path):
     cfg = ClusteringConfig(
         llm_execution_mode="live",
         openai_model="gpt-5.5",
+        ai_api_key="fake-key",
         max_total_llm_cost_per_job=0.0001,
         openai_input_cost_per_1m_tokens=1000.0,
         openai_output_cost_per_1m_tokens=1000.0,
@@ -174,6 +174,7 @@ def test_live_cost_cap_fails_closed_when_pricing_missing(tmp_path):
     cfg = ClusteringConfig(
         llm_execution_mode="live",
         openai_model="gpt-5.5",
+        ai_api_key="fake-key",
         max_total_llm_cost_per_job=10.0,
         openai_input_cost_per_1m_tokens=0.0,
         openai_output_cost_per_1m_tokens=0.0,
@@ -204,7 +205,7 @@ def test_unknown_llm_cost_can_be_explicitly_allowed(tmp_path):
 
     assert flow["cost_estimate"]["pricing_missing"] is True
     assert flow["cost_estimate"]["allowed_to_run"] is True
-    assert flow["job_status"] == "INCOMPLETE_UNRESOLVED_LLM_CANDIDATES"
+    assert flow["job_status"] == "COMPLETE_REVIEW_PENDING"
 
 
 def test_invalid_llm_responses_and_98_override_are_rejected():

@@ -68,11 +68,18 @@ def run_llm_backend_flow(result: Dict[str, Any], config: ClusteringConfig, final
             for idx, group in enumerate(queue["groups_to_send"])
         ]
     elif mode == "live":
-        if not cost["allowed_to_run"]:
+        api_key = getattr(config, "ai_api_key", "")
+        if not api_key:
+            # No key: skip all LLM calls. 70% candidates stay visible in output.
+            api_errors.append(
+                "OPENAI_API_KEY not configured. LLM review skipped; "
+                "70% candidates preserved in output for manual review."
+            )
+        elif not cost["allowed_to_run"]:
             job_status = "INCOMPLETE_LLM_COST_CAP_EXCEEDED"
         else:
             client = OpenAIReviewClient(
-                api_key=getattr(config, "ai_api_key", ""),
+                api_key=api_key,
                 model=selected_model,
                 base_url=getattr(config, "ai_base_url", "https://api.openai.com/v1"),
                 timeout=getattr(config, "llm_timeout_seconds", 60),
@@ -132,16 +139,18 @@ def run_llm_backend_flow(result: Dict[str, Any], config: ClusteringConfig, final
     elif mode == "batch":
         job_status = "INCOMPLETE_BATCH_PENDING"
     elif mode == "disabled":
-        job_status = "INCOMPLETE_UNRESOLVED_LLM_CANDIDATES"
+        # Deterministic-only run: 70% candidates are intentionally preserved
+        # for manual review — this is a successful, complete run.
+        job_status = "COMPLETE_REVIEW_PENDING"
+    elif mode == "live" and api_errors:
+        # LLM calls failed or key missing: 70% candidates preserved for review.
+        job_status = "COMPLETE_REVIEW_PENDING"
 
+    # 70% is a valid final score: it means "plausible but uncertain — manual/LLM
+    # review needed". Do NOT strip 70s. They should always be visible so users
+    # can review or re-run with LLM configured. LLM approve/reject decisions
+    # update or remove specific rows; uncertain/unresolved rows stay at 70.
     final_df = sort_by_clusters(result["preprocessed_df"], final_map, final_scores)
-    if job_status == "COMPLETE":
-        final_df = final_df.with_columns(
-            pl.when(pl.col("Match Percentage") == "70%")
-            .then(pl.lit(""))
-            .otherwise(pl.col("Match Percentage"))
-            .alias("Match Percentage")
-        )
     final_df.write_csv(final_output_path)
 
     unresolved_path = os.path.join(output_dir, "unresolved_llm_exception_report.csv")
@@ -414,8 +423,14 @@ def validate_llm_responses(responses: List[Dict[str, Any]], groups_by_id: Dict[s
             report.append(_validation_row(group_id, "rejected", reason))
             continue
         seen_rows |= set(row_ids)
+        if decision == "uncertain":
+            # LLM uncertain: do not apply any decision. Rows stay at their
+            # current 70% score for manual review.
+            report.append(_validation_row(group_id, "accepted_uncertain_kept_70",
+                                          "LLM uncertain; rows preserved at 70% for manual review"))
+            continue
         decision_row = {
-            "decision": "reject" if decision == "uncertain" else decision,
+            "decision": decision,
             "row_ids": row_ids if decision != "split" else row_ids,
             "match_percentage": final_score or 0,
             "reasoning": response.get("reasoning", ""),
@@ -633,7 +648,6 @@ def _deterministic_98_rows(cluster_map: Dict[int, int], scores: Dict[int, float]
 
 
 def _final_scores_allowed(df: pl.DataFrame, job_status: str) -> bool:
-    allowed = {"98%", "85%", ""}
-    if job_status != "COMPLETE":
-        allowed.add("70%")
+    # 70% is always a valid final score (plausible-but-uncertain candidates).
+    allowed = {"98%", "85%", "70%", ""}
     return set(str(x or "") for x in df.get_column("Match Percentage").to_list()) <= allowed

@@ -26,8 +26,13 @@ def _get_api_key() -> str:
 
 
 def _status_badge(job_status: str) -> None:
-    if job_status == "COMPLETE":
+    if job_status in {"COMPLETE", "COMPLETE_REVIEW_PENDING"}:
         st.success(f"Job status: **{job_status}**")
+        if job_status == "COMPLETE_REVIEW_PENDING":
+            st.info(
+                "70% candidates are shown in the output and were not resolved by LLM. "
+                "Review them manually or re-run with an OpenAI key configured."
+            )
     elif job_status == "FAILED":
         st.error(f"Job status: **{job_status}**")
     else:
@@ -116,6 +121,20 @@ if llm_mode in ("live", "batch"):
 else:
     max_cost = 0.0
 
+show_70_candidates = st.checkbox(
+    "Show unresolved 70% candidates in output",
+    value=True,
+    help=(
+        "70% means the engine found a plausible relationship but needs LLM or manual review to confirm. "
+        "If no OpenAI key is configured, 70% candidates remain visible so they are not silently lost. "
+        "Uncheck to suppress them from the download (they will still appear in review files)."
+    ),
+)
+st.caption(
+    "**Note:** 70% = LLM/manual review needed. "
+    "If no OpenAI key is configured, 70% candidates are shown in the output and were not sent to LLM."
+)
+
 st.divider()
 
 # ---------------------------------------------------------------------------
@@ -154,12 +173,19 @@ if run_clicked and uploaded is not None:
         cmd += ["--openai-model", openai_model]
     if max_cost > 0:
         cmd += ["--max-total-llm-cost-per-job", str(max_cost)]
+    if show_70_candidates:
+        cmd += ["--allow-unresolved-llm-candidates-in-final-output"]
 
     # Inject API key via env — never passed as CLI arg or shown in UI
     env = os.environ.copy()
     api_key = _get_api_key()
     if api_key:
         env["OPENAI_API_KEY"] = api_key
+    elif llm_mode in ("live", "batch"):
+        st.warning(
+            "OpenAI key not configured. 70% review candidates are shown in the output "
+            "and were not sent to LLM."
+        )
 
     # Propagate other LLM config from secrets when present
     for secret_key in (

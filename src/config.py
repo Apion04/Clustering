@@ -463,13 +463,11 @@ class ClusteringConfig:
     llm_can_auto_cluster: bool = False
     ai_uncertain_cluster_enabled: bool = True
     ai_uncertain_match_pct: float = 68.0
-    # Production-safe default: unresolved 70-score LLM candidates must not be
-    # silently returned to non-technical users. They are built for backend LLM
-    # review, then either resolved by decisions or removed from the clean final
-    # output while the run is marked incomplete.
-    allow_unresolved_llm_candidates_in_final_output: bool = False
+    # 70-score candidates are "plausible but uncertain" — always shown in output
+    # so users can review them. Set to False only to suppress them explicitly.
+    allow_unresolved_llm_candidates_in_final_output: bool = True
     unresolved_llm_candidate_mode: str = "exception"  # exception or blank
-    expose_unresolved_llm_candidates: bool = False
+    expose_unresolved_llm_candidates: bool = True
     llm_group_decisions: List[Dict[str, Any]] = field(default_factory=list)
     llm_enabled: bool = False
     llm_execution_mode: str = "disabled"  # disabled, mock, live, batch
@@ -553,9 +551,9 @@ class ClusteringConfig:
             rare_token_min_document_frequency=int(os.getenv("RARE_TOKEN_MIN_DOCUMENT_FREQUENCY", "1")),
             ai_uncertain_cluster_enabled=os.getenv("AI_UNCERTAIN_CLUSTER_ENABLED", "true").lower() == "true",
             ai_uncertain_match_pct=float(os.getenv("AI_UNCERTAIN_MATCH_PCT", "68.0")),
-            allow_unresolved_llm_candidates_in_final_output=os.getenv("ALLOW_UNRESOLVED_LLM_CANDIDATES_IN_FINAL_OUTPUT", "false").lower() == "true",
+            allow_unresolved_llm_candidates_in_final_output=os.getenv("ALLOW_UNRESOLVED_LLM_CANDIDATES_IN_FINAL_OUTPUT", "true").lower() == "true",
             unresolved_llm_candidate_mode=os.getenv("UNRESOLVED_LLM_CANDIDATE_MODE", "exception").lower(),
-            expose_unresolved_llm_candidates=os.getenv("EXPOSE_UNRESOLVED_LLM_CANDIDATES", "false").lower() == "true",
+            expose_unresolved_llm_candidates=os.getenv("EXPOSE_UNRESOLVED_LLM_CANDIDATES", "true").lower() == "true",
             ai_max_calls=int(os.getenv("AI_MAX_CALLS", "50")),
             ai_cache_enabled=os.getenv("AI_CACHE_ENABLED", "true").lower() == "true",
             ai_cache_path=os.getenv("AI_CACHE_PATH", ".cache/llm_review_cache.json"),

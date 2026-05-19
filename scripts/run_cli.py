@@ -285,7 +285,7 @@ def _write_final_production_readiness_report(path, args, result, llm_backend, ou
     cost = llm_backend.get("cost_estimate", {})
     final_df = llm_backend.get("final_df")
     final_columns = final_df.columns if final_df is not None else []
-    allowed_scores = {"98%", "85%", ""}
+    allowed_scores = {"98%", "85%", "70%", ""}
     final_score_values = set(str(x or "") for x in final_df["Match Percentage"].to_list()) if final_df is not None and "Match Percentage" in final_df.columns else set()
     clean_score_ok = final_score_values <= allowed_scores
     expected_columns = result["main_df"].columns if "main_df" in result else final_columns
@@ -325,7 +325,9 @@ def _write_final_production_readiness_report(path, args, result, llm_backend, ou
         "## Final User-Facing Contract",
         "",
         "The final user-facing file must contain only original input columns plus `Cluster Number` and `Match Percentage`.",
-        "After a successful LLM processing run, `Match Percentage` must contain only `98%`, `85%`, or blank.",
+        "`Match Percentage` may contain `98%`, `85%`, `70%`, or blank. "
+        "`70%` means plausible but uncertain — LLM/manual review needed. "
+        "If no OpenAI key is configured or LLM is disabled, 70% candidates remain visible in the output.",
         "",
         "## Readiness",
         "",
