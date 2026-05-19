@@ -807,3 +807,155 @@ def test_reused_small_exact_tax_block_requires_name_address_or_domain_support():
         {},
         config,
     ).is_match
+
+
+# ---------------------------------------------------------------------------
+# Precision guardrails: generic/location root tokens must not score 85%
+# ---------------------------------------------------------------------------
+
+def test_bank_only_does_not_bridge_distinct_banks_at_85():
+    """Bank of Canada / Bank of Montreal share only "bank" — a generic word.
+    They must not be scored 85% (MANUAL_REVIEW). Either blank or ≤70% only."""
+    pairs = [
+        ("Bank of Canada", "Bank of Montreal"),
+        ("Bank of Canada", "Bank of Nova Scotia"),
+        ("Bank of Montreal", "Bank of Nova Scotia"),
+        ("TD Bank", "Bank of Canada"),
+    ]
+    for name_a, name_b in pairs:
+        a = row(name_a, "", "Ottawa", "CA")
+        b = row(name_b, "", "Montreal", "CA")
+        res = evaluate_pair(a, b, {})
+        assert not res.is_match or res.match_pct <= 70, (
+            f"{name_a!r} vs {name_b!r}: expected blank or ≤70%, got {res.match_pct}% "
+            f"(pass_type={res.pass_type})"
+        )
+
+
+def test_canadian_adjective_does_not_bridge_unrelated_suppliers():
+    """'Canadian' is a geographic adjective and must never be the root bridge."""
+    pairs = [
+        ("Canadian Black Book", "Canadian Linen Supply"),
+        ("Canadian Tire", "Canadian Pacific Railway"),
+        ("Canadian Broadcasting Corporation", "Canadian Utilities"),
+    ]
+    for name_a, name_b in pairs:
+        a = row(name_a, "", "Toronto", "CA")
+        b = row(name_b, "", "Toronto", "CA")
+        res = evaluate_pair(a, b, {})
+        assert not res.is_match or res.match_pct <= 70, (
+            f"{name_a!r} vs {name_b!r}: should not score 85%+, got {res.match_pct}% "
+            f"(pass_type={res.pass_type})"
+        )
+
+
+def test_plus_suffix_does_not_bridge_unrelated_suppliers():
+    """'Plus' is too generic to bridge distinct suppliers (Facility Plus vs Food Plus)."""
+    pairs = [
+        ("Facility Plus", "Food Plus"),
+        ("Office Plus", "Trucks Plus"),
+        ("Facility Plus", "Office Plus"),
+    ]
+    for name_a, name_b in pairs:
+        a = row(name_a, "", "Toronto", "CA")
+        b = row(name_b, "", "Toronto", "CA")
+        res = evaluate_pair(a, b, {})
+        assert not res.is_match or res.match_pct <= 70, (
+            f"{name_a!r} vs {name_b!r}: 'plus'-only should not score 85%+, got {res.match_pct}% "
+            f"(pass_type={res.pass_type})"
+        )
+
+
+def test_auto_prefix_does_not_bridge_unrelated_suppliers():
+    """'Auto' alone is too generic to bridge distinct automotive suppliers."""
+    pairs = [
+        ("AUTO A LA CARTE", "AUTO VALUE"),
+        ("AUTO A LA CARTE", "AUTO MOTION"),
+        ("AUTO VALUE", "AUTO PRO"),
+    ]
+    for name_a, name_b in pairs:
+        a = row(name_a, "", "Toronto", "CA")
+        b = row(name_b, "", "Toronto", "CA")
+        res = evaluate_pair(a, b, {})
+        assert not res.is_match or res.match_pct <= 70, (
+            f"{name_a!r} vs {name_b!r}: 'auto'-only should not score 85%+, got {res.match_pct}% "
+            f"(pass_type={res.pass_type})"
+        )
+
+
+def test_telus_bare_entity_connected_to_division_at_most_70():
+    """TELUS (standalone) vs TELUS Health must be ≤70% — bare single-token hub.
+
+    Without domain/address/tax, a standalone brand name connecting to a
+    multi-word division is ambiguous and must route to LLM review (70%)."""
+    telus_bare = row("TELUS", "", "Vancouver", "CA")
+    telus_health = row("TELUS Health", "", "Vancouver", "CA")
+    res = evaluate_pair(telus_bare, telus_health, {})
+    if res.is_match:
+        assert res.match_pct <= 70, (
+            f"TELUS vs TELUS Health: bare single-token hub must be ≤70%, got {res.match_pct}%"
+        )
+
+
+def test_telus_divisions_peer_to_peer_not_85():
+    """TELUS Health vs TELUS Communications should not score 85% (two-word name guardrail)."""
+    a = row("TELUS Health", "", "Vancouver", "CA")
+    b = row("TELUS Communications", "", "Vancouver", "CA")
+    res = evaluate_pair(a, b, {})
+    assert not res.is_match or res.match_pct <= 70, (
+        f"TELUS Health vs TELUS Communications: must be blank or ≤70%, got {res.match_pct}%"
+    )
+
+
+def test_telus_multi_word_with_domain_support_can_still_cluster():
+    """Multi-word TELUS entities sharing a business domain should still connect."""
+    a = row("TELUS Corporation", "", "Vancouver", "CA", domain="telus.example")
+    b = row("TELUS Health Inc", "", "Vancouver", "CA", domain="telus.example", legal=True)
+    res = evaluate_pair(a, b, {})
+    assert res.is_match, "TELUS Corporation / TELUS Health sharing domain must still cluster"
+
+
+def test_scotiabank_and_bank_of_nova_scotia_same_address_clusters():
+    """Scotia / Bank of Nova Scotia with same address must remain captured."""
+    a = row("Scotiabank", "44 King St W", "Toronto", "CA")
+    b = row("Bank of Nova Scotia", "44 King St W", "Toronto", "CA")
+    res = evaluate_pair(a, b, {})
+    assert res.is_match, (
+        "Scotiabank vs Bank of Nova Scotia at same address must still cluster — "
+        "do not break this recall case"
+    )
+
+
+def test_bfi_base_and_branch_still_cluster():
+    """BFI Canada and BFI Canada Ltd must remain captured (not broken by generic-token changes)."""
+    result = clustered_names([
+        ("BFI Canada", "1 Industrial Rd", "Calgary", "CA", "T2E 7C4"),
+        ("BFI Canada Ltd", "1 Industrial Rd", "Calgary", "CA", "T2E 7C4"),
+    ])
+    clusters = [c for c in result["main_df"]["Cluster Number"].to_list() if c is not None]
+    assert len(clusters) == 2 and len(set(clusters)) == 1, (
+        "BFI Canada / BFI Canada Ltd must still cluster together"
+    )
+
+
+def test_hy_louie_variants_still_cluster():
+    """H. Y. Louie and H.Y. Louie Co. must remain captured (recall regression guard)."""
+    result = clustered_names([
+        ("H. Y. Louie Co.", "1450 Foreshore Walk", "Vancouver", "CA", "V6H 3X6"),
+        ("H.Y. Louie Company Limited", "1450 Foreshore Walk", "Vancouver", "CA", "V6H 3X6"),
+    ])
+    clusters = [c for c in result["main_df"]["Cluster Number"].to_list() if c is not None]
+    assert len(clusters) == 2 and len(set(clusters)) == 1, (
+        "H. Y. Louie variants must still cluster together"
+    )
+
+
+def test_rogers_and_rogers_cable_without_support_not_85():
+    """Rogers vs Rogers Cable without domain/address/tax must be ≤70% (weak single-token)."""
+    a = row("Rogers", "", "Toronto", "CA")
+    b = row("Rogers Cable", "", "Toronto", "CA")
+    res = evaluate_pair(a, b, {})
+    if res.is_match:
+        assert res.match_pct <= 70, (
+            f"Rogers vs Rogers Cable (bare) must be ≤70% without support, got {res.match_pct}%"
+        )

@@ -562,6 +562,19 @@ def _core_identity_relation(row_a: Dict[str, Any], row_b: Dict[str, Any], name_s
     matched = bool(exact_core or shared_trusted_core_tokens or (core_sim >= 0.92 and name_sim >= 0.88))
     if not matched:
         return {"matched": False}
+    bare_core_row = bool(name_a == core_a or name_b == core_b)
+    # A standalone single-token entity (e.g. "TELUS") connecting to a differently-named
+    # peer ("TELUS Health") via bare-core identity is ambiguous without domain/address/tax
+    # support — treat as LLM-review (70%), not MANUAL_REVIEW (85%).
+    # Only applies when the two name_norms differ: if they are identical (same normalized
+    # name, different addresses) the exact-name signal is strong enough to remain at 85%.
+    _single_nontrusted_bare = (
+        bare_core_row
+        and exact_core
+        and name_a != name_b
+        and len(tokens_a) == 1
+        and tokens_a[0] not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS
+    )
     return {
         "matched": True,
         "core_a": core_a,
@@ -572,12 +585,16 @@ def _core_identity_relation(row_a: Dict[str, Any], row_b: Dict[str, Any], name_s
         "shared_trusted_core_tokens": shared_trusted_core_tokens,
         "is_trusted_supplier_core": bool(shared_trusted_core_tokens or (exact_core and set(tokens_a) & TRUSTED_SUPPLIER_IDENTITY_CORES)),
         "is_broad_global_supplier_core": bool((set(tokens_a) & set(tokens_b) & BROAD_GLOBAL_SUPPLIER_CORES) or (exact_core and set(tokens_a) & BROAD_GLOBAL_SUPPLIER_CORES)),
-        "is_ambiguous_review_core": bool((set(tokens_a) & set(tokens_b) & AMBIGUOUS_REVIEW_CORES) or (exact_core and set(tokens_a) & AMBIGUOUS_REVIEW_CORES)),
+        "is_ambiguous_review_core": bool(
+            (set(tokens_a) & set(tokens_b) & AMBIGUOUS_REVIEW_CORES)
+            or (exact_core and set(tokens_a) & AMBIGUOUS_REVIEW_CORES)
+            or _single_nontrusted_bare
+        ),
         "protected_identity_phrase": protected_a if protected_a == protected_b else "",
         "shared_long_safe": shared_long_safe,
         "prefix_related": prefix_related,
         "exact_full_name": exact_full_name,
-        "bare_core_row": bool(name_a == core_a or name_b == core_b),
+        "bare_core_row": bare_core_row,
     }
 
 

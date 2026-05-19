@@ -156,6 +156,7 @@ LOCATION_ROOT_TOKENS: Set[str] = {
     "mannheim", "munich",
     "muenchen", "outremont", "paris", "singapore", "solna", "strasbourg",
     "hoechst",
+    "canadian", "british",  # geographic adjectives — must not bridge unrelated suppliers
     "hangzhou", "nanjing", "pacific", "shanghai", "tianjin", "toronto", "usa", "vancouver", "vienna", "wien", "wuhan",
     "europa", "qingdao", "shenyang",
     "changsha", "chengdu", "chongqing", "dalian", "fuzhou", "guiyang",
@@ -236,6 +237,10 @@ GENERIC_ROOT_TOKENS: Set[str] = {
     # Civic/geographic terms — not brand-discriminating on their own
     "city", "town", "port", "state", "county", "district", "region", "area",
     "zone", "borough", "township", "municipality", "province",
+    # Generic single-word roots that are too common to bridge unrelated suppliers.
+    "bank", "banks",   # financial institution word — "bank of X" vs "bank of Y" are different entities
+    "plus",            # augmentation suffix — "facility plus" vs "food plus" are unrelated
+    "auto",            # automotive prefix — "auto value" vs "auto motion" are unrelated
 }
 
 # Single-token roots in this set are too risky to create supplier brand/group
