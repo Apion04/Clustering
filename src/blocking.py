@@ -169,6 +169,26 @@ def generate_candidate_pairs(df: pl.DataFrame, config: ClusteringConfig = None) 
         for family_id in str(known_brand_family_ids).split("|"):
             if family_id:
                 _add_block(blocks, row_id, f"KBF_{family_id}", "known_brand_family")
+        # Location-core block: groups rows that share the same brand core after
+        # stripping trailing location/branch modifiers (e.g. "bfi canada" for both
+        # "BFI CANADA-CALGARY" and "BFI CANADA-TORONTO").
+        name_location_core = row.get("name_location_core", "") or ""
+        if (
+            name_location_core
+            and name_location_core != name_norm
+            and not is_individual
+            and not is_hospitality
+        ):
+            nlc_tokens = [t for t in name_location_core.split() if t]
+            nlc_distinctive = any(
+                len(t) >= 3
+                and t not in GENERIC_ROOT_TOKENS
+                and t not in LOCATION_ROOT_TOKENS
+                and t not in COMMON_FIRST_NAMES
+                for t in nlc_tokens
+            )
+            if nlc_distinctive:
+                _add_block(blocks, row_id, f"NLOC_{name_location_core}", "location_core")
 
     key_seconds = time.perf_counter() - key_start
 
@@ -219,6 +239,7 @@ def generate_candidate_pairs(df: pl.DataFrame, config: ClusteringConfig = None) 
         "distinctive_core": min(200, weak_block_max),
         "trusted_core": min(300, weak_block_max),
         "known_brand_family": min(int(getattr(config, "max_known_brand_family_block_size", 300)), weak_block_max),
+        "location_core": min(150, weak_block_max),
         "support_same_entity_id": int(getattr(config, "max_tax_block_size", 5000)),
         "support_same_entity_name": min(300, weak_block_max),
         "support_family": min(300, weak_block_max),
@@ -244,6 +265,7 @@ def generate_candidate_pairs(df: pl.DataFrame, config: ClusteringConfig = None) 
         "support_same_entity_name": 4,
         "support_family": 11,
         "support_review": 12,
+        "location_core": 10,
     }
     ordered_blocks = sorted(
         by_key.items(),

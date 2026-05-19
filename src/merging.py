@@ -22,6 +22,7 @@ STRONG_EDGE_TYPES = {
     "tax_exact", "tax_loose_supported", "name_address_exact", "name_exact",
     "name_fuzzy_supported", "professional_name_address", "distinctive_supplier_identity",
     "same_legal_owner_confirmed",  # exact non-generic name, different tax/address allowed
+    "brand_location_variant_match",  # same brand core, different branch/location modifier
 }
 
 
@@ -190,6 +191,7 @@ class ClusterMerger:
                 "known_brand_family_alias", "distinctive_supplier_identity",
                 "same_legal_owner_confirmed",   # same legal name, different tax records
                 "address_distinctive_shared",   # distinctive token + address, different tax
+                "brand_location_variant_match",  # same brand core, branch/location variant
             }
             if not (self.config.allow_parent_family_tax_conflicts and family_edge):
                 return "BLOCKED_TAX_CONFLICT"

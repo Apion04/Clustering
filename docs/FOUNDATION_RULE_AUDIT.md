@@ -554,13 +554,167 @@ These are **data-only** changes. No Python edits are recommended.
 
 ---
 
-## 13. Sign-off
+---
+
+## 13. Location modifier coverage (added 2026-05-19)
+
+### 13.1 Overview
+
+Branch and location descriptors in supplier names (e.g. "BFI CANADA-CALGARY", "Bell Canada (5115 Creekbank Rd)") were causing missed clusters. Three changes address this:
+
+1. **`data/location_modifiers.csv`** — 299 canonical location terms loaded at startup.
+2. **`name_location_core` column** — computed during preprocessing by stripping location/branch modifiers from `original_name` / `name_norm`.
+3. **`brand_location_variant_match` pass (PASS 2D-pre / PASS 3B)** — fires when two rows share an identical `name_location_core` and at least one `name_norm` differs from its core.
+
+### 13.2 Location term coverage
+
+| Region | Coverage |
+| --- | --- |
+| Canada | 10 provinces + territories; 30+ cities (Calgary, Toronto, Vancouver, Winnipeg, Ottawa, Montreal, etc.) |
+| United States | All 50 states + DC; 30+ major cities (Houston, Phoenix, Dallas, Seattle, Atlanta, Denver, Boston, etc.) |
+| United Kingdom / Ireland | England, Scotland, Wales, Ireland; Birmingham, Manchester, Leeds, Glasgow, Liverpool, Dublin, Cork, Oxford, Cambridge, etc. |
+| Germany | `germany`, `deutschland`; Berlin, Munich/Muenchen, Hamburg, Frankfurt, Cologne/Koeln, Stuttgart, Nuremberg |
+| France | `france`; Paris, Lyon, Marseille, Toulouse, Bordeaux, Strasbourg |
+| Italy | `italy`, `italia`; Rome/Roma, Milan/Milano, Naples/Napoli, Turin/Torino |
+| Spain / Portugal | `spain`, `portugal`; Madrid, Barcelona, Lisbon/Lisboa, Porto |
+| Netherlands / Belgium / Luxembourg | Amsterdam, Brussels/Bruxelles, Rotterdam, The Hague/Den Haag |
+| Switzerland / Austria | Zurich/Zuerich, Geneva, Vienna/Wien, Bern, Salzburg |
+| Nordics | Denmark/Sverige/Norway/Finland; Copenhagen/Kobenhavn, Stockholm, Oslo, Helsinki, Gothenburg/Goeteborg |
+| Eastern Europe | Poland/Warsaw/Warschau, Czechia/Prague, Hungary/Budapest, Romania/Bucharest, Bulgaria/Sofia, Greece/Athens |
+
+Total loaded: **299 terms** (each multi-word entry also yields individual tokens ≥5 chars).
+
+### 13.3 Scoring rules
+
+| Condition | Score | needs_review |
+| --- | --- | --- |
+| Same brand core, different location modifier | 85 | False |
+| Same brand core + shared domain or address | 98 | False |
+
+### 13.4 Safety invariants
+
+- Only location terms with **≥5 characters** are eligible for stripping (prevents removing 2-char abbreviations like "ca", "on", "ny").
+- Stripping is blocked if the remaining core would be all-generic/location (e.g. "services toronto" → core "services" is in GENERIC_ROOT_TOKENS → not stripped).
+- At most 2 trailing tokens are stripped per name.
+- `brand_location_variant_match` is a **STRONG_EDGE_TYPE** — participates in transitive merges without weak-chain penalty.
+- Locations themselves are **never** treated as clustering evidence — they are strip/normalize only.
+
+### 13.5 Guardrail exemptions added
+
+`brand_location_variant_match` was added to two guardrail exclusion lists so that alphanumeric brand cores (e.g. "4titude") are not blocked by the generic-token and numeric-prefix guards:
+
+- `"Only shared name tokens are generic/non-bridge"` — excluded because the pass has its own internal distinctiveness check on the core.
+- Numeric/short-code prefix allowed list — added `brand_location_variant_match` alongside `tax_exact`, `name_exact`, etc.
+
+---
+
+## 14. Language normalization audit (added 2026-05-19)
+
+### 14.1 German umlauts and ß
+
+| Variant | Normalized to | Mechanism |
+| --- | --- | --- |
+| Müller / Muller / Mueller | muller / mueller | CHAR_TRANSLITERATION: ü→ue; explicit `muller→mueller` rule in `normalize_supplier_name` |
+| Kühne / Kuhne / Kuehne | kuehne | CHAR_TRANSLITERATION + explicit `kuhne→kuehne` |
+| ä → ae, ö → oe, ü → ue, ß → ss | handled | CHAR_TRANSLITERATION dict in `normalize_supplier_name` |
+
+### 14.2 French / Spanish / Italian / Portuguese accents
+
+All handled via `unicodedata.normalize("NFKD", text)` + stripping combining characters (U+0300–U+036F). Result: é→e, è→e, ê→e, ç→c, à→a, ô→o, ñ→n, etc.
+
+### 14.3 City name normalization (`normalize_city`)
+
+| Input | Normalized | Added this session |
+| --- | --- | --- |
+| muenchen | munich | ✅ |
+| nuernberg | nuremberg | ✅ |
+| goeteborg | gothenburg | ✅ |
+| kopenhagen / kobenhavn | copenhagen | ✅ |
+| zuerich | zurich | ✅ |
+| wien | vienna | ✅ |
+| praag | prague | ✅ |
+| warschau | warsaw | ✅ |
+| bruessel / bruxelles | brussels | ✅ |
+
+---
+
+## 15. Connected-component / transitive-closure safety audit (added 2026-05-19)
+
+### 15.1 STRONG_EDGE_TYPES — free transitive merge
+
+All edges in `STRONG_EDGE_TYPES` bypass `_is_weak_chain`. A cluster built entirely of strong edges merges transitively without any size limit.
+
+```
+STRONG_EDGE_TYPES = {
+    "tax_exact", "tax_loose_supported", "name_address_exact", "name_exact",
+    "name_fuzzy_supported", "professional_name_address", "distinctive_supplier_identity",
+    "same_legal_owner_confirmed",
+    "brand_location_variant_match",   ← added this session
+}
+```
+
+**Test coverage**: `test_transitive_safety.py::test_safe_transitive_strong_edges` — verifies that A→B (strong, 98) + B→C (strong, 85) all merge to one cluster; `test_safe_transitive_minimum_score_kept` verifies weakest-link score = 85.
+
+### 15.2 WEAK_EDGE_TYPES — chain-blocked
+
+`_is_weak_chain` blocks any merge where:
+- combined cluster size > `max_low_confidence_cluster_size` (default 6), OR
+- either cluster already has a weak edge (prevents A-B-weak + B-C-weak transitive chain).
+
+**Test coverage**: `test_weak_chain_second_merge_blocked`, `test_weak_chain_second_merge_blocked_family_type`, `test_address_weak_chain_no_transitive_merge`.
+
+### 15.3 AMBIGUOUS_REVIEW_CORES — forced LLM review
+
+Tokens in `AMBIGUOUS_REVIEW_CORES` (e.g. `"insight"`, `"insights"`, `"springer"`, `"apple"`) force `score=70, needs_review=True` in `distinctive_supplier_identity` even when a core matches, unless `same_domain or address_supported or tax_match`.
+
+**Test coverage**: `test_insight_ambiguous_cores_no_high_confidence_cluster` — verifies "Insight Health" / "Innovation Insights" / "Management Insights" never produce a 85/98 deterministic cluster.
+
+### 15.4 PROTECTED_COMPOUND_IDENTITY_PHRASES — family separation
+
+Phrases in this set (e.g. `"eastman kodak"`, `"air liquide"`, `"sigma aldrich"`) prevent cross-phrase merges. A pair where `protected_a != protected_b` and pass_type is in the guarded set is rejected without tax/domain support.
+
+**Test coverage**: `test_eastman_chemical_does_not_bridge_to_eastman_kodak`, `test_three_hop_protected_compound`.
+
+### 15.5 BFI Canada location branch — safe transitive merge
+
+"BFI Canada" + "BFI Canada-Calgary" + "BFI Canada-Toronto" all share `name_location_core="bfi canada"`. Each adjacent pair fires `brand_location_variant_match` at 85. In `ClusterMerger`, both merges succeed (strong edge, no chain block). Final cluster: all 3 rows, weakest-link score = 85.
+
+**Test coverage**: `test_bfi_location_branch_three_rows_same_cluster`, `test_bfi_location_cluster_minimum_score`.
+
+---
+
+## 16. Singleton cluster cleanup (added 2026-05-19)
+
+### 16.1 Implementation
+
+In `src/main.py`, `cluster_map` is populated only for groups with `len(rows) > 1`:
+
+```python
+for root, rows in clusters.items():
+    if len(rows) > 1:
+        cluster_map[...] = root
+```
+
+In `src/sorting.py`:
+```python
+pl.col("row_id").map_elements(lambda x: row_to_cluster_number.get(x, None), ...)  # → None for singletons
+pl.when(pl.col("Cluster Number").is_not_null()).then(...).otherwise(pl.lit(""))   # → "" Match Percentage
+```
+
+Singleton rows receive `Cluster Number = null` and `Match Percentage = ""` in the final output.
+
+### 16.2 Test coverage
+
+`test_location_modifier.py::test_singleton_has_blank_cluster` — feeds a single "BC LTSA" row through the full `cluster_suppliers` pipeline and asserts `Cluster Number is None` and `Match Percentage == ""`.
+
+---
+
+## 17. Sign-off (updated 2026-05-19)
 
 - Foundation rules: **consistent and enforced**.
-- Recent fixes (acronym, FKA, compact-name, same-legal-owner, franchise bypass, guardrail ordering) integrate cleanly with the existing rule spec.
-- 203/203 tests pass.
-- Validation sample produces the expected score distribution and cluster assignments.
-- Final user output is restricted to 98 / 85 / 70 / blank (70 only when run is flagged INCOMPLETE).
-- No required code changes. Two optional CSV additions await confirmation.
-
-Awaiting explicit user approval before any further commit or push.
+- Location modifier handling: **implemented and tested** (Tasks 1–2, 5 from the 2026-05-19 hardening pass).
+- Language normalization: **audited and extended** (Task 3).
+- Transitive closure safety: **audited and fully tested** (Task 4).
+- Singleton cleanup: **verified** (Task 5).
+- All **239/239 regression tests pass**.
+- Final user output remains restricted to 98 / 85 / 70 / blank.

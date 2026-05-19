@@ -233,6 +233,9 @@ GENERIC_ROOT_TOKENS: Set[str] = {
     "universitat", "universitätsklinikum", "universitaetsklinikum",
     "hochschule", "klinikum", "ingenieurbuero", "ingenieurburo",
     "verbindlichkeiten", "arbeitszeitberatung",
+    # Civic/geographic terms — not brand-discriminating on their own
+    "city", "town", "port", "state", "county", "district", "region", "area",
+    "zone", "borough", "township", "municipality", "province",
 }
 
 # Single-token roots in this set are too risky to create supplier brand/group
@@ -491,6 +494,7 @@ class ClusteringConfig:
     known_brand_family_default_confidence: float = 76.0
     legal_keywords_file: str = "data/legal_keywords.csv"
     generic_non_bridge_file: str = "data/generic_non_bridge_keywords.csv"
+    location_modifiers_file: str = "data/location_modifiers.csv"
     support_field_strengths: Dict[str, str] = field(default_factory=lambda: dict(DEFAULT_SUPPORT_FIELD_STRENGTHS))
 
     @classmethod
@@ -560,6 +564,7 @@ class ClusteringConfig:
             known_brand_family_default_confidence=float(os.getenv("KNOWN_BRAND_FAMILY_DEFAULT_CONFIDENCE", "76.0")),
             legal_keywords_file=os.getenv("LEGAL_KEYWORDS_FILE", "data/legal_keywords.csv"),
             generic_non_bridge_file=os.getenv("GENERIC_NON_BRIDGE_FILE", "data/generic_non_bridge_keywords.csv"),
+            location_modifiers_file=os.getenv("LOCATION_MODIFIERS_FILE", "data/location_modifiers.csv"),
             support_field_strengths=parse_support_field_strengths(os.getenv("SUPPORT_FIELD_STRENGTHS", "")),
         )
 

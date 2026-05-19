@@ -1,0 +1,281 @@
+term,type,country_or_region,notes
+calgary,city,canada,Alberta capital city
+kelowna,city,canada,British Columbia city
+ottawa,city,canada,Federal capital
+toronto,city,canada,Ontario capital
+windsor,city,canada,Ontario city
+winnipeg,city,canada,Manitoba capital
+montreal,city,canada,Quebec city
+montréal,city,canada,Quebec city accented form
+saint john,city,canada,New Brunswick city
+st johns,city,canada,Newfoundland capital
+stjohns,city,canada,Compact form
+mississauga,city,canada,Ontario city
+halifax,city,canada,Nova Scotia capital
+kitchener,city,canada,Ontario city
+petawawa,city,canada,Ontario town
+victoria,city,canada,British Columbia capital
+vancouver,city,canada,British Columbia city
+edmonton,city,canada,Alberta capital
+regina,city,canada,Saskatchewan capital
+saskatoon,city,canada,Saskatchewan city
+london,city,canada,Ontario city
+hamilton,city,canada,Ontario city
+waterloo,city,canada,Ontario city
+guelph,city,canada,Ontario city
+markham,city,canada,Ontario city
+brampton,city,canada,Ontario city
+burnaby,city,canada,British Columbia city
+surrey,city,canada,British Columbia city
+richmond,city,canada,British Columbia city
+laval,city,canada,Quebec city
+quebec,city,canada,Quebec City / province
+alberta,province,canada,Canadian province
+british columbia,province,canada,Canadian province
+manitoba,province,canada,Canadian province
+new brunswick,province,canada,Canadian province
+newfoundland,province,canada,Canadian province
+nova scotia,province,canada,Canadian province
+ontario,province,canada,Canadian province
+prince edward island,province,canada,Canadian province
+saskatchewan,province,canada,Canadian province
+canada,country,canada,Country name
+alabama,state,usa,US state
+alaska,state,usa,US state
+arizona,state,usa,US state
+arkansas,state,usa,US state
+california,state,usa,US state
+colorado,state,usa,US state
+connecticut,state,usa,US state
+delaware,state,usa,US state
+florida,state,usa,US state
+georgia,state,usa,US state
+hawaii,state,usa,US state
+idaho,state,usa,US state
+illinois,state,usa,US state
+indiana,state,usa,US state
+iowa,state,usa,US state
+kansas,state,usa,US state
+kentucky,state,usa,US state
+louisiana,state,usa,US state
+maine,state,usa,US state
+maryland,state,usa,US state
+massachusetts,state,usa,US state
+michigan,state,usa,US state
+minnesota,state,usa,US state
+mississippi,state,usa,US state
+missouri,state,usa,US state
+montana,state,usa,US state
+nebraska,state,usa,US state
+nevada,state,usa,US state
+new hampshire,state,usa,US state
+new jersey,state,usa,US state
+new mexico,state,usa,US state
+new york,state,usa,US state
+north carolina,state,usa,US state
+north dakota,state,usa,US state
+ohio,state,usa,US state
+oklahoma,state,usa,US state
+oregon,state,usa,US state
+pennsylvania,state,usa,US state
+rhode island,state,usa,US state
+south carolina,state,usa,US state
+south dakota,state,usa,US state
+tennessee,state,usa,US state
+texas,state,usa,US state
+utah,state,usa,US state
+vermont,state,usa,US state
+virginia,state,usa,US state
+washington,state,usa,US state
+west virginia,state,usa,US state
+wisconsin,state,usa,US state
+wyoming,state,usa,US state
+district of columbia,state,usa,US federal district
+houston,city,usa,Texas city
+phoenix,city,usa,Arizona city
+philadelphia,city,usa,Pennsylvania city
+dallas,city,usa,Texas city
+austin,city,usa,Texas capital
+jacksonville,city,usa,Florida city
+columbus,city,usa,Ohio city
+charlotte,city,usa,North Carolina city
+indianapolis,city,usa,Indiana capital
+seattle,city,usa,Washington city
+denver,city,usa,Colorado capital
+nashville,city,usa,Tennessee capital
+detroit,city,usa,Michigan city
+portland,city,usa,Oregon city
+memphis,city,usa,Tennessee city
+louisville,city,usa,Kentucky city
+baltimore,city,usa,Maryland city
+milwaukee,city,usa,Wisconsin city
+albuquerque,city,usa,New Mexico city
+tucson,city,usa,Arizona city
+fresno,city,usa,California city
+sacramento,city,usa,California capital
+atlanta,city,usa,Georgia capital
+kansas city,city,usa,Missouri/Kansas city
+miami,city,usa,Florida city
+raleigh,city,usa,North Carolina capital
+omaha,city,usa,Nebraska city
+minneapolis,city,usa,Minnesota city
+tulsa,city,usa,Oklahoma city
+cleveland,city,usa,Ohio city
+wichita,city,usa,Kansas city
+arlington,city,usa,Texas city
+boston,city,usa,Massachusetts capital
+chicago,city,usa,Illinois city
+united states,country,usa,Country name
+england,country,uk,English country/region
+scotland,country,uk,Scottish country/region
+wales,country,uk,Welsh country/region
+ireland,country,uk,Ireland
+manchester,city,uk,English city
+birmingham,city,uk,English city
+leeds,city,uk,English city
+glasgow,city,uk,Scottish city
+liverpool,city,uk,English city
+bristol,city,uk,English city
+sheffield,city,uk,English city
+cardiff,city,uk,Welsh capital
+belfast,city,uk,Northern Ireland capital
+dublin,city,ireland,Irish capital
+cork,city,ireland,Irish city
+galway,city,ireland,Irish city
+limerick,city,ireland,Irish city
+oxford,city,uk,English city
+cambridge,city,uk,English city
+reading,city,uk,English city
+nottingham,city,uk,English city
+coventry,city,uk,English city
+leicester,city,uk,English city
+aberdeen,city,uk,Scottish city
+germany,country,europe,Country
+deutschland,country,europe,German-language name for Germany
+france,country,europe,Country
+italy,country,europe,Country
+spain,country,europe,Country
+portugal,country,europe,Country
+netherlands,country,europe,Country
+holland,country,europe,Informal name for Netherlands
+belgium,country,europe,Country
+switzerland,country,europe,Country
+austria,country,europe,Country
+denmark,country,europe,Country
+sweden,country,europe,Country
+norway,country,europe,Country
+finland,country,europe,Country
+poland,country,europe,Country
+czechia,country,europe,Czech Republic informal name
+hungary,country,europe,Country
+romania,country,europe,Country
+bulgaria,country,europe,Country
+greece,country,europe,Country
+luxembourg,country,europe,Country
+liechtenstein,country,europe,Country
+slovenia,country,europe,Country
+croatia,country,europe,Country
+serbia,country,europe,Country
+estonia,country,europe,Country
+latvia,country,europe,Country
+lithuania,country,europe,Country
+iceland,country,europe,Country
+berlin,city,germany,German capital
+munich,city,germany,Bavarian capital - English name
+muenchen,city,germany,Munich - German/transliterated name
+hamburg,city,germany,Hamburg
+frankfurt,city,germany,Frankfurt am Main
+cologne,city,germany,English name for Koeln
+koeln,city,germany,Cologne - normalized German form
+stuttgart,city,germany,Stuttgart
+dortmund,city,germany,Dortmund
+essen,city,germany,Essen
+leipzig,city,germany,Leipzig
+bremen,city,germany,Bremen
+dresden,city,germany,Dresden
+hannover,city,germany,Hannover
+nuremberg,city,germany,English name for Nuernberg
+nuernberg,city,germany,Nuremberg - normalized German form
+bonn,city,germany,Bonn
+aachen,city,germany,Aachen
+bochum,city,germany,Bochum
+karlsruhe,city,germany,Karlsruhe
+mainz,city,germany,Mainz
+wiesbaden,city,germany,Wiesbaden
+freiburg,city,germany,Freiburg im Breisgau
+heidelberg,city,germany,Heidelberg
+tuebingen,city,germany,Tuebingen - normalized form
+dusseldorf,city,germany,Dusseldorf - no umlaut
+duesseldorf,city,germany,Dusseldorf - transliterated umlaut
+mannheim,city,germany,Mannheim
+bielefeld,city,germany,Bielefeld
+paris,city,france,French capital
+lyon,city,france,French city
+marseille,city,france,French city
+toulouse,city,france,French city
+nice,city,france,French city
+nantes,city,france,French city
+strasbourg,city,france,French/Alsatian city
+bordeaux,city,france,French city
+madrid,city,spain,Spanish capital
+barcelona,city,spain,Spanish city
+valencia,city,spain,Spanish city
+seville,city,spain,Spanish city - English name
+sevilla,city,spain,Spanish city - native name
+bilbao,city,spain,Spanish Basque city
+zaragoza,city,spain,Spanish city
+rome,city,italy,Italian capital - English name
+roma,city,italy,Italian capital - native name
+milan,city,italy,Italian city - English name
+milano,city,italy,Italian city - native name
+turin,city,italy,Italian city - English name
+torino,city,italy,Italian city - native name
+naples,city,italy,Italian city - English name
+napoli,city,italy,Italian city - native name
+bologna,city,italy,Italian city
+florence,city,italy,Italian city - English name
+firenze,city,italy,Italian city - native name
+amsterdam,city,netherlands,Dutch capital
+rotterdam,city,netherlands,Dutch city
+utrecht,city,netherlands,Dutch city
+eindhoven,city,netherlands,Dutch city
+brussels,city,belgium,Belgian capital - English name
+bruxelles,city,belgium,Belgian capital - French name
+antwerp,city,belgium,Belgian city - English name
+antwerpen,city,belgium,Belgian city - native name
+ghent,city,belgium,Belgian city - English name
+gent,city,belgium,Belgian city - native name
+zurich,city,switzerland,Swiss city
+zuerich,city,switzerland,Zurich - transliterated German form
+geneva,city,switzerland,Swiss city - English name
+geneve,city,switzerland,Geneva - French name
+basel,city,switzerland,Swiss city
+bern,city,switzerland,Swiss capital
+lausanne,city,switzerland,Swiss city
+zug,city,switzerland,Swiss city
+vienna,city,austria,Austrian capital - English name
+wien,city,austria,Austrian capital - German name
+graz,city,austria,Austrian city
+linz,city,austria,Austrian city
+salzburg,city,austria,Austrian city
+copenhagen,city,denmark,Danish capital - English name
+kobenhavn,city,denmark,Copenhagen - normalized Danish form
+stockholm,city,sweden,Swedish capital
+gothenburg,city,sweden,Swedish city - English name
+goeteborg,city,sweden,Gothenburg - normalized Swedish/transliterated form
+oslo,city,norway,Norwegian capital
+helsinki,city,finland,Finnish capital
+warsaw,city,poland,Polish capital - English name
+warszawa,city,poland,Warsaw - native name
+krakow,city,poland,Polish city - English form
+krakow,city,poland,Krakow - normalized form
+prague,city,czechia,Czech capital - English name
+praha,city,czechia,Prague - native name
+budapest,city,hungary,Hungarian capital
+bucharest,city,romania,Romanian capital - English name
+bucuresti,city,romania,Bucharest - native name
+sofia,city,bulgaria,Bulgarian capital
+athens,city,greece,Greek capital - English name
+athina,city,greece,Athens - native form
+lisbon,city,portugal,Portuguese capital - English name
+lisboa,city,portugal,Lisbon - native name

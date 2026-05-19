@@ -2,7 +2,7 @@
 import json
 import re
 import unicodedata
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Set
 import polars as pl
 
 from src.config import (
@@ -209,6 +209,98 @@ def normalize_supplier_name(name: Optional[Any], legal_keywords: Optional[LegalK
     return name
 
 
+_MIN_LOCATION_STRIP_LEN = 5  # Don't strip location tokens shorter than this to avoid short-abbrev false positives
+
+
+def _has_distinctive_location_token(name_norm: str, location_terms: Set[str]) -> bool:
+    """Return True if name_norm contains at least one non-generic, non-location token (len >= 3)."""
+    weak = GENERIC_ROOT_TOKENS | location_terms | COMMON_FIRST_NAMES
+    return any(len(t) >= 3 and t not in weak for t in name_norm.split())
+
+
+def _strip_trailing_location_tokens(name_norm: str, location_terms: Set[str]) -> str:
+    """Strip up to 2 trailing location terms from normalized name.
+
+    Only strips when:
+    - the trailing token is in location_terms and len >= _MIN_LOCATION_STRIP_LEN
+    - the remaining core has at least one distinctive (non-generic/non-location) token
+    """
+    tokens = name_norm.split()
+    if len(tokens) <= 1:
+        return name_norm
+
+    stripped_count = 0
+    while stripped_count < 2 and len(tokens) > stripped_count + 1:
+        tail = tokens[-(stripped_count + 1)]
+        if tail in location_terms and len(tail) >= _MIN_LOCATION_STRIP_LEN:
+            stripped_count += 1
+        else:
+            break
+
+    if stripped_count == 0:
+        return name_norm
+
+    core_tokens = tokens[:-stripped_count]
+    if not _has_distinctive_location_token(" ".join(core_tokens), location_terms):
+        return name_norm  # Don't strip if nothing meaningful remains
+
+    return " ".join(core_tokens)
+
+
+def compute_name_location_core(
+    original_name: Any,
+    name_norm: str,
+    location_terms: Set[str],
+    legal_keywords: Optional[LegalKeywordDictionary] = None,
+) -> str:
+    """Compute brand-location core by stripping parenthesized and hyphen-separated location modifiers.
+
+    Handles:
+    - "BFI CANADA-CALGARY" → "bfi canada"  (hyphen-separated city stripped)
+    - "Bell Canada (5115 Creekbank Rd)" → "bell canada"  (parenthesized address stripped)
+    - "Bell Canada (Deactivated)" → "bell canada"  (parenthesized status stripped)
+
+    Safety: does NOT strip if the remaining core lacks a distinctive token,
+    so generic names like "services" are never silently collapsed.
+    """
+    if not name_norm:
+        return name_norm
+
+    raw = str(original_name or "").strip()
+
+    # Strategy 1: Strip any parenthesized content from original name.
+    # Parentheses in supplier names almost always contain branch addresses,
+    # postal codes, status words, or location qualifiers — not core identity.
+    raw_no_parens = re.sub(r'\s*\([^)]+\)', '', raw).strip()
+    if raw_no_parens and raw_no_parens != raw:
+        re_normed = normalize_supplier_name(raw_no_parens, legal_keywords=legal_keywords)
+        if re_normed and _has_distinctive_location_token(re_normed, location_terms):
+            return re_normed
+
+    # Strategy 2: Strip trailing hyphen-separated location modifier.
+    # "BFI CANADA-CALGARY" → the segment after the last "-" is the branch modifier.
+    if '-' in raw:
+        last_dash = raw.rfind('-')
+        core_raw = raw[:last_dash].strip()
+        tail_raw = raw[last_dash + 1:].strip()
+        if core_raw and tail_raw:
+            tail_norm = normalize_supplier_name(tail_raw, legal_keywords=legal_keywords)
+            tail_tokens = [t for t in tail_norm.split() if t]
+            # Tail is a location modifier only when ALL its tokens are location terms
+            # of sufficient length.
+            if tail_tokens and all(
+                t in location_terms and len(t) >= _MIN_LOCATION_STRIP_LEN
+                for t in tail_tokens
+            ):
+                core_norm = normalize_supplier_name(core_raw, legal_keywords=legal_keywords)
+                if core_norm and _has_distinctive_location_token(core_norm, location_terms):
+                    return core_norm
+
+    # Strategy 3: Strip trailing location tokens from the already-normalized name.
+    # Catches cases where normalize_supplier_name already collapsed the hyphen to a space.
+    return _strip_trailing_location_tokens(name_norm, location_terms)
+
+
 def _legal_stripping_left_too_generic(name: str) -> bool:
     tokens = [t for t in name.split() if t]
     if not tokens:
@@ -256,6 +348,19 @@ def normalize_city(city: Optional[Any]) -> str:
     city = re.sub(r"\bberlin\s+\d+\b", "berlin", city)
     city = re.sub(r"x{3,}$", "", city)  # thannxxxxx -> thann
     city = city.replace("wustenrot neulautern", "wustenrot neulauter")
+    # German/European city name normalization
+    # (transliterate_special_chars already handles ü→ue, ö→oe, ä→ae, ß→ss)
+    city = re.sub(r"\bmuenchen\b", "munich", city)
+    city = re.sub(r"\bnuernberg\b", "nuremberg", city)
+    city = re.sub(r"\bgoeteborg\b", "gothenburg", city)
+    city = re.sub(r"\bkopenhagen\b", "copenhagen", city)
+    city = re.sub(r"\bkobenhavn\b", "copenhagen", city)
+    city = re.sub(r"\bzuerich\b", "zurich", city)
+    city = re.sub(r"\bwien\b", "vienna", city)
+    city = re.sub(r"\bpraag\b", "prague", city)
+    city = re.sub(r"\bwarschau\b", "warsaw", city)
+    city = re.sub(r"\bbruessel\b", "brussels", city)
+    city = re.sub(r"\bbruxelles\b", "brussels", city)
     return re.sub(r"\s+", " ", city).strip()
 
 
@@ -640,6 +745,7 @@ def preprocess_dataframe(
     column_mapping: Dict[str, Any],
     legal_keywords: Optional[LegalKeywordDictionary] = None,
     support_field_strengths: Optional[Dict[str, str]] = None,
+    location_terms: Optional[Set[str]] = None,
 ) -> pl.DataFrame:
     legal_index = legal_keywords or get_default_legal_keywords()
     support_strengths = dict(DEFAULT_SUPPORT_FIELD_STRENGTHS)
@@ -812,6 +918,23 @@ def preprocess_dataframe(
         pl.col("name_norm").map_elements(extract_root_brand, return_dtype=pl.Utf8).alias("root_brand"),
         pl.col("name_norm").map_elements(extract_supplier_identity_core, return_dtype=pl.Utf8).alias("supplier_identity_core"),
     ])
+    # Brand-location core: name with branch/location modifiers stripped.
+    # Used by brand_location_variant_match to detect same supplier under location suffixes.
+    loc_terms = set(location_terms) if location_terms else set()
+    _orig_name_col = name_col  # captured for closure
+    df = df.with_columns(
+        pl.struct([_orig_name_col, "name_norm"])
+        .map_elements(
+            lambda r: compute_name_location_core(
+                r.get(_orig_name_col, ""),
+                r.get("name_norm", ""),
+                loc_terms,
+                legal_index,
+            ),
+            return_dtype=pl.Utf8,
+        )
+        .alias("name_location_core")
+    )
     return df
 
 

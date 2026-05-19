@@ -821,6 +821,34 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             review_reason="Related regulatory/task-force phrase; not clear same supplier identity",
         ))
 
+    # PASS 2D-pre: brand-location variant check. When both rows share the same
+    # name_location_core (location/branch modifier already stripped) but differ
+    # in name_norm, resolve here at 85 so PASS 2D cannot downgrade to 70 review.
+    # Duplicate of PASS 3B logic but placed before supplier-identity scoring.
+    _nlc_a_early = str(row_a.get("name_location_core") or "")
+    _nlc_b_early = str(row_b.get("name_location_core") or "")
+    if (_nlc_a_early and _nlc_b_early
+            and _nlc_a_early == _nlc_b_early
+            and (_nlc_a_early != name_a or _nlc_b_early != name_b)):
+        _loc_generic2 = GENERIC_ROOT_TOKENS | LOCATION_ROOT_TOKENS | COMMON_FIRST_NAMES
+        _nlc_dist_early = [t for t in _nlc_a_early.split() if len(t) >= 3 and t not in _loc_generic2]
+        if _nlc_dist_early:
+            _score_early = 98.0 if (same_domain or address_supported) else 85.0
+            return R(MatchResult(
+                True, _score_early,
+                "brand_location_variant_match",
+                {
+                    "brand_location_core": _nlc_a_early,
+                    "location_modifier_a": " ".join(t for t in name_a.split() if t not in set(_nlc_a_early.split())),
+                    "location_modifier_b": " ".join(t for t in name_b.split() if t not in set(_nlc_b_early.split())),
+                    "name_sim": round(name_sim, 3),
+                    "same_domain": same_domain,
+                    "address_supported": address_supported,
+                },
+                needs_review=False,
+                review_reason="",
+            ))
+
     # PASS 2D: same clear supplier brand/group identity across addresses,
     # legal forms, branches, or countries. This is distinct from weak
     # family/parent rollup and requires a safe distinctive core.
@@ -944,6 +972,38 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             needs_review=False,
             review_reason="",
         ))
+
+    # PASS 3B: brand-location variant match.
+    # Fires when names differ only by a trailing location/branch modifier (city, province,
+    # country, or parenthesized address) but share the same brand-location core.
+    # Example: "BFI CANADA-CALGARY" vs "BFI CANADA-TORONTO" → core "bfi canada".
+    # Example: "Bell Canada (5115 Creekbank Rd)" vs "Bell Canada" → core "bell canada".
+    nlc_a = str(row_a.get("name_location_core") or "")
+    nlc_b = str(row_b.get("name_location_core") or "")
+    if nlc_a and nlc_b and nlc_a == nlc_b and (nlc_a != name_a or nlc_b != name_b):
+        # At least one name had its location modifier stripped.
+        # Check that the shared core has a distinctive (non-generic) token.
+        _loc_generic = GENERIC_ROOT_TOKENS | LOCATION_ROOT_TOKENS | COMMON_FIRST_NAMES
+        _nlc_distinctive = [t for t in nlc_a.split() if len(t) >= 3 and t not in _loc_generic]
+        if _nlc_distinctive:
+            score = 85.0
+            needs_review = False
+            if same_domain or address_supported:
+                score = 98.0
+            return R(MatchResult(
+                True, score,
+                "brand_location_variant_match",
+                {
+                    "brand_location_core": nlc_a,
+                    "location_modifier_a": " ".join(t for t in name_a.split() if t not in set(nlc_a.split())),
+                    "location_modifier_b": " ".join(t for t in name_b.split() if t not in set(nlc_b.split())),
+                    "name_sim": round(name_sim, 3),
+                    "same_domain": same_domain,
+                    "address_supported": address_supported,
+                },
+                needs_review=needs_review,
+                review_reason="",
+            ))
 
     # PASS 4: strong fuzzy name match.
     if name_sim >= config.fuzzy_name_threshold_strong:

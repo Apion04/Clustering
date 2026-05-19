@@ -14,6 +14,7 @@ from src.brand_families import (
 )
 from src.generic_keywords import apply_generic_non_bridge_keywords, load_generic_non_bridge_keywords
 from src.legal_keywords import load_legal_keywords
+from src.location_modifiers import load_location_modifiers
 from src.idf_tokens import annotate_rare_tokens, build_rare_token_index, shared_rare_tokens
 from src.preprocessing import preprocess_dataframe
 from src.blocking import generate_candidate_pairs, get_address_company_counts
@@ -221,6 +222,18 @@ def _load_generic_non_bridge_keywords(config: ClusteringConfig):
     return index
 
 
+def _load_location_modifiers_terms(config: ClusteringConfig):
+    """Load location modifier terms for branch/location suffix stripping."""
+    loc_file = _resolve_project_path(getattr(config, "location_modifiers_file", ""))
+    terms = load_location_modifiers(loc_file) if loc_file else set()
+    setattr(config, "_location_modifier_terms", terms)
+    if terms:
+        _log(f"      Location modifiers loaded: {len(terms):,} terms from {loc_file}")
+    else:
+        _log(f"      Location modifiers: file not found or empty, using LOCATION_ROOT_TOKENS only")
+    return terms
+
+
 def cluster_suppliers(
     input_df: pl.DataFrame,
     column_mapping: Dict[str, str],
@@ -254,11 +267,13 @@ def cluster_suppliers(
     t0 = time.perf_counter()
     _load_generic_non_bridge_keywords(config)
     legal_index = _load_legal_keywords(config)
+    location_terms = _load_location_modifiers_terms(config)
     df = preprocess_dataframe(
         input_df,
         column_mapping,
         legal_keywords=legal_index,
         support_field_strengths=getattr(config, "support_field_strengths", {}),
+        location_terms=location_terms,
     )
     df = _annotate_known_brand_families(df, config)
     rare_token_index = build_rare_token_index(df, config, legal_index)

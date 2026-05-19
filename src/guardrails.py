@@ -333,7 +333,7 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
         and bool(_shared_short_code_tokens(row_a, row_b))
     )
     if (
-        pass_type not in {"tax_exact", "tax_loose_supported", "tax_exact_institutional_ecosystem_review", "name_exact", "name_exact_review", "name_address_exact", "support_field_review", "domain_review_candidate", "regulatory_or_task_force_related"}
+        pass_type not in {"tax_exact", "tax_loose_supported", "tax_exact_institutional_ecosystem_review", "name_exact", "name_exact_review", "name_address_exact", "support_field_review", "domain_review_candidate", "regulatory_or_task_force_related", "brand_location_variant_match"}
         and _only_shared_tokens_are_non_bridge(row_a, row_b)
         and not same_domain
         and not (both_people and same_full_address and bool(person_identity_strength(row_a, row_b)))
@@ -348,7 +348,7 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
     # Production and 3B Scientific vs unrelated Scientific Center records.
     if _has_numeric_or_short_code_prefix(row_a) or _has_numeric_or_short_code_prefix(row_b):
         allowed_numeric_code_match = (
-            pass_type in {"tax_exact", "tax_loose_supported", "name_exact", "name_address_exact", "support_field_review", "domain_review_candidate"}
+            pass_type in {"tax_exact", "tax_loose_supported", "name_exact", "name_address_exact", "support_field_review", "domain_review_candidate", "brand_location_variant_match"}
             or same_domain
             or _full_name_highly_similar(row_a, row_b)
             or exact_alphanumeric_identity_core
