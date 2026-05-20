@@ -20,9 +20,11 @@ from src.config import (
     PROTECTED_COMPOUND_IDENTITY_PHRASES,
     REGULATORY_REVIEW_TOKENS,
     RISKY_BANNER_BRAND_TOKENS,
+    SERVICE_DESCRIPTOR_TOKENS,
     SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS,
     SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS,
     TRUSTED_SUPPLIER_IDENTITY_CORES,
+    _GENERIC_SLD_GUARD,
 )
 from src.matching_types import MatchResult
 from src.guardrails import apply_guardrails
@@ -742,6 +744,14 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
     name_sim = calculate_name_similarity(name_a, name_b)
     addr_sim = calculate_address_similarity(addr_a, addr_b)
     same_domain = bool(domain_a and domain_b and domain_a == domain_b and not row_a.get("is_generic_domain", False) and not row_b.get("is_generic_domain", False))
+    # same_sld: cross-TLD domain-family evidence (e.g. aprolis.com vs aprolis.es → SLD "aprolis").
+    # Only fires when domains differ (same_domain already covers identical domains).
+    # Guarded: short or generic SLDs (dm, bts, ag, etc.) do not trigger same_sld.
+    _sld_a = str(row_a.get("domain_sld", "") or "")
+    _sld_b = str(row_b.get("domain_sld", "") or "")
+    _sld_guarded = (not _sld_a or not _sld_b or _sld_a in _GENERIC_SLD_GUARD or _sld_b in _GENERIC_SLD_GUARD
+                    or len(_sld_a) < 3 or len(_sld_b) < 3)
+    same_sld = bool(not same_domain and not _sld_guarded and _sld_a == _sld_b)
     same_city_country = bool(city_a and city_b and country_a and country_b and country_a == country_b and fuzz.ratio(city_a, city_b) >= 85)
     tax_match = _tax_overlap(row_a, row_b)
     tax_loose_match = _tax_loose_overlap(row_a, row_b)
@@ -1131,6 +1141,53 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
                 review_reason="",
             ))
 
+    # PASS 3C: brand-prefix + service/descriptor match.
+    # Fires when one name is a complete token-prefix of the other and every
+    # extra token is a generic, location, legal, or service-descriptor word.
+    # The brand core (the shorter name) must contain at least one distinctive
+    # token (len >= 4, not generic/location/person) to prevent generic
+    # words like "services" from becoming an anchor.
+    # Score: 85 with same_domain or same_sld support; 70 otherwise.
+    _tokens_a3c = name_a.split() if name_a else []
+    _tokens_b3c = name_b.split() if name_b else []
+    _shorter_3c, _longer_3c = (
+        (_tokens_a3c, _tokens_b3c)
+        if len(_tokens_a3c) <= len(_tokens_b3c)
+        else (_tokens_b3c, _tokens_a3c)
+    )
+    if (
+        _shorter_3c
+        and len(_shorter_3c) < len(_longer_3c)
+        and _longer_3c[: len(_shorter_3c)] == _shorter_3c
+    ):
+        _extra_3c = _longer_3c[len(_shorter_3c):]
+        _weak_3c = GENERIC_ROOT_TOKENS | LOCATION_ROOT_TOKENS | SERVICE_DESCRIPTOR_TOKENS
+        _all_extra_weak = all(t in _weak_3c for t in _extra_3c)
+        # Brand core must have at least one distinctive token (not generic/location/person, len >= 4)
+        _brand_distinctive_3c = any(
+            len(t) >= 4 and t not in _weak_3c and t not in COMMON_FIRST_NAMES
+            for t in _shorter_3c
+        )
+        if _all_extra_weak and _brand_distinctive_3c:
+            _banner_only_3c = all(t in RISKY_BANNER_BRAND_TOKENS for t in _shorter_3c if len(t) >= 3 and t not in _weak_3c)
+            _score_3c = 85.0 if (same_domain or same_sld) else 70.0
+            if _banner_only_3c:
+                _score_3c = min(_score_3c, 70.0)
+            return R(MatchResult(
+                True, _score_3c,
+                "brand_prefix_descriptor_match",
+                {
+                    "brand_core": " ".join(_shorter_3c),
+                    "descriptor_tokens": _extra_3c,
+                    "name_sim": round(name_sim, 3),
+                    "same_domain": same_domain,
+                    "same_sld": same_sld,
+                    "score_reason": "Brand-prefix + service/descriptor suffix match",
+                },
+                needs_review=_score_3c < 85.0,
+                review_reason="" if _score_3c >= 85.0 else "Brand-prefix descriptor match without domain/SLD support; LLM review",
+            ))
+
     # PASS 4: strong fuzzy name match.
     if name_sim >= config.fuzzy_name_threshold_strong:
         if address_supported or addr_sim >= 0.80 or same_city_country or same_domain:
@@ -1171,9 +1228,27 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             return R(MatchResult(True, 93.0, "domain_address_supported",
                 {"domain": domain_a, "name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)},
                 needs_review=True, review_reason="Same domain and address with near name; review recommended"))
-        if name_sim >= 0.70 or secondary_name_match(row_a, row_b) or related_root or known_family or _acronym_bridge(row_a, row_b):
+        if name_sim >= 0.70 or secondary_name_match(row_a, row_b) or related_root or known_family or _acronym_bridge(row_a, row_b) or _acronym_bridge_full(row_a, row_b):
             return R(MatchResult(True, 86.0 if name_sim >= 0.80 else 78.0, "domain_name_related", {"domain": domain_a, "name_sim": round(name_sim, 3)}, needs_review=name_sim < 0.80, review_reason="Same domain with lower name similarity"))
         return R(MatchResult(True, 72.0, "domain_review_candidate", {"domain": domain_a, "name_sim": round(name_sim, 3)}, needs_review=True, review_reason="Same business domain with unrelated or weakly related names; manual review"))
+
+    # PASS 5B: same SLD (cross-TLD domain family) — weaker than same_domain.
+    # Fires when two rows share a distinctive SLD (e.g. aprolis.com vs aprolis.es)
+    # but have different full domains. Requires name/acronym/brand evidence to
+    # reach 85; SLD alone caps at 70.
+    if same_sld:
+        if address_supported and name_sim >= 0.80:
+            return R(MatchResult(True, 93.0, "domain_sld_address_confirmed",
+                {"domain_sld": _sld_a, "name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)},
+                needs_review=True, review_reason="Same SLD and address with near name; review recommended"))
+        if name_sim >= 0.70 or secondary_name_match(row_a, row_b) or related_root or known_family or _acronym_bridge(row_a, row_b) or _acronym_bridge_full(row_a, row_b):
+            return R(MatchResult(True, 85.0, "domain_sld_family",
+                {"domain_sld": _sld_a, "name_sim": round(name_sim, 3)},
+                needs_review=True, review_reason="Same SLD cross-TLD with supporting name evidence; review recommended"))
+        # SLD alone without name evidence → plausible but needs review.
+        return R(MatchResult(True, 70.0, "domain_sld_review_candidate",
+            {"domain_sld": _sld_a, "name_sim": round(name_sim, 3)},
+            needs_review=True, review_reason="Same SLD cross-TLD with unrelated names; manual review"))
 
     # PASS 6: exact/similar address plus supporting evidence.
     if addr_a and addr_b and (addr_a == addr_b or addr_sim >= 0.88 or address_supported):

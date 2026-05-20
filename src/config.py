@@ -292,7 +292,33 @@ GENERIC_ROOT_TOKENS: Set[str] = {
     # Additional generic business words found in client data
     "digital", "online", "interactive", "creative", "professional", "managed",
     "integrated", "complete", "total", "central", "direct",
+    # Service/division descriptor words — used by PASS 3C brand-prefix matching
+    "location", "finance", "leasing", "rental", "hire",
 }
+
+# SLDs that are too short or too generic to serve as standalone brand evidence.
+# When domain_sld_a == domain_sld_b but the SLD is in this guard, same_sld
+# evidence is suppressed (treated as no SLD match).
+_GENERIC_SLD_GUARD: FrozenSet[str] = frozenset({
+    # Short company/legal-form abbreviations that appear as SLDs
+    "co", "ag", "sa", "bv", "nv", "ab",
+    # Short common SLDs (2-3 chars) — ambiguous, not brand-distinctive on their own
+    "dm", "bts",
+    # Common TLD names that can appear as SLDs in unusual registrations
+    "net", "com", "org", "gov", "edu",
+    # Two-letter country codes that could appear as SLDs
+    "de", "fr", "uk", "es", "it", "nl", "pl", "ch", "at", "be", "no", "se",
+    "dk", "fi", "pt", "hu", "cz", "ro", "hr", "bg", "sk",
+})
+
+# Division/service descriptor words used by PASS 3C brand-prefix matching.
+# When a name is a prefix of another and the extra tokens are all in this set
+# (or GENERIC_ROOT_TOKENS / location_terms), they are treated as descriptors
+# not brand discriminators.
+SERVICE_DESCRIPTOR_TOKENS: FrozenSet[str] = frozenset({
+    "location", "finance", "leasing", "rental", "hire", "iberia",
+    "campus", "ecully", "pau",
+})
 
 # Single-token roots in this set are too risky to create supplier brand/group
 # identity clusters by themselves. They can still support stronger evidence

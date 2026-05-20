@@ -690,6 +690,39 @@ def extract_domain(email_or_website: Optional[Any]) -> str:
     return text.strip()
 
 
+_SECONDARY_TLDS: frozenset = frozenset({
+    "co", "com", "net", "org", "gov", "edu", "ac", "or",
+})
+
+
+def _extract_domain_sld(domain: str) -> str:
+    """Extract the Second-Level Domain (SLD) from a full domain string.
+
+    Examples:
+      "bcorporation.fr"  → "bcorporation"
+      "bv.aok.de"        → "aok"   (subdomain.sld.tld)
+      "foo.co.uk"        → "foo"   (compound TLD)
+      "aprolis.com"      → "aprolis"
+      "dm.de"            → "dm"    (short — caller must guard)
+    """
+    if not domain:
+        return ""
+    domain = str(domain).lower().strip()
+    parts = domain.split(".")
+    if len(parts) < 2:
+        return ""
+    # Handle compound TLDs: foo.co.uk → last part is 2-char country, second-to-last is
+    # a known secondary-level label (co, com, net …) → SLD is third from last.
+    if (
+        len(parts) >= 3
+        and len(parts[-1]) == 2
+        and parts[-2] in _SECONDARY_TLDS
+    ):
+        return parts[-3]
+    # Standard case: sld.tld or subdomain.sld.tld → second from last.
+    return parts[-2]
+
+
 def is_generic_domain(domain: str) -> bool:
     """Return True for free/ISP/disposable domains.
 
@@ -965,6 +998,7 @@ def preprocess_dataframe(
     else:
         df = df.with_columns(pl.lit("").alias("domain"))
     df = df.with_columns(pl.col("domain").map_elements(is_generic_domain, return_dtype=pl.Boolean).alias("is_generic_domain"))
+    df = df.with_columns(pl.col("domain").map_elements(_extract_domain_sld, return_dtype=pl.Utf8).alias("domain_sld"))
     df = df.with_columns([
         pl.col("name_norm").map_elements(token_sort_fingerprint, return_dtype=pl.Utf8).alias("name_token_sort"),
         pl.col("name_norm").map_elements(phonetic_key, return_dtype=pl.Utf8).alias("name_phonetic"),

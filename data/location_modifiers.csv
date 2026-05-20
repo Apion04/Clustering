@@ -278,4 +278,24 @@ sofia,city,bulgaria,Bulgarian capital
 athens,city,greece,Greek capital - English name
 athina,city,greece,Athens - native form
 lisbon,city,portugal,Portuguese capital - English name
+polska,country,europe,Polish-language name for Poland
+iberia,country,europe,Region name for Spain/Portugal
+italia,country,europe,Italian-language name for Italy
+brasil,country,southamerica,Portuguese-language name for Brazil
+nederland,country,europe,Dutch-language name for Netherlands
+osterreich,country,europe,German-language name for Austria
+suisse,country,europe,French-language name for Switzerland
+schweiz,country,europe,German-language name for Switzerland
+svizzera,country,europe,Italian-language name for Switzerland
+norge,country,europe,Norwegian-language name for Norway
+belgie,country,europe,Dutch-language name for Belgium
+belgique,country,europe,French-language name for Belgium
+sverige,country,europe,Swedish-language name for Sweden
+danmark,country,europe,Danish-language name for Denmark
+mexico,country,northamerica,Country name
+india,country,asia,Country name
+singapore,country,asia,Country name
+australia,country,oceania,Country name
+malaysia,country,asia,Country name
+indonesia,country,asia,Country name
 lisboa,city,portugal,Lisbon - native name

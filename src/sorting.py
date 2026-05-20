@@ -82,7 +82,7 @@ def sort_by_clusters(df: pl.DataFrame, cluster_map: Dict[int, int], match_pcts: 
         "orig_json_secondary_names", "json_secondary_names_norm",
         "name_norm", "name_location_core", "name2_norm", "name3_norm", "name4_norm", "name5_norm", "name6_norm", "name7_norm",
         "addr_norm", "city_norm", "country_norm", "postal_norm", "tax_norm", "tax_loose_norm",
-        "domain_from_domain", "domain_from_email", "domain_from_website", "domain", "is_generic_domain",
+        "domain_from_domain", "domain_from_email", "domain_from_website", "domain", "is_generic_domain", "domain_sld",
         "name_token_sort", "name_phonetic", "root_brand", "supplier_identity_core", "has_legal_suffix", "has_company_keyword", "is_hospitality",
         "person_name_norm", "is_likely_individual", "legal_suffixes_found",
         "known_brand_family_ids", "known_brand_family_safe_ids", "known_brand_family_risky_ids", "known_brand_alias_hits",

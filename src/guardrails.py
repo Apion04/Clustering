@@ -117,6 +117,21 @@ def _same_business_domain(row_a: Dict[str, Any], row_b: Dict[str, Any]) -> bool:
     return bool(da and db and da == db and not row_a.get("is_generic_domain") and not row_b.get("is_generic_domain"))
 
 
+def _same_sld_domain_family(row_a: Dict[str, Any], row_b: Dict[str, Any]) -> bool:
+    """Return True when both rows share a distinctive cross-TLD SLD (domain_sld field)."""
+    from src.config import _GENERIC_SLD_GUARD
+    sld_a = str(row_a.get("domain_sld", "") or "")
+    sld_b = str(row_b.get("domain_sld", "") or "")
+    if not sld_a or not sld_b or sld_a != sld_b:
+        return False
+    if sld_a in _GENERIC_SLD_GUARD or len(sld_a) < 3:
+        return False
+    da = row_a.get("domain", "")
+    db = row_b.get("domain", "")
+    # Only fire as cross-TLD evidence when domains differ (same_domain covers identical domains).
+    return da != db
+
+
 def _addr_sim(row_a: Dict[str, Any], row_b: Dict[str, Any]) -> float:
     aa = row_a.get("addr_norm", "")
     ab = row_b.get("addr_norm", "")
@@ -267,6 +282,7 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
     addr_sim = _addr_sim(row_a, row_b)
     tax_match = _has_tax(row_a, row_b)
     same_domain = _same_business_domain(row_a, row_b)
+    same_sld = _same_sld_domain_family(row_a, row_b)
     city_country = _city_country_support(row_a, row_b)
     profile_a = build_person_profile(row_a)
     profile_b = build_person_profile(row_b)
@@ -347,9 +363,10 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
         and bool(_shared_short_code_tokens(row_a, row_b))
     )
     if (
-        pass_type not in {"tax_exact", "tax_loose_supported", "tax_exact_institutional_ecosystem_review", "name_exact", "name_exact_review", "name_address_exact", "support_field_review", "domain_review_candidate", "regulatory_or_task_force_related", "brand_location_variant_match", "compact_name_match_supported", "compact_name_match_city", "article_reorder_match"}
+        pass_type not in {"tax_exact", "tax_loose_supported", "tax_exact_institutional_ecosystem_review", "name_exact", "name_exact_review", "name_address_exact", "support_field_review", "domain_review_candidate", "domain_sld_family", "domain_sld_review_candidate", "domain_sld_address_confirmed", "regulatory_or_task_force_related", "brand_location_variant_match", "brand_prefix_descriptor_match", "compact_name_match_supported", "compact_name_match_city", "article_reorder_match"}
         and _only_shared_tokens_are_non_bridge(row_a, row_b)
         and not same_domain
+        and not same_sld
         and not (both_people and same_full_address and bool(person_identity_strength(row_a, row_b)))
         and not exact_alphanumeric_identity_core
         and not generic_only_supported_by_strong_address_name
