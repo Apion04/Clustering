@@ -19,6 +19,9 @@ WEAK_EDGE_TYPES = {
     "name_fuzzy_review_candidate",     # high name sim, no location/domain support
     "known_brand_family_weak_candidate",  # known family alias, risky, no support
     "possible_sub_brand_candidate",    # one name is a prefix of the other
+    # Phase 3A: domain-only with unrelated names — safe for single pair, chain-blocked.
+    # Prevents shared client-contact domains (e.g. pharma.com) from bridging unrelated suppliers.
+    "domain_review_candidate",
 }
 
 DOMAIN_SUPPORTED_EDGE_TYPES = {"address_domain", "domain_name_related"}

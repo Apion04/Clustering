@@ -135,6 +135,19 @@ st.caption(
     "If no OpenAI key is configured, 70% candidates are shown in the output and were not sent to LLM."
 )
 
+ignore_client_domains_text = st.text_input(
+    "Client/Internal Domains to Ignore",
+    value="",
+    placeholder="e.g. merck.com; gilead.com; pfizer.com",
+    help=(
+        "Enter client/internal contact email domains that should **not** be used for supplier clustering. "
+        "Separate multiple domains with semicolons.\n\n"
+        "Use this when a domain (e.g. gilead.com) appears on many unrelated supplier rows because "
+        "it belongs to your organisation, not the supplier.\n\n"
+        "Free email domains (gmail.com, outlook.com, etc.) are always ignored automatically."
+    ),
+)
+
 st.divider()
 
 # ---------------------------------------------------------------------------
@@ -173,6 +186,8 @@ if run_clicked and uploaded is not None:
         cmd += ["--openai-model", openai_model]
     if max_cost > 0:
         cmd += ["--max-total-llm-cost-per-job", str(max_cost)]
+    if ignore_client_domains_text.strip():
+        cmd += ["--ignore-client-domains", ignore_client_domains_text.strip()]
     if show_70_candidates:
         cmd += ["--allow-unresolved-llm-candidates-in-final-output"]
 

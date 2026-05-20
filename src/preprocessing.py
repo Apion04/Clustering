@@ -737,6 +737,63 @@ def is_generic_domain(domain: str) -> bool:
     return any(d.endswith("." + g) for g in GENERIC_DOMAINS)
 
 
+def compute_broad_contact_domains(
+    df: "pl.DataFrame",
+    min_rows: int = 4,
+    min_distinct_roots: int = 3,
+) -> "frozenset[str]":
+    """Return domains that appear across many unrelated suppliers (shared client/contact domains).
+
+    A domain is flagged when it appears in >= min_rows rows AND those rows have
+    >= min_distinct_roots distinct *first-token* supplier_identity_core values.
+
+    Using only the first token of each core prevents legitimate brand variants
+    (e.g. 'bts in london' / 'bts italy' / 'bts' all share first token 'bts')
+    from inflating the distinct-roots count. Genuinely unrelated suppliers
+    (gilead.com: centrum / colorado / covenant / egg) will have different first tokens.
+
+    Domains that meet the threshold should not be used as supplier identity evidence:
+    e.g. gilead.com recorded on 7 unrelated supplier contacts.
+    """
+    import polars as pl
+    from collections import defaultdict
+
+    if "domain" not in df.columns or "supplier_identity_core" not in df.columns:
+        return frozenset()
+
+    domain_row_count: dict = defaultdict(int)
+    domain_root_tokens: dict = defaultdict(set)
+
+    rows = (
+        df.filter(
+            pl.col("domain").is_not_null()
+            & (pl.col("domain") != "")
+            & (~pl.col("is_generic_domain").fill_null(False))
+            & pl.col("supplier_identity_core").is_not_null()
+            & (pl.col("supplier_identity_core") != "")
+        )
+        .select(["domain", "supplier_identity_core"])
+        .to_dicts()
+    )
+    for row in rows:
+        d = row["domain"]
+        c = row["supplier_identity_core"]
+        # Use only the first token for root comparison so "bts italy" and "bts london"
+        # both reduce to "bts" (same brand, different region) and don't inflate the count.
+        first_token = c.split()[0] if c else ""
+        if not first_token:
+            continue
+        domain_row_count[d] += 1
+        domain_root_tokens[d].add(first_token)
+
+    broad: set = set()
+    for domain, count in domain_row_count.items():
+        if count >= min_rows and len(domain_root_tokens[domain]) >= min_distinct_roots:
+            broad.add(domain)
+
+    return frozenset(broad)
+
+
 def extract_root_brand(name: str) -> str:
     if not name:
         return ""

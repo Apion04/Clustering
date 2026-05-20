@@ -294,6 +294,12 @@ GENERIC_ROOT_TOKENS: Set[str] = {
     "integrated", "complete", "total", "central", "direct",
     # Service/division descriptor words — used by PASS 3C brand-prefix matching
     "location", "finance", "leasing", "rental", "hire",
+    # Phase 3A: regional division suffixes (also in SERVICE_DESCRIPTOR_TOKENS).
+    # Listing here ensures extract_supplier_identity_core strips them as trailing
+    # descriptors, so "brand emea" → core "brand" → exact_core match with "brand".
+    "emea", "apac", "amer", "dach", "latam",
+    # "ventures" is an investment/startup arm suffix — non-discriminating alone.
+    "ventures",
 }
 
 # SLDs that are too short or too generic to serve as standalone brand evidence.
@@ -318,6 +324,12 @@ _GENERIC_SLD_GUARD: FrozenSet[str] = frozenset({
 SERVICE_DESCRIPTOR_TOKENS: FrozenSet[str] = frozenset({
     "location", "finance", "leasing", "rental", "hire", "iberia",
     "campus", "ecully", "pau",
+    # Phase 3A: regional division suffixes commonly appended to brand names
+    # (e.g. "BRAND EMEA", "BRAND APAC") — safe as PASS 3C descriptors because
+    # a brand core must still have a distinctive token to trigger the pass.
+    "emea", "apac", "amer", "dach", "latam",
+    # "ventures" is a startup/investment-arm suffix, not a brand discriminator.
+    "ventures",
 })
 
 # Single-token roots in this set are too risky to create supplier brand/group
@@ -601,6 +613,12 @@ class ClusteringConfig:
     generic_non_bridge_file: str = "data/generic_non_bridge_keywords.csv"
     location_modifiers_file: str = "data/location_modifiers.csv"
     support_field_strengths: Dict[str, str] = field(default_factory=lambda: dict(DEFAULT_SUPPORT_FIELD_STRENGTHS))
+    # Domains explicitly provided by the user that should be excluded from all domain-based
+    # clustering evidence (same_domain, same_sld, domain_review_candidate, etc.).
+    # Typical use: client/internal contact email domains recorded on unrelated supplier rows.
+    # Free/generic email domains (gmail.com, etc.) are always blocked via GENERIC_DOMAINS
+    # regardless of this setting.
+    ignore_client_domains: FrozenSet[str] = field(default_factory=frozenset)
 
     @classmethod
     def from_env(cls) -> "ClusteringConfig":

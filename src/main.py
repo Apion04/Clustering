@@ -16,7 +16,7 @@ from src.generic_keywords import apply_generic_non_bridge_keywords, load_generic
 from src.legal_keywords import load_legal_keywords
 from src.location_modifiers import load_location_modifiers
 from src.idf_tokens import annotate_rare_tokens, build_rare_token_index, shared_rare_tokens
-from src.preprocessing import preprocess_dataframe
+from src.preprocessing import preprocess_dataframe, compute_broad_contact_domains
 from src.blocking import generate_candidate_pairs, get_address_company_counts
 from src.matching import evaluate_pair
 from src.merging import ClusterMerger
@@ -37,13 +37,16 @@ REVIEW_ONLY_PASS_TYPES = frozenset({
     "name_exact_review",
     "rare_token_review_candidate",
     "support_field_review",
-    "domain_review_candidate",
+    # Phase 3A: domain_review_candidate removed — same-domain pairs with unrelated
+    # names now surface at 70% in the main output instead of being hidden.
     "person_address_city_mismatch_review",
     "person_same_name_location_review",
     "regulatory_or_task_force_related",
     "tax_exact_low_similarity_review",
     "tax_exact_institutional_ecosystem_review",
-    "operational_status_review",
+    # Phase 3A: operational_status_review removed — BLOCKED/GESPERRT/DO-NOT-USE rows
+    # whose name_norm matches a clean counterpart now cluster at 70–85% in the main
+    # output rather than being hidden in review_candidates.
     # Recall-improvement LLM candidates enter union-find as 70-score clusters
     # rather than review_candidates so they appear in output when
     # allow_unresolved_llm_candidates_in_final_output=True.
@@ -51,6 +54,7 @@ REVIEW_ONLY_PASS_TYPES = frozenset({
     # Types kept here only to document explicitly what is NOT here:
     #   weak_brand_root_candidate, name_fuzzy_review_candidate,
     #   known_brand_family_weak_candidate, possible_sub_brand_candidate
+    #   domain_review_candidate, operational_status_review  (removed Phase 3A)
 })
 
 
@@ -286,6 +290,14 @@ def cluster_suppliers(
     rare_token_index = build_rare_token_index(df, config, legal_index)
     df = annotate_rare_tokens(df, rare_token_index)
     config._tax_block_stats = _build_tax_block_stats(df)
+    # Audit-only: detect domains that appear across many unrelated suppliers.
+    # This is logged as a hint but does NOT automatically block clustering.
+    # Use --ignore-client-domains / config.ignore_client_domains to suppress specific domains.
+    _broad_domains = compute_broad_contact_domains(df)
+    if _broad_domains:
+        _log(f"      Broad contact domains (audit hint, {len(_broad_domains)}): {sorted(_broad_domains)}")
+    if config.ignore_client_domains:
+        _log(f"      Client domains ignored by user: {sorted(config.ignore_client_domains)}")
     stage_timings["preprocessing_seconds"] = time.perf_counter() - t0
     _log(f"[2/8] Preprocessing complete: {stage_timings['preprocessing_seconds']:.2f}s")
 

@@ -108,7 +108,9 @@ def test_multilingual_transliteration_matches_when_otherwise_supported():
     assert clusters["Ölmühlen GmbH"] == clusters["Oelmuehlen GmbH"]
 
 
-def test_operational_status_names_route_to_review_not_main_cluster():
+def test_operational_status_names_cluster_in_main_output():
+    # Phase 3A: BLOCKED/DO-NOT-USE variants whose name_norm matches a clean counterpart
+    # now appear in the main output at 70–85% rather than being hidden in review_candidates.
     result = _cluster([
         ("BLOCKED - ACME GmbH", "Main Street 1", "Berlin", "DE"),
         ("ACME GmbH", "Main Str. 1", "Berlin", "DE"),
@@ -116,9 +118,21 @@ def test_operational_status_names_route_to_review_not_main_cluster():
         ("Beta Ltd", "High St 5", "London", "GB"),
     ])
     clusters = _cluster_number_by_name(result)
-    assert not clusters["BLOCKED - ACME GmbH"] or clusters["BLOCKED - ACME GmbH"] != clusters["ACME GmbH"]
-    assert not clusters["DO NOT USE Beta Ltd"] or clusters["DO NOT USE Beta Ltd"] != clusters["Beta Ltd"]
-    assert any(c["pass_type"] == "operational_status_review" for c in result.get("review_candidates", []))
+    assert clusters["BLOCKED - ACME GmbH"] and clusters["BLOCKED - ACME GmbH"] == clusters["ACME GmbH"], (
+        "BLOCKED variant must cluster with clean version in main output (Phase 3A)"
+    )
+    assert clusters["DO NOT USE Beta Ltd"] and clusters["DO NOT USE Beta Ltd"] == clusters["Beta Ltd"], (
+        "DO NOT USE variant must cluster with clean version in main output (Phase 3A)"
+    )
+    # Score must be capped by the operational-status guardrail (≤ 86)
+    acme_pct = next(
+        r["Match Percentage"]
+        for r in result["main_df"].to_dicts()
+        if r["Supplier Name"] == "BLOCKED - ACME GmbH"
+    )
+    assert acme_pct in {"70%", "85%"}, (
+        f"Operational status cluster should be 70% or 85%, got {acme_pct!r}"
+    )
 
 
 def test_millipore_broad_identity_is_not_blank_and_below_90():

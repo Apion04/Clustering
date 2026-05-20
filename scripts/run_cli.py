@@ -55,6 +55,11 @@ def main():
     parser.add_argument("--llm-retry-count", type=int, help="OpenAI retry count")
     parser.add_argument("--allow-unresolved-llm-candidates-in-final-output", action="store_true", help="Allow unresolved 70-score candidates to remain in final output")
     parser.add_argument("--override-llm-can-modify-98", action="store_true", help="Allow LLM decisions to modify deterministic 98 clusters")
+    parser.add_argument(
+        "--ignore-client-domains",
+        default="",
+        help="Semicolon-separated list of client/internal domains to exclude from clustering evidence, e.g. merck.com;gilead.com;pfizer.com",
+    )
 
     args = parser.parse_args()
     output_paths = _resolve_output_paths(args)
@@ -104,6 +109,12 @@ def main():
         config.allow_unresolved_llm_candidates_in_final_output = True
     if args.override_llm_can_modify_98:
         config.override_llm_can_modify_98 = True
+    if args.ignore_client_domains:
+        config.ignore_client_domains = frozenset(
+            d.strip().lower()
+            for d in args.ignore_client_domains.split(";")
+            if d.strip()
+        )
 
     # Run clustering
     result = cluster_suppliers(df, mapping, config)

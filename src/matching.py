@@ -28,7 +28,7 @@ from src.config import (
 )
 from src.matching_types import MatchResult
 from src.guardrails import apply_guardrails
-from src.preprocessing import extract_supplier_identity_core
+from src.preprocessing import extract_supplier_identity_core, _extract_domain_sld
 
 # Stopwords and legal stops for acronym generation (not the same as generic root tokens)
 _ACRONYM_STOPWORDS: frozenset = frozenset({
@@ -743,15 +743,29 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
     domain_a, domain_b = row_a.get("domain", ""), row_b.get("domain", "")
     name_sim = calculate_name_similarity(name_a, name_b)
     addr_sim = calculate_address_similarity(addr_a, addr_b)
-    same_domain = bool(domain_a and domain_b and domain_a == domain_b and not row_a.get("is_generic_domain", False) and not row_b.get("is_generic_domain", False))
+    _ignored = config.ignore_client_domains if config is not None else frozenset()
+    _ignored_slds = frozenset(_extract_domain_sld(d) for d in _ignored if d) if _ignored else frozenset()
+    same_domain = bool(
+        domain_a and domain_b and domain_a == domain_b
+        and not row_a.get("is_generic_domain", False)
+        and not row_b.get("is_generic_domain", False)
+        and domain_a not in _ignored
+        and domain_b not in _ignored
+    )
     # same_sld: cross-TLD domain-family evidence (e.g. aprolis.com vs aprolis.es → SLD "aprolis").
     # Only fires when domains differ (same_domain already covers identical domains).
     # Guarded: short or generic SLDs (dm, bts, ag, etc.) do not trigger same_sld.
+    # Also suppressed if the SLD belongs to a user-specified ignored client domain.
     _sld_a = str(row_a.get("domain_sld", "") or "")
     _sld_b = str(row_b.get("domain_sld", "") or "")
     _sld_guarded = (not _sld_a or not _sld_b or _sld_a in _GENERIC_SLD_GUARD or _sld_b in _GENERIC_SLD_GUARD
                     or len(_sld_a) < 3 or len(_sld_b) < 3)
-    same_sld = bool(not same_domain and not _sld_guarded and _sld_a == _sld_b)
+    same_sld = bool(
+        not same_domain and not _sld_guarded
+        and _sld_a == _sld_b
+        and _sld_a not in _ignored_slds
+        and _sld_b not in _ignored_slds
+    )
     same_city_country = bool(city_a and city_b and country_a and country_b and country_a == country_b and fuzz.ratio(city_a, city_b) >= 85)
     tax_match = _tax_overlap(row_a, row_b)
     tax_loose_match = _tax_loose_overlap(row_a, row_b)
