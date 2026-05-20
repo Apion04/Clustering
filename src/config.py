@@ -32,6 +32,7 @@ STATUS_WORDS: Set[str] = {
     "gesperrte", "geschlossen", "closed", "do not use", "do-not-use", "obsolete",
     "legacy", "former", "duplicate", "dup", "test", "testing", "old vendor",
     "xxxxx", "xxxx", "xxx",
+    "inaktiv", "do not pay", "rebate recipient",
 }
 
 OPERATIONAL_PREFIX_TOKENS: Set[str] = {
@@ -90,6 +91,45 @@ KNOWN_BRANDS: Set[str] = {
 STORE_NUMBER_PATTERNS: List[str] = [
     r"\s*#\d+", r"\s*no\s*\d+", r"\s*nr\s*\d+", r"\s*store\s*\d+",
     r"\s*outlet\s*\d+", r"\s*\d{3,5}$",
+]
+
+# Regex patterns for vendor-master operational noise stripped BEFORE supplier identity matching.
+# Applied to the lowercase name after normalize_text() but before all other normalization.
+# Order matters: strip longest/most-specific patterns first.
+OPERATIONAL_NOISE_PATTERNS: List[str] = [
+    # SAP/ERP vendor ID suffixes
+    r"\bsap\s+vendor\s+(?:number|nr|no|#)?\s*\d{4,}\b.*$",
+    r"\bvendor\s+(?:number|nr|no|#)\s*\d{4,}\b.*$",
+    r"\bsap\s*[-:/]?\s*\d{5,}\b.*$",
+    # Payment term and operational coding (strip from payment term onwards)
+    r"\bfor\s+[a-z0-9\s]{2,}\band\s+payment\s+term\s+\d+\b.*$",
+    r"\bpayment\s+term\s+\d+\b.*$",
+    r"\bmc\s+[a-z]{2,8}\d{2,}\b.*$",
+    # Residual "for ... and" trailing fragment after payment term stripping
+    r"\s+for\s+[a-z0-9\s]{2,10}\band\s*$",
+    # WEB EDI / MRO / alternate vendor directives
+    r"\b(?:alternate\s+to\s+)?web\s+edi\s+vendor\b.*$",
+    r"\bweb\s+edi\b.*$",
+    r"\ball\s+mro\b.*$",
+    r"\balternate\s+to\b.*$",
+    # USE VENDOR directive (with or without trailing ID)
+    r"\buse\s+(?:vendor|alternate|supplier)\b.*$",
+    r"\bdo\s+not\s+(?:use|pay|order)\b.*$",
+    # Trailing vendor/supplier references after EDI stripping
+    r"\bvendor\s+\d+\s*$",
+    # Trailing N-WAY operational tags
+    r"\s*[-–]\s*\d+\s*way\b\s*$",
+    r"\s*[-–]\s*(?:three|two|four|five)\s*way\b\s*$",
+    # Leading BLOCKED / GESPERRT / INACTIVE status prefix (before brand)
+    r"^(?:blocked|gesperrt|inaktiv|inactive|gesperrte|geschlossen)\s*[-:/]?\s*",
+    # Leading masked-X block (e.g. XXXXXXXXXXConcat)
+    r"^x{4,}\s*",
+    # Trailing masked-X block
+    r"\s*x{4,}\s*$",
+    # Trailing customer refund / rebate / expense tokens
+    r"\s*[-–]?\s*(?:customer\s+refund|rebate\s+recipient|expense(?:s)?|expenses?)\s*$",
+    # Trailing numeric vendor/reference IDs (5+ digits at end, not part of alphanumeric brand)
+    r"(?<!\w)\s+\d{5,}\s*$",
 ]
 
 
@@ -242,6 +282,16 @@ GENERIC_ROOT_TOKENS: Set[str] = {
     "bank", "banks",   # financial institution word — "bank of X" vs "bank of Y" are different entities
     "plus",            # augmentation suffix — "facility plus" vs "food plus" are unrelated
     "auto",            # automotive prefix — "auto value" vs "auto motion" are unrelated
+    # Common English adjectives/verbs used as brand prefixes — too generic to bridge alone
+    "active", "advance", "advanced", "dynamic", "premier", "prime", "rapid",
+    "smart", "strategic", "innovative",
+    # Country/region words used as corporate prefixes — not identity evidence
+    "polska", "deutschland", "ireland", "italia", "spain", "mexico",
+    "brasil", "brazil", "sverige", "belgie", "belgique", "nederland",
+    "schweiz", "suisse", "svizzera", "osterreich", "norge", "danmark",
+    # Additional generic business words found in client data
+    "digital", "online", "interactive", "creative", "professional", "managed",
+    "integrated", "complete", "total", "central", "direct",
 }
 
 # Single-token roots in this set are too risky to create supplier brand/group
@@ -255,6 +305,9 @@ SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS: Set[str] = {
     "deutsche", "gold", "golden", "india", "liberty", "metro", "national",
     "nippon", "orange", "phoenix", "popular", "shell", "silver", "total",
     "united", "white", "world", "insight", "insights", "springer",
+    "acta", "activa", "adams", "apex", "angle", "nexus", "vector",
+    "vertex", "summit", "zenith", "axon", "nova", "vega", "orion",
+    "telus",
 }
 
 AMBIGUOUS_REVIEW_CORES: Set[str] = {

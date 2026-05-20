@@ -244,7 +244,7 @@ def test_loose_tax_requires_support():
     a = row("ABC GmbH", "Main Str 1", "Berlin", "DE", "DE233002380", legal=True)
     b = row("ABC GmbH", "Main Str 1", "Berlin", "DE", "233002380", legal=True)
     res = evaluate_pair(a, b, {})
-    assert res.is_match and res.pass_type in {"tax_loose_supported", "name_address_exact", "name_exact"}
+    assert res.is_match and res.pass_type in {"tax_loose_supported", "name_address_exact", "name_exact", "exact_duplicate"}
 
 def test_person_common_street_token_different_city_rejected():
     a = row("Robert Boehme", "MARTIN-RIESENBURGER-STR. 38", "BERLIN")

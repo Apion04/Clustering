@@ -272,7 +272,7 @@ def _compact_names_match(row_a: Dict, row_b: Dict) -> bool:
     names_b = _all_match_names(row_b)
     for a in names_a:
         ca = a.replace(" ", "")
-        if len(ca) < 4 or len(ca) > 12:
+        if len(ca) < 4 or len(ca) > 20:
             continue
         for b in names_b:
             if a == b:
@@ -303,11 +303,13 @@ def _distinctive_tokens(row: Dict) -> Set[str]:
             continue
         if token in GENERIC_ROOT_TOKENS or token in LOCATION_ROOT_TOKENS or token in COMMON_FIRST_NAMES:
             continue
+        if token in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS and token not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS:
+            continue
         tokens.add(token)
     root = row.get("root_brand", "")
     if root and root not in GENERIC_ROOT_TOKENS and root not in LOCATION_ROOT_TOKENS and root not in COMMON_FIRST_NAMES:
         for token in str(root).split():
-            if len(token) >= 4:
+            if len(token) >= 4 and not (token in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS and token not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS):
                 tokens.add(token)
     return tokens
 
@@ -682,6 +684,30 @@ def _related_root(row_a: Dict, row_b: Dict) -> bool:
     return bool(_distinctive_tokens(row_a) & _distinctive_tokens(row_b))
 
 
+def _root_is_risky_single(row_a: Dict, row_b: Dict) -> bool:
+    """True when the shared root brand token is in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS."""
+    ra = row_a.get("root_brand", "")
+    rb = row_b.get("root_brand", "")
+    return bool(
+        ra and rb and ra == rb
+        and ra in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS
+        and ra not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS
+    )
+
+
+def _names_are_article_reordered(name_a: str, name_b: str) -> bool:
+    """Return True when two names have identical tokens but different order,
+    and at least one token is a common article (the, a, an, la, le, les, el)."""
+    if not name_a or not name_b or name_a == name_b:
+        return False
+    tokens_a = frozenset(name_a.split())
+    tokens_b = frozenset(name_b.split())
+    if tokens_a != tokens_b:
+        return False
+    articles = frozenset({"the", "a", "an", "la", "le", "les", "el", "los", "las"})
+    return bool(tokens_a & articles)
+
+
 def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: Dict[str, int], config: ClusteringConfig = None) -> MatchResult:
     if config is None:
         config = ClusteringConfig()
@@ -693,6 +719,20 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         if timing is not None:
             timing["guardrails_seconds"] = timing.get("guardrails_seconds", 0.0) + (time.perf_counter() - t0)
         return guarded
+
+    # PASS 0: exact duplicate — same normalized name AND same normalized address.
+    # This is the highest-confidence signal and must dominate all other passes.
+    _name_a0 = str(row_a.get("name_norm", "") or "")
+    _addr_a0 = str(row_a.get("addr_norm", "") or "")
+    _name_b0 = str(row_b.get("name_norm", "") or "")
+    _addr_b0 = str(row_b.get("addr_norm", "") or "")
+    if (_name_a0 and _name_b0 and _name_a0 == _name_b0
+            and _addr_a0 and _addr_b0 and _addr_a0 == _addr_b0):
+        return R(MatchResult(
+            True, 98.0, "exact_duplicate",
+            {"name": _name_a0, "addr": _addr_a0},
+            needs_review=False, review_reason="",
+        ))
 
     name_a, name_b = row_a.get("name_norm", ""), row_b.get("name_norm", "")
     addr_a, addr_b = row_a.get("addr_norm", ""), row_b.get("addr_norm", "")
@@ -718,6 +758,7 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
     supplier_identity = _core_identity_relation(row_a, row_b, name_sim)
     regulatory_relation = _regulatory_task_force_relation(row_a, row_b)
     institutional_ecosystem = _institutional_ecosystem_relation(row_a, row_b)
+    root_is_risky = _root_is_risky_single(row_a, row_b)
 
     # PASS 1: tax exact overlap, including multi-tax/JSON-derived IDs.
     if tax_match:
@@ -817,10 +858,30 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             "addr_sim": round(addr_sim, 3),
         }))
 
+    # PASS 1.5: compact/joined-name variant with address or domain support.
+    # Handles "3 CARP" vs "3CARP", "T.B.D. Pizza" vs "TBD Pizza" (after norm),
+    # "MER JAN" vs "MERJAN", "Rose Design" vs "Rosedesign".
+    if _compact_names_match(row_a, row_b):
+        if same_domain or address_supported:
+            return R(MatchResult(True, 98.0, "compact_name_match_supported",
+                {"name_a": name_a, "name_b": name_b, "same_domain": same_domain, "address_supported": address_supported},
+                needs_review=False, review_reason=""))
+        if same_city_country:
+            return R(MatchResult(True, 85.0, "compact_name_match_city",
+                {"name_a": name_a, "name_b": name_b},
+                needs_review=True, review_reason="Compact/joined name variant in same city; review recommended"))
+
+    # PASS 1.6: article-reordered name variant at same address.
+    # Handles "PIE THE" vs "THE PIE", "AT LIMITS" vs "AT THE LIMITS" (same address).
+    if _names_are_article_reordered(name_a, name_b) and (address_supported or same_domain):
+        return R(MatchResult(True, 98.0, "article_reorder_match",
+            {"name_a": name_a, "name_b": name_b},
+            needs_review=False, review_reason=""))
+
     # PASS 2: exact normalized name and same/similar address, including
     # street-number ranges such as 39 vs 39/49 when city/postal supports it.
     if name_a and name_a == name_b and addr_a and addr_b and address_supported:
-        return R(MatchResult(True, 96.0, "name_address_exact", {"name": name_a, "address_a": addr_a, "address_b": addr_b, "addr_sim": round(addr_sim, 3)}))
+        return R(MatchResult(True, 98.0, "name_address_exact", {"name": name_a, "address_a": addr_a, "address_b": addr_b, "addr_sim": round(addr_sim, 3)}))
 
     # PASS 2B: professional title / person-company variants at the same address.
     if professional_person_address:
@@ -1073,6 +1134,24 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
     # PASS 4: strong fuzzy name match.
     if name_sim >= config.fuzzy_name_threshold_strong:
         if address_supported or addr_sim >= 0.80 or same_city_country or same_domain:
+            # Promote to domain_address_confirmed if both domain and address are present
+            if same_domain and address_supported and name_sim >= 0.80:
+                return R(MatchResult(True, 98.0, "domain_address_confirmed",
+                    {"domain": domain_a, "name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)},
+                    needs_review=False, review_reason=""))
+            # If one name is a single risky token (bare hub) and the only support is city/country,
+            # downgrade to 70 — no address/domain/tax means ambiguous sub-brand or division.
+            _name_a_tokens = str(name_a or "").split()
+            _name_b_tokens = str(name_b or "").split()
+            _bare_risky = (
+                (len(_name_a_tokens) == 1 and _name_a_tokens[0] in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS and _name_a_tokens[0] not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS)
+                or (len(_name_b_tokens) == 1 and _name_b_tokens[0] in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS and _name_b_tokens[0] not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS)
+            )
+            if _bare_risky and not address_supported and not same_domain and not tax_match and not (addr_sim >= 0.80):
+                return R(MatchResult(True, 70.0, "name_fuzzy_review_candidate",
+                    {"name_sim": round(name_sim, 3), "candidate_type": "bare_risky_hub"},
+                    needs_review=True,
+                    review_reason="Bare single-token risky hub with city-only support; LLM review required"))
             return R(MatchResult(True, 91.0, "name_fuzzy_supported", {"name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)}))
         # High name similarity with no location/domain/address support → LLM review candidate.
         # Previously blank; now routes to 70 so plausible name variants reach the review queue.
@@ -1083,6 +1162,15 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
 
     # PASS 5: domain plus related name/secondary/acronym evidence.
     if same_domain:
+        # NEW: same domain + near name + address support → promoted to 98/93
+        if address_supported and name_sim >= 0.80:
+            return R(MatchResult(True, 98.0, "domain_address_confirmed",
+                {"domain": domain_a, "name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)},
+                needs_review=False, review_reason=""))
+        if address_supported and name_sim >= 0.55:
+            return R(MatchResult(True, 93.0, "domain_address_supported",
+                {"domain": domain_a, "name_sim": round(name_sim, 3), "addr_sim": round(addr_sim, 3)},
+                needs_review=True, review_reason="Same domain and address with near name; review recommended"))
         if name_sim >= 0.70 or secondary_name_match(row_a, row_b) or related_root or known_family or _acronym_bridge(row_a, row_b):
             return R(MatchResult(True, 86.0 if name_sim >= 0.80 else 78.0, "domain_name_related", {"domain": domain_a, "name_sim": round(name_sim, 3)}, needs_review=name_sim < 0.80, review_reason="Same domain with lower name similarity"))
         return R(MatchResult(True, 72.0, "domain_review_candidate", {"domain": domain_a, "name_sim": round(name_sim, 3)}, needs_review=True, review_reason="Same business domain with unrelated or weakly related names; manual review"))
@@ -1109,6 +1197,17 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             return R(MatchResult(True, 80.0, "address_secondary_or_acronym", evidence | {"known_related_name_pair": known_related_pair}, needs_review=True, review_reason="Same/similar address + secondary/acronym/known relationship evidence"))
         if same_domain:
             return R(MatchResult(True, 84.0, "address_domain", evidence | {"domain": domain_a}, needs_review=True, review_reason="Same/similar address + domain"))
+        if config.enable_family_bridge and known_brand_family_alias.get("matched"):
+            risky = bool(known_brand_family_alias.get("has_risky"))
+            alias_score = 90.0 if (known_brand_family_alias.get("exact_alias_overlap") or name_sim >= 0.65) else 88.0
+            alias_ev = evidence | {
+                "known_brand_family_overlap": known_brand_family_alias.get("overlap", []),
+                "safe_overlap": known_brand_family_alias.get("safe_overlap", []),
+                "risky_overlap": known_brand_family_alias.get("risky_overlap", []),
+                "name_sim": round(name_sim, 3),
+                "address_supported": True,
+            }
+            return R(MatchResult(True, alias_score, "known_brand_family_alias", alias_ev, needs_review=True, review_reason="Known brand/family alias with address support; manual review"))
         return R(MatchResult(False, 0.0, "address_only", evidence, True, "Address-only match"))
 
     # PASS 7: secondary/acronym bridge with support. Acronym/full-name is too

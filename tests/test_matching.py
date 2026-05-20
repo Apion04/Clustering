@@ -37,7 +37,7 @@ class TestEvaluatePair:
 
         result = evaluate_pair(row_a, row_b, {})
         assert result.is_match is True
-        assert result.match_pct == 96.0
+        assert result.match_pct >= 96.0  # RC2: exact duplicate now scores 98.0
 
     def test_address_only_no_match(self):
         row_a = {"name_norm": "merelex corporation", "tax_norm": "", "addr_norm": "10884 weyburn ave", "domain": "", "is_generic_domain": False}

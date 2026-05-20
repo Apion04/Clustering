@@ -218,8 +218,15 @@ def names_share_only_first_name(row_a: Dict[str, Any], row_b: Dict[str, Any]) ->
     pb = build_person_profile(row_b)
     if not pa.tokens or not pb.tokens:
         return False
+    # Do not fire when names are identical — exact name match handles this case.
+    if pa.tokens == pb.tokens:
+        return False
     shared = set(pa.tokens) & set(pb.tokens)
     if not shared:
+        return False
+    # Only fire when the shared first token is actually a known common first name.
+    # Brand names (e.g. "Allman", "Siemens") should not trigger this guard.
+    if not (shared & COMMON_FIRST_NAMES):
         return False
     return shared == {pa.first} == {pb.first}
 

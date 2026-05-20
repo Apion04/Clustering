@@ -17,6 +17,8 @@ from src.config import (
     HOSPITALITY_TERMS,
     LOCATION_ROOT_TOKENS,
     PROTECTED_COMPOUND_IDENTITY_PHRASES,
+    SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS,
+    SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS,
 )
 from src.matching_types import MatchResult
 from src.person import (
@@ -292,6 +294,18 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
     ):
         return _reject(result, "Protected compound supplier identity requires explicit tax/domain support before merging with parent or sibling core")
 
+    # Exact duplicate (same normalized name + same address) is the highest-confidence
+    # signal and bypasses most guardrails, but not operational status.
+    if pass_type == "exact_duplicate":
+        if row_a.get("has_operational_status_hint") or row_b.get("has_operational_status_hint"):
+            return _review_candidate(
+                result,
+                "operational_status_review",
+                86.0,
+                "Operational blocked/inactive/use-instruction text present; manual review before clustering",
+            )
+        return result
+
     # Tax exact is the strongest signal and must pass even for individuals/hotels.
     # This check MUST come before the operational_status check so that a valid
     # same-tax match is never demoted by an instructional name fragment.
@@ -333,7 +347,7 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
         and bool(_shared_short_code_tokens(row_a, row_b))
     )
     if (
-        pass_type not in {"tax_exact", "tax_loose_supported", "tax_exact_institutional_ecosystem_review", "name_exact", "name_exact_review", "name_address_exact", "support_field_review", "domain_review_candidate", "regulatory_or_task_force_related", "brand_location_variant_match"}
+        pass_type not in {"tax_exact", "tax_loose_supported", "tax_exact_institutional_ecosystem_review", "name_exact", "name_exact_review", "name_address_exact", "support_field_review", "domain_review_candidate", "regulatory_or_task_force_related", "brand_location_variant_match", "compact_name_match_supported", "compact_name_match_city", "article_reorder_match"}
         and _only_shared_tokens_are_non_bridge(row_a, row_b)
         and not same_domain
         and not (both_people and same_full_address and bool(person_identity_strength(row_a, row_b)))
@@ -348,7 +362,7 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
     # Production and 3B Scientific vs unrelated Scientific Center records.
     if _has_numeric_or_short_code_prefix(row_a) or _has_numeric_or_short_code_prefix(row_b):
         allowed_numeric_code_match = (
-            pass_type in {"tax_exact", "tax_loose_supported", "name_exact", "name_address_exact", "support_field_review", "domain_review_candidate", "brand_location_variant_match"}
+            pass_type in {"tax_exact", "tax_loose_supported", "name_exact", "name_address_exact", "support_field_review", "domain_review_candidate", "brand_location_variant_match", "compact_name_match_supported", "compact_name_match_city", "article_reorder_match"}
             or same_domain
             or _full_name_highly_similar(row_a, row_b)
             or exact_alphanumeric_identity_core
@@ -404,6 +418,10 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
         return _reject(result, "Same individual/person name requires same/highly similar full address by default")
 
     if one_person:
+        # Compact/joined name matches are direct name equivalences (e.g. "MER JAN" == "MERJAN")
+        # and should not be blocked by an accidental person-name detection.
+        if pass_type in {"compact_name_match_supported", "compact_name_match_city", "article_reorder_match"}:
+            return replace(result, needs_review=True, review_reason="Compact/joined name variant; verify individual vs company")
         person_row = row_a if profile_a.is_likely else row_b
         company_row = row_b if profile_a.is_likely else row_a
         if tax_match or same_domain:
@@ -456,6 +474,19 @@ def apply_guardrails(row_a: Dict[str, Any], row_b: Dict[str, Any], result: Match
         distinctive_shared = _distinctive_shared_tokens(row_a, row_b)
         if weak_shared and not distinctive_shared and not tax_match and not same_domain and addr_sim < 0.95:
             return _reject(result, "City/location or generic industry tokens cannot drive family clustering")
+
+    # A risky single-token root (ambiguous brand hub such as "telus", "shell",
+    # "metro") with only city/country support must be downgraded to 70 so it
+    # enters the LLM review queue rather than auto-clustering at 76.
+    if pass_type == "family_bridge_supported" and not tax_match and not same_domain and addr_sim < 0.88:
+        ra = row_a.get("root_brand", "")
+        rb = row_b.get("root_brand", "")
+        if (ra and rb and ra == rb
+                and ra in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS
+                and ra not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS):
+            return replace(result, match_pct=min(result.match_pct, 70.0),
+                           needs_review=True,
+                           review_reason="Risky single-token root with only city/country support; LLM review required")
 
     # Address-only is already non-match in matcher, but keep this as safety.
     if pass_type == "address_only":

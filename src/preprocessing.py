@@ -11,6 +11,7 @@ from src.config import (
     DEFAULT_JSON_TAX_KEYS, DEFAULT_JSON_SECONDARY_NAME_KEYS, LOCATION_ROOT_TOKENS, COMMON_FIRST_NAMES,
     DEFAULT_SUPPORT_FIELD_STRENGTHS, SUPPORT_FIELD_STRENGTHS, REGULATORY_REVIEW_TOKENS,
     OPERATIONAL_PREFIX_TOKENS, SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS, SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS,
+    OPERATIONAL_NOISE_PATTERNS,
 )
 from src.legal_keywords import (
     LegalKeywordDictionary,
@@ -171,6 +172,21 @@ def has_operational_status_hint(name: Optional[Any]) -> bool:
     return False
 
 
+def remove_operational_noise(name: str) -> str:
+    """Strip ERP/AP vendor-master operational tokens before supplier identity matching.
+
+    Applied AFTER normalize_text() (so input is lowercase) but BEFORE legal suffix
+    stripping. Guard: if stripping would leave fewer than 3 non-whitespace characters,
+    do not strip (protects very short names).
+    """
+    for pattern in OPERATIONAL_NOISE_PATTERNS:
+        candidate = re.sub(pattern, "", name, flags=re.IGNORECASE).strip()
+        candidate = re.sub(r"\s+", " ", candidate).strip()
+        if len(candidate.replace(" ", "")) >= 3:
+            name = candidate
+    return re.sub(r"\s+", " ", name).strip()
+
+
 def remove_legal_suffixes(name: str, legal_keywords: Optional[LegalKeywordDictionary] = None) -> str:
     stripped, _removed = strip_legal_suffixes(name, legal_keywords or get_default_legal_keywords())
     return stripped
@@ -190,13 +206,50 @@ def normalize_supplier_name(name: Optional[Any], legal_keywords: Optional[LegalK
     name = re.sub(r"[\"`‘’“”]", " ", name)
     name = remove_status_words(name)
     name = remove_operational_prefixes(name)
+    name = remove_operational_noise(name)
     name = name.replace(" and ", " ")
+    # Collapse punctuated acronyms BEFORE the general dot→space replacement.
+    # "T.B.D." → "tbd", "J.S.J.V." → "jsjv", "C.E.G.O.S" → "cegos"
+    def _collapse_dotted_acronym(token: str) -> str:
+        # Match patterns like "t.b.d." or "j.s.j.v." (all single-letters + dots)
+        if re.match(r'^[a-z](?:\.[a-z])+\.?$', token):
+            return token.replace(".", "")
+        return token
+    name = " ".join(_collapse_dotted_acronym(t) for t in name.split())
+    # Collapse spaced single-letter initials: "J S J V" → "jsjv", "R H L" → "rhl"
+    # Only collapse when there are 3+ consecutive single letters separated by spaces
+    # (2-letter cases like "A B" could be valid abbreviations or "A & B" collateral).
+    name = re.sub(r'(?<![a-z0-9])([a-z] ){2,}[a-z](?![a-z0-9])', lambda m: m.group(0).replace(' ', ''), name)
     name = name.replace(".", " ").replace("-", " ")
+    # Compound word normalization
+    _COMPOUND_WORDS = {
+        "health care": "healthcare",
+        "ing buero": "ingenieurburo",
+        "ing buro": "ingenieurburo",
+        "ingenieurbüro": "ingenieurburo",
+    }
+    for phrase, replacement in _COMPOUND_WORDS.items():
+        name = re.sub(r'\b' + re.escape(phrase) + r'\b', replacement, name)
     name = remove_store_numbers(name)
     before_legal = name
     name = remove_legal_suffixes(name, legal_index)
     if _legal_stripping_left_too_generic(name):
         name = before_legal
+    # PT (Indonesian/Portuguese) prefix stripping when name has 2+ remaining tokens
+    _pt_stripped = re.sub(r'^pt\s+', '', name).strip()
+    if len(_pt_stripped.split()) >= 2:
+        name = _pt_stripped
+    # PT as suffix (e.g. "Krisbow PT")
+    _pt_sfx = re.sub(r'\s+pt\s*$', '', name).strip()
+    if _pt_sfx and _pt_sfx != name:
+        name = _pt_sfx
+    # OOO (Russian LLC) prefix stripping when name has 1+ remaining token
+    _ooo_stripped = re.sub(r'^ooo\s+', '', name).strip()
+    if len(_ooo_stripped.split()) >= 1 and _ooo_stripped:
+        name = _ooo_stripped
+    # Normalize GmbH & Co KG compound form (already stripped by legal suffix stripping
+    # when the CSV is loaded, but normalize the residual form after dot/hyphen replacement)
+    name = re.sub(r'\bgmbh\s+(?:und\s+)?co\.?\s+kg\b', 'gmbh', name, flags=re.IGNORECASE)
     # normalize frequent German name families observed in test files
     name = re.sub(r"\bmuller\b", "mueller", name)
     name = re.sub(r"\bkuhne\b", "kuehne", name)
