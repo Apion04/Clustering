@@ -1,6 +1,7 @@
 """Configuration and normalization constants for supplier clustering."""
 
 import os
+import re
 import json
 from dataclasses import dataclass, field
 from typing import Any, Set, List, Dict, FrozenSet
@@ -333,6 +334,28 @@ KNOWN_RELATED_NAME_PAIRS: List[FrozenSet[str]] = [
     # only used with address/domain/tax support; it does not create broad blocks.
     frozenset({"service express", "top gun technology"}),
 ]
+
+def _load_risky_banner_brand_tokens() -> FrozenSet[str]:
+    """Load risky banner/franchise/dealer brand tokens from the data CSV."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "risky_banner_brand_tokens.csv")
+    if not os.path.exists(path):
+        return frozenset()
+    tokens: Set[str] = set()
+    with open(path, encoding="utf-8") as fh:
+        for i, line in enumerate(fh):
+            if i == 0:
+                continue  # skip header
+            parts = line.strip().split(",", 2)
+            if not parts or not parts[0].strip():
+                continue
+            token = parts[0].strip().lower()
+            # Split on whitespace and hyphens to handle multi-word entries
+            for sub in re.split(r"[\s\-]+", token):
+                if len(sub) >= 3:
+                    tokens.add(sub)
+    return frozenset(tokens)
+
+RISKY_BANNER_BRAND_TOKENS: FrozenSet[str] = _load_risky_banner_brand_tokens()
 
 # Column name patterns for worldwide tax/legal registration identifiers.
 # We do not validate every country's checksum in this engine. Instead, we normalize and use these IDs as matching signals.

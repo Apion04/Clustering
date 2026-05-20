@@ -19,6 +19,7 @@ from src.config import (
     AMBIGUOUS_REVIEW_CORES,
     PROTECTED_COMPOUND_IDENTITY_PHRASES,
     REGULATORY_REVIEW_TOKENS,
+    RISKY_BANNER_BRAND_TOKENS,
     SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS,
     SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS,
     TRUSTED_SUPPLIER_IDENTITY_CORES,
@@ -539,6 +540,7 @@ def _core_identity_relation(row_a: Dict[str, Any], row_b: Dict[str, Any], name_s
     exact_core = core_a == core_b
     core_sim = calculate_name_similarity(core_a, core_b)
     shared_core_tokens = sorted(set(tokens_a) & set(tokens_b))
+    is_banner_only_core = bool(shared_core_tokens) and all(t in RISKY_BANNER_BRAND_TOKENS for t in shared_core_tokens)
     shared_trusted_core_tokens = sorted(set(tokens_a) & set(tokens_b) & TRUSTED_SUPPLIER_IDENTITY_CORES)
     shared_long_safe = [
         t for t in shared_core_tokens
@@ -595,6 +597,7 @@ def _core_identity_relation(row_a: Dict[str, Any], row_b: Dict[str, Any], name_s
         "prefix_related": prefix_related,
         "exact_full_name": exact_full_name,
         "bare_core_row": bare_core_row,
+        "is_banner_only_core": is_banner_only_core,
     }
 
 
@@ -854,6 +857,25 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         _loc_generic2 = GENERIC_ROOT_TOKENS | LOCATION_ROOT_TOKENS | COMMON_FIRST_NAMES
         _nlc_dist_early = [t for t in _nlc_a_early.split() if len(t) >= 3 and t not in _loc_generic2]
         if _nlc_dist_early:
+            _banner_only_early = all(t in RISKY_BANNER_BRAND_TOKENS for t in _nlc_dist_early)
+            if _banner_only_early and not (same_domain or address_supported):
+                return R(MatchResult(
+                    True, 70.0,
+                    "brand_location_variant_match",
+                    {
+                        "brand_location_core": _nlc_a_early,
+                        "banner_brand_only": True,
+                        "banner_tokens": _nlc_dist_early,
+                        "location_modifier_a": " ".join(t for t in name_a.split() if t not in set(_nlc_a_early.split())),
+                        "location_modifier_b": " ".join(t for t in name_b.split() if t not in set(_nlc_b_early.split())),
+                        "name_sim": round(name_sim, 3),
+                        "same_domain": same_domain,
+                        "address_supported": address_supported,
+                        "score_reason": "Banner/franchise/dealer brand only — no operator/owner/address support",
+                    },
+                    needs_review=True,
+                    review_reason="Banner/franchise/dealer brand only — LLM review required",
+                ))
             _score_early = 98.0 if (same_domain or address_supported) else 85.0
             return R(MatchResult(
                 True, _score_early,
@@ -880,6 +902,9 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         trusted_core = bool(supplier_identity.get("is_trusted_supplier_core"))
         broad_global_core = bool(supplier_identity.get("is_broad_global_supplier_core"))
         ambiguous_review_core = bool(supplier_identity.get("is_ambiguous_review_core"))
+        is_banner_only_core = bool(supplier_identity.get("is_banner_only_core"))
+        if is_banner_only_core and not (same_domain or address_supported or tax_match):
+            ambiguous_review_core = True
         score = 86.0
         needs_review = False
         reason = "Distinctive supplier brand/group identity"
@@ -1007,6 +1032,25 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         _loc_generic = GENERIC_ROOT_TOKENS | LOCATION_ROOT_TOKENS | COMMON_FIRST_NAMES
         _nlc_distinctive = [t for t in nlc_a.split() if len(t) >= 3 and t not in _loc_generic]
         if _nlc_distinctive:
+            _banner_only_3b = all(t in RISKY_BANNER_BRAND_TOKENS for t in _nlc_distinctive)
+            if _banner_only_3b and not (same_domain or address_supported):
+                return R(MatchResult(
+                    True, 70.0,
+                    "brand_location_variant_match",
+                    {
+                        "brand_location_core": nlc_a,
+                        "banner_brand_only": True,
+                        "banner_tokens": _nlc_distinctive,
+                        "location_modifier_a": " ".join(t for t in name_a.split() if t not in set(nlc_a.split())),
+                        "location_modifier_b": " ".join(t for t in name_b.split() if t not in set(nlc_b.split())),
+                        "name_sim": round(name_sim, 3),
+                        "same_domain": same_domain,
+                        "address_supported": address_supported,
+                        "score_reason": "Banner/franchise/dealer brand only — no operator/owner/address support",
+                    },
+                    needs_review=True,
+                    review_reason="Banner/franchise/dealer brand only — LLM review required",
+                ))
             score = 85.0
             needs_review = False
             if same_domain or address_supported:

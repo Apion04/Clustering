@@ -86,6 +86,7 @@ def sort_by_clusters(df: pl.DataFrame, cluster_map: Dict[int, int], match_pcts: 
         "name_token_sort", "name_phonetic", "root_brand", "supplier_identity_core", "has_legal_suffix", "has_company_keyword", "is_hospitality",
         "person_name_norm", "is_likely_individual", "legal_suffixes_found",
         "known_brand_family_ids", "known_brand_family_safe_ids", "known_brand_family_risky_ids", "known_brand_alias_hits",
+        "franchise_store_number",
         "idf_discriminative_tokens",
         "support_fields_json", "support_same_entity_id_values", "support_same_entity_name_values",
         "support_family_values", "support_domain_values", "support_review_values", "orig_support_fields",

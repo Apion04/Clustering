@@ -935,6 +935,27 @@ def preprocess_dataframe(
         )
         .alias("name_location_core")
     )
+    # Franchise store number: extract numeric store ID when a risky banner brand is in name_norm.
+    # Used for matching: same banner + same store number + same address → 98%; different store numbers → not 85%.
+    from src.config import RISKY_BANNER_BRAND_TOKENS as _RISKY_BANNER
+    import re as _re
+    def _extract_franchise_store_number(name_norm: str) -> str:
+        if not name_norm:
+            return ""
+        tokens = name_norm.split()
+        has_banner = any(t in _RISKY_BANNER for t in tokens)
+        if not has_banner:
+            return ""
+        # Match patterns: #123, No 123, Nr 123, Store 123, or standalone 3-5 digit number
+        m = _re.search(r'#(\d+)|(?:no|nr|store|outlet)\s*(\d+)|(?<!\w)(\d{3,5})(?!\w)', name_norm, _re.IGNORECASE)
+        if m:
+            return next(g for g in m.groups() if g is not None)
+        return ""
+    df = df.with_columns(
+        pl.col("name_norm")
+        .map_elements(_extract_franchise_store_number, return_dtype=pl.Utf8)
+        .alias("franchise_store_number")
+    )
     return df
 
 
