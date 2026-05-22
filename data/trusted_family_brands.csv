@@ -1,0 +1,394 @@
+canonical_brand,aliases,domains,score_hint,risk_level,category,notes
+microsoft,msft|ms|azure|office 365|o365|linkedin|github|visual studio|bing|xbox|skype,microsoft.com|azure.com|office.com|linkedin.com|github.com|xbox.com|bing.com,85,medium,tech,Large family with many sub-brands; needs corroborating evidence beyond name alone
+google,alphabet|youtube|gmail|android|waymo|deepmind|google cloud|gcp,google.com|alphabet.com|youtube.com|googl.com|gcp.google.com|waymo.com|deepmind.com,85,medium,tech,Parent/child brand complexity; android and gmail are common words
+amazon,aws|amazon web services|whole foods|twitch|imdb|ring|alexa|zappos,amazon.com|aws.amazon.com|amazonaws.com|wholefoodsmarket.com|twitch.tv|imdb.com,85,medium,tech,Very large family; many unrelated divisions; risk of false match
+apple,aapl,apple.com|apple.co,70,high,tech,Common English word; high false-positive risk
+meta,facebook|instagram|whatsapp|oculus|meta platforms,meta.com|facebook.com|instagram.com|whatsapp.com|oculus.com,85,medium,tech,Rebranded 2021; facebook still widely used
+ibm,international business machines|big blue|ibm cloud|red hat|kyndryl,ibm.com|redhat.com,85,medium,tech,Kyndryl spun off 2021; complex portfolio
+oracle,orcl|oracle cloud|netsuite|java,oracle.com|netsuite.com|java.com,85,medium,tech,Large acquisition history; medium complexity
+sap,sap se|s/4hana|successfactors|ariba|concur,sap.com|successfactors.com|ariba.com|concur.com,85,medium,tech,Complex product family; distinctive brand name
+salesforce,sfdc|crm|slack|tableau|mulesoft,salesforce.com|slack.com|tableau.com|mulesoft.com,85,low,tech,Distinctive brand; known acquisition trail
+servicenow,snow|service now,servicenow.com,85,low,tech,Distinctive SaaS brand; limited ambiguity
+adobe,adobe systems|adobecc|photoshop|marketo|figma|acrobat,adobe.com|marketo.com|figma.com,85,low,tech,Distinctive brand; creative software leader
+cisco,cisco systems|webex|meraki|appd,cisco.com|webex.com|meraki.com,85,medium,tech,Large portfolio; Webex/Meraki are common-word sub-brands
+intel,intel corporation|mobileye,intel.com|mobileye.com,85,medium,tech,Distinctive but mobileye is a subsidiary; hardware ecosystem
+amd,advanced micro devices|radeon|ryzen,amd.com,85,medium,tech,Common tech acronym; GPU/CPU brand
+nvidia,nvda|cuda|geforce,nvidia.com,85,low,tech,Distinctive brand; dominant in AI/GPU space
+broadcom,brcm|ca technologies|symantec,broadcom.com|ca.com,85,medium,tech,Complex M&A history; CA and Symantec absorbed
+qualcomm,qcom|snapdragon,qualcomm.com,85,low,tech,Distinctive brand; mobile chip leader
+dell,dell technologies|emc|vmware|alienware|secureworks,dell.com|emc.com|vmware.com|alienware.com|secureworks.com,85,medium,tech,Large portfolio; VMware partially spun out
+hp,hewlett packard|hp inc|hpq,hp.com,70,high,tech,Very short name; ambiguous with many uses
+hpe,hewlett packard enterprise|hpe aruba,hpe.com|arubanetworks.com,85,medium,tech,Split from HP 2015; enterprise IT focus
+lenovo,lenovo group,lenovo.com,85,low,tech,Distinctive brand; global PC/device leader
+vmware,vmw|broadcom vmware,vmware.com,85,medium,tech,Now part of Broadcom; still used as brand
+workday,wday,workday.com,85,low,tech,Distinctive HCM/ERP brand
+intuit,quickbooks|turbotax|mint|mailchimp,intuit.com|quickbooks.com|turbotax.com|mailchimp.com,85,low,tech,Distinctive brand; strong product family
+atlassian,jira|confluence|trello|bitbucket,atlassian.com|jira.com|trello.com|bitbucket.org,85,low,tech,Distinctive brand; well-known dev tools
+shopify,shop pay,shopify.com,85,low,tech,Distinctive ecommerce brand
+zoom,zoom video|zoom communications,zoom.us,85,low,tech,Distinctive brand in context of video conferencing
+slack,salesforce slack,slack.com,85,low,tech,Subsidiary of Salesforce; distinctive
+dropbox,dbx,dropbox.com,85,low,tech,Distinctive cloud storage brand
+snowflake,snow,snowflake.com,85,low,tech,Distinctive data cloud brand
+databricks,dbrx,databricks.com,85,low,tech,Distinctive data/AI platform brand
+palantir,pltr|gotham|foundry,palantir.com,85,low,tech,Distinctive brand; government/enterprise data
+crowdstrike,crwd|falcon,crowdstrike.com,85,low,tech,Distinctive cybersecurity brand
+okta,auth0,okta.com|auth0.com,85,low,tech,Distinctive identity platform
+cloudflare,cloudflare workers,cloudflare.com,85,low,tech,Distinctive CDN/security brand
+twilio,twlo,twilio.com,85,low,tech,Distinctive comms API brand
+hubspot,hubs,hubspot.com,85,low,tech,Distinctive CRM/marketing brand
+stripe,stripe payments,stripe.com,85,low,tech,Distinctive payments brand
+paypal,venmo|braintree|xoom,paypal.com|venmo.com|braintree.com,85,medium,tech,Large payments family; Venmo/Braintree sub-brands
+ebay,ebay inc,ebay.com,85,low,tech,Distinctive marketplace brand
+tiktok,bytedance|douyin,tiktok.com|bytedance.com,85,medium,tech,TikTok is ByteDance subsidiary; Chinese parent adds complexity
+bytedance,tiktok|douyin,bytedance.com|tiktok.com,85,medium,tech,Chinese parent of TikTok; medium complexity
+tencent,qq|wechat|weixin,tencent.com|qq.com|wechat.com,85,medium,tech,Large Chinese conglomerate; WeChat is dominant product
+alibaba,aliyun|taobao|tmall|aliexpress|ant group,alibaba.com|alibabacloud.com|taobao.com|tmall.com|aliexpress.com,85,medium,tech,Large Chinese conglomerate; many sub-brands
+baidu,baidu inc,baidu.com,85,medium,tech,Chinese tech giant; limited global alias complexity
+xiaomi,mi|redmi,xiaomi.com|mi.com,85,medium,tech,Chinese device brand; Mi is common sub-brand
+huawei,huawei technologies|honor,huawei.com|honor.com,85,medium,tech,Geopolitical risk; Honor is spun-off sub-brand
+samsung,samsung electronics|samsung sds,samsung.com,85,medium,tech,Large Korean conglomerate; many divisions
+sony,sony corporation|playstation|sony pictures|sony music,sony.com|playstation.com,85,medium,tech,Large conglomerate; entertainment plus electronics
+panasonic,panasonic holdings,panasonic.com,85,low,tech,Distinctive Japanese electronics brand
+canon,canon inc,canon.com,85,low,tech,Distinctive imaging brand
+hitachi,hitachi ltd,hitachi.com,85,medium,tech,Large Japanese conglomerate; many divisions
+toshiba,toshiba corporation,toshiba.com,85,medium,tech,Large Japanese conglomerate; restructuring
+nec,nippon electric company,nec.com,85,medium,tech,Short acronym; Japanese IT/telecom
+fujitsu,fujitsu limited,fujitsu.com,85,low,tech,Distinctive Japanese IT brand
+block,square|cash app|spiral,block.xyz|squareup.com|cash.app,85,medium,tech,Rebranded from Square 2021; Square still widely used
+pfizer,pfe,pfizer.com,85,low,pharma,Distinctive global pharma brand
+merck,msd|merck & co|merck sharp & dohme,merck.com,85,medium,pharma,US Merck (Merck & Co); separate from Merck KGaA Germany; MSD used outside US
+merck kgaa,emd|merck group|emd serono|sigma aldrich|merck millipore|emd millipore,merckgroup.com|emdgroup.com|sigmaaldrich.com|emdserono.com|emdmillipore.com,85,medium,pharma,German Merck; distinct legal entity from US Merck; large specialty chemicals/pharma portfolio
+johnson & johnson,j&j|jnj|janssen|kenvue|neutrogena|tylenol,jnj.com|janssen.com|kenvue.com,85,low,pharma,Distinctive brand; Janssen is pharma subsidiary; Kenvue spun off consumer division
+novartis,nvs|sandoz,novartis.com|sandoz.com,85,low,pharma,Distinctive Swiss pharma; Sandoz generics subsidiary
+roche,roche holding|genentech|chugai,roche.com|genentech.com|chugai-pharm.co.jp,85,low,pharma,Distinctive Swiss pharma; Genentech is fully owned US subsidiary
+sanofi,sny|genzyme|aventis,sanofi.com|genzyme.com,85,low,pharma,Distinctive French pharma; Genzyme absorbed
+gsk,glaxosmithkline|haleon,gsk.com|haleon.com,85,low,pharma,Rebranded from GlaxoSmithKline; Haleon spun off consumer division
+astrazeneca,azn|az,astrazeneca.com,85,low,pharma,Distinctive brand; az is 2-char but brand is globally known
+bayer,bayer ag|bayer cropscience,bayer.com,85,medium,pharma,Distinctive but acquired Monsanto; complex portfolio
+boehringer ingelheim,bi|boehringer,boehringer-ingelheim.com,85,low,pharma,Distinctive private pharma; low ambiguity
+eli lilly,lly|lilly,lilly.com,85,low,pharma,Distinctive pharma; Lilly is common shorthand
+abbvie,abbv|imbruvica|humira,abbvie.com,85,low,pharma,Distinctive brand; spun from Abbott 2013
+amgen,amgn,amgen.com,85,low,pharma,Distinctive biotech brand
+bristol myers squibb,bms|bmy|mead johnson,bms.com|bristolmyerssquibb.com,85,low,pharma,Distinctive brand; BMS widely used
+gilead,gild|gilead sciences,gilead.com,85,low,pharma,Distinctive biotech brand
+biogen,biib,biogen.com,85,low,pharma,Distinctive biotech brand
+moderna,mrna,moderna.com,85,low,pharma,Distinctive mRNA pharma brand
+regeneron,regn,regeneron.com,85,low,pharma,Distinctive biotech brand
+vertex,vrtx|vertex pharmaceuticals,vrtx.com|vertexpharmaceuticals.com,85,low,pharma,Distinctive pharma; low ambiguity
+takeda,tak|takeda pharmaceutical,takeda.com,85,low,pharma,Distinctive Japanese pharma
+novo nordisk,nvo,novonordisk.com,85,low,pharma,Distinctive Danish pharma; insulin/diabetes leader
+baxter,bax|baxter international,baxter.com,85,low,pharma,Distinctive med device/pharma brand
+becton dickinson,bd|bdx|carefusion,bd.com|carefusion.com,85,low,pharma,BD is widely recognized; distinctive despite short form
+medtronic,mdt,medtronic.com,85,low,pharma,Distinctive medical device brand
+siemens healthineers,siemens health|varian,siemens-healthineers.com|varian.com,85,low,pharma,Subsidiary of Siemens; distinctive sub-brand
+ge healthcare,gehc|ge health,gehealthcare.com,85,medium,pharma,Spun from GE 2023; GE prefix adds complexity
+philips healthcare,philips health|royal philips,philips.com,85,medium,pharma,Part of Philips; healthcare division
+thermo fisher,tmo|thermofisher|fisher scientific|applied biosystems|invitrogen|life technologies,thermofisher.com|fishersci.com,85,low,pharma,Distinctive lab/biotech brand; large instrument/reagent family
+qiagen,qgen,qiagen.com,85,low,pharma,Distinctive molecular diagnostics brand
+illumina,ilmn,illumina.com,85,low,pharma,Distinctive genomics brand
+agilent,agilent technologies,agilent.com,85,low,pharma,Distinctive lab instrument brand; spun from HP
+waters,wat|waters corporation,waters.com,85,low,pharma,Common English word but distinctive in lab context
+bio-rad,biorad|bio rad laboratories,bio-rad.com,85,low,pharma,Distinctive life science brand
+beckman coulter,beckman|danaher beckman,beckmancoulter.com,85,low,pharma,Subsidiary of Danaher; distinctive lab brand
+danaher,dhr,danaher.com,85,low,pharma,Distinctive industrial/science conglomerate
+cytiva,ge cytiva|ge life sciences,cytiva.com,85,low,pharma,Spun from GE Healthcare; distinctive biotech brand
+sartorius,sar|sartorius stedim,sartorius.com|sartoriusstedimbiotech.com,85,low,pharma,Distinctive German bioprocess brand
+merck millipore,millipore|emd millipore,merckmillipore.com|emdmillipore.com,85,medium,pharma,Sub-brand of Merck KGaA; keep mapped to merck kgaa
+mckesson,mck,mckesson.com,85,low,pharma,Distinctive pharma distribution brand
+cardinal health,cah,cardinalhealth.com,85,low,pharma,Distinctive pharma distribution brand
+amerisourcebergen,abc|cencora,amerisourcebergen.com|cencora.com,85,low,pharma,Renamed to Cencora 2023; distinctive
+cvs health,cvs|cvs pharmacy|aetna,cvshealth.com|cvs.com|aetna.com,85,medium,pharma,Large health conglomerate; Aetna absorbed
+walgreens,wba|walgreens boots alliance|boots,walgreens.com|boots.com,85,medium,retail,US pharmacy; Boots is UK sub-brand
+unitedhealth,unh|optum,unitedhealthgroup.com|optum.com,85,medium,pharma,Large health insurer+PBM; Optum sub-brand
+cigna,ci|evernorth,cigna.com|evernorth.com,85,medium,pharma,Health insurer; Evernorth services subsidiary
+elevance health,antm|anthem,elevancehealth.com|anthem.com,85,medium,pharma,Rebranded from Anthem 2022; health insurer
+quest diagnostics,dgx,questdiagnostics.com,85,low,pharma,Distinctive lab diagnostics brand
+labcorp,lh|laboratory corporation,labcorp.com,85,low,pharma,Distinctive lab diagnostics brand
+basf,basf se,basf.com,85,low,chemical,Distinctive German chemical brand; globally recognized
+dow,dow inc|dow chemical|dow dupont,dow.com,85,medium,chemical,Merged with DuPont then split; complex history
+dupont,dd|dupont de nemours|corteva|spinco,dupont.com|corteva.com,85,low,chemical,Distinctive brand; Corteva agri spin-off 2019
+3m,mmm|minnesota mining|scotch|post-it,3m.com,85,medium,industrial,Alphanumeric brand; many consumer sub-brands
+honeywell,hon|uop|resideo,honeywell.com|uop.com|resideo.com,85,medium,industrial,Large industrial conglomerate; multiple spins
+siemens,siemens ag|siemens energy|siemens mobility,siemens.com|siemens-energy.com,85,medium,industrial,German conglomerate; many divisions
+schneider electric,se|aveva|aepc,schneider-electric.com|aveva.com,85,medium,industrial,French energy/automation; AVEVA acquired
+abb,abb ltd|asea brown boveri,abb.com,85,medium,industrial,3-char acronym; Swiss industrial giant
+eaton,etn|eaton corporation,eaton.com,85,low,industrial,Distinctive power management brand
+emerson,emr|emerson electric,emerson.com,85,medium,industrial,Common English name; industrial automation brand
+rockwell automation,rok|allen bradley,rockwellautomation.com|ab.com,85,low,industrial,Distinctive automation brand; Allen Bradley sub-brand
+grainger,gww|w.w. grainger,grainger.com,85,low,industrial,Distinctive MRO distribution brand
+air liquide,airliquide.com,airliquide.com,85,low,industrial,Distinctive French industrial gas brand
+air products,apd|air products and chemicals,airproducts.com,85,low,industrial,Distinctive industrial gas brand
+linde,linde plc|boc,linde.com|boc.com,85,low,industrial,Distinctive industrial gas brand; BOC is UK subsidiary
+solvay,solb|solvay sa,solvay.com,85,low,chemical,Distinctive Belgian chemical brand
+evonik,evonik industries,evonik.com,85,low,chemical,Distinctive German specialty chemical brand
+covestro,covestro corporation,covestro.com,85,low,chemical,Distinctive; spun from Bayer 2015
+akzo nobel,akzo|dulux,akzonobel.com|dulux.com,85,low,chemical,Distinctive Dutch paint/coating brand; Dulux sub-brand
+ppg,ppg industries,ppg.com,85,low,chemical,Distinctive coatings brand
+sherwin williams,shw|valspar,sherwin-williams.com|valspar.com,85,low,chemical,Distinctive paint brand; Valspar acquired
+eastman,emn|eastman chemical,eastman.com,85,low,chemical,Distinctive chemical brand
+celanese,ce|celanese corporation,celanese.com,85,low,chemical,Distinctive specialty chemical brand
+huntsman,hun|huntsman corporation,huntsman.com,85,low,chemical,Distinctive chemical brand
+clariant,clari,clariant.com,85,low,chemical,Distinctive Swiss chemical brand
+arkema,arkema sa,arkema.com,85,low,chemical,Distinctive French chemical brand
+ineos,ineos group,ineos.com,85,low,chemical,Distinctive private chemical company
+sabic,sabic sa|saudi basic industries,sabic.com,85,low,chemical,Distinctive Saudi petrochemical brand
+mitsubishi chemical,mcc|mgc,m-chemical.com,85,medium,chemical,Japanese conglomerate sub-brand; medium complexity
+lg chem,lgc,lgchem.com,85,medium,chemical,Korean conglomerate sub-brand
+posco,posco holdings|pohang,posco.com,85,low,industrial,Distinctive Korean steel brand
+arcelormittal,mt|arcelor,arcelormittal.com,85,low,industrial,Distinctive global steel brand
+thyssenkrupp,tkh|thyssen krupp,thyssenkrupp.com,85,low,industrial,Distinctive German industrial brand
+caterpillar,cat|cat financial,caterpillar.com|cat.com,85,low,industrial,Distinctive heavy equipment brand; CAT widely recognized
+john deere,de|deere & company,deere.com|johndeere.com,85,low,industrial,Distinctive agricultural equipment brand
+komatsu,kmt|komatsu ltd,komatsu.com,85,low,industrial,Distinctive Japanese construction equipment brand
+cummins,cmi|cummins inc,cummins.com,85,low,industrial,Distinctive engine/power brand
+rolls royce,rr|rolls-royce holdings,rolls-royce.com,85,medium,industrial,Ambiguous: both aerospace and luxury auto (separate companies)
+boeing,ba|boeing company,boeing.com,85,low,industrial,Distinctive aerospace brand
+airbus,airbus se,airbus.com,85,low,industrial,Distinctive European aerospace brand
+lockheed martin,lmt|lm,lockheedmartin.com,85,low,industrial,Distinctive defense brand
+northrop grumman,noc|northrop,northropgrumman.com,85,low,industrial,Distinctive defense brand
+raytheon,rtx|raytheon technologies|collins aerospace|pratt & whitney,rtx.com|raytheon.com|collinsaerospace.com,85,low,industrial,RTX is post-merger ticker; Raytheon Technologies rebranded
+bae systems,bae,baesystems.com,85,low,industrial,Distinctive UK defense brand
+thales,thales group,thalesgroup.com,85,low,industrial,Distinctive French defense/electronics brand
+safran,saf|safran sa,safran.com,85,low,industrial,Distinctive French aerospace/defense brand
+jpmorgan chase,jpm|chase|j.p. morgan|jpmc,jpmorganchase.com|chase.com|jpmorgan.com,85,medium,financial,Large bank; Chase is retail brand; JP Morgan is investment brand
+bank of america,bac|bofa|merrill lynch|merrill,bankofamerica.com|ml.com|merrilledge.com,85,medium,financial,Large bank; Merrill Lynch absorbed 2009
+citigroup,citi|citibank|citicorp,citigroup.com|citi.com|citibank.com,85,medium,financial,Large global bank; Citi shorthand widely used
+wells fargo,wfc|wachovia,wellsfargo.com,85,medium,financial,Large US bank; Wachovia absorbed 2008
+goldman sachs,gs|goldman|marcus,goldmansachs.com|marcus.com,85,medium,financial,Distinctive investment bank; Marcus is consumer brand
+morgan stanley,morganstanley.com,morganstanley.com,85,medium,financial,Distinctive investment bank
+blackrock,blk|ishares|aladdin,blackrock.com|ishares.com,85,medium,financial,Distinctive asset manager; iShares ETF brand
+visa,visa inc,visa.com,85,medium,financial,Payment network brand
+mastercard,mastercard worldwide,mastercard.com,85,medium,financial,Distinctive payment network brand
+american express,amex|axp,americanexpress.com|amex.com,85,medium,financial,AMEX widely recognized; distinctive
+capital one,cof|capitalone,capitalone.com,85,medium,financial,Distinctive US bank brand
+hsbc,hongkong shanghai banking|hsbc holdings,hsbc.com,85,medium,financial,4-char acronym; major global bank
+barclays,barc|barclays bank|barclays capital,barclays.com,85,medium,financial,Distinctive UK bank; Barcap investment arm
+deutsche bank,deutsche bank ag,db.com|deutsche-bank.com,85,medium,financial,Large German bank
+ubs,ubs group|ubs ag,ubs.com,85,medium,financial,3-char acronym; Swiss investment bank
+santander,san|banco santander,santander.com,85,medium,financial,Large Spanish bank; global footprint
+bnp paribas,bnp|bnpp,bnpparibas.com,85,medium,financial,Large French bank; 3-char acronym
+ing,ing groep|ing bank,ing.com,85,medium,financial,3-char acronym; Dutch financial services
+natwest,nwg|national westminster|rbs|royal bank of scotland,natwest.com|rbs.com,85,medium,financial,UK bank; rebranded from RBS
+lloyds,lloy|lloyds banking|lloyds tsb,lloyds.com|lloydsbankinggroup.com,85,medium,financial,Distinctive UK bank; common name but branded
+rbc,royal bank of canada|rbc capital,rbc.com|rbccm.com,85,medium,financial,3-char acronym; major Canadian bank
+td bank,td canada trust,td.com|tdbank.com,85,medium,financial,Canadian bank
+scotiabank,bns|bank of nova scotia,scotiabank.com,85,medium,financial,Distinctive Canadian bank
+bmo,bank of montreal|bmo financial,bmo.com,85,medium,financial,3-char acronym; Canadian bank
+cibc,canadian imperial bank of commerce,cibc.com,85,medium,financial,4-char acronym; Canadian bank
+icbc,industrial commercial bank of china,icbc.com,85,medium,financial,Chinese state bank; 4-char acronym
+mufg,mitsubishi ufj|bank of tokyo|mufg bank,mufg.jp,85,medium,financial,Japanese banking group; 4-char acronym
+nomura,nomura holdings,nomura.com,85,low,financial,Distinctive Japanese investment bank
+allianz,allianz se|pimco,allianz.com|pimco.com,85,medium,financial,German insurer; PIMCO is asset mgmt subsidiary
+axa,axa sa|axa xl,axa.com,85,medium,financial,French insurer; AXA XL commercial lines
+zurich,zurich insurance|zurich financial,zurich.com,85,medium,financial,Swiss insurer; common city name
+aig,american international group,aig.com,85,medium,financial,4-char acronym; large US insurer
+metlife,met|metropolitan life,metlife.com,85,medium,financial,Distinctive US insurer brand
+prudential,pru|prudential financial|prudential plc,prudential.com,85,medium,financial,Common English word; ambiguous US vs UK entities
+aon,aon plc,aon.com,85,low,financial,Distinctive insurance/consulting brand
+marsh,marsh mclennan|mmc|oliver wyman|guy carpenter,marshmclennan.com|marsh.com|oliverwyman.com,85,medium,financial,Common English word; parent MMC is distinctive
+swiss re,swiss reinsurance,swissre.com,85,low,financial,Distinctive Swiss reinsurer
+munich re,munichre|muenchener rueck,munichre.com,85,low,financial,Distinctive German reinsurer
+state street,stt|ssga,statestreet.com|ssga.com,85,medium,financial,Common English words; major custodian bank
+bny mellon,bank of new york mellon,bnymellon.com,85,medium,financial,Merged brand; BK ticker ambiguous
+exxonmobil,xom|exxon|mobil|esso,exxonmobil.com|exxon.com|esso.com,85,medium,energy,Merged 1999; Esso is international brand
+chevron,cvx|chevron corporation|texaco|caltex,chevron.com|texaco.com,85,medium,energy,Texaco/Caltex are sub-brands
+shell,rdsa|rdsb|shell plc|royal dutch shell,shell.com,70,high,energy,Common English word; franchise dealers worldwide
+bp,british petroleum|bp plc|arco|ampm,bp.com|arco.com,70,high,energy,2-char abbreviation; BP branded stations vary globally
+totalenergies,total|total sa|total energies,totalenergies.com,70,high,energy,Common word total; many unrelated businesses
+eni,eni spa|agip,eni.com|agip.com,85,medium,energy,Italian oil company; 3-char acronym
+equinor,eqnr|statoil,equinor.com,85,low,energy,Distinctive Norwegian energy brand; rebranded from Statoil
+saudi aramco,aramco|saudi arabian oil,aramco.com|saudiaramco.com,85,medium,energy,State oil giant; distinctive but state-owned adds complexity
+petrobras,pbr|petroleo brasileiro,petrobras.com.br,85,medium,energy,Brazilian state oil; distinctive
+sinopec,snp|china petroleum|sinopec corp,sinopec.com,85,medium,energy,Chinese state energy
+conocophillips,cop|phillips 66|conoco,conocophillips.com|phillips66.com|conoco.com,85,medium,energy,ConocoPhillips and P66 are now separate companies
+marathon,mpc|marathon petroleum|mro|marathon oil,marathonpetroleum.com|marathonoil.com,85,medium,energy,Two separate Marathon companies; medium complexity
+valero,vlo|valero energy,valero.com,85,low,energy,Distinctive US refiner brand
+phillips 66,psx|phillips66,phillips66.com,85,low,energy,Distinctive US downstream energy brand
+enbridge,enb|enbridge inc,enbridge.com,85,low,energy,Distinctive Canadian pipeline brand
+kinder morgan,kmi,kindermorgan.com,85,low,energy,Distinctive pipeline brand
+duke energy,duk,duke-energy.com,85,medium,energy,Common English word; major US utility
+nextera energy,nee|florida power & light|fpl,nexteraenergy.com|fpl.com,85,low,energy,Distinctive renewable energy brand
+national grid,national grid plc,nationalgrid.com,70,high,energy,Common phrase; UK/US utility
+iberdrola,iber,iberdrola.com,85,low,energy,Distinctive Spanish utility brand
+enel,enel spa,enel.com,85,low,energy,Distinctive Italian utility brand
+engie,engie sa|gdf suez,engie.com,85,low,energy,Distinctive French energy brand; rebranded from GDF Suez
+edf,electricite de france|edf energy,edf.com|edfenergy.com,85,medium,energy,3-char acronym; French state utility
+e.on,eon|e.on se,eon.com,85,medium,energy,German utility; E.ON vs EON spelling varies
+rwe,rwe ag,rwe.com,85,medium,energy,3-char acronym; German utility
+veolia,veolia environment|veolia water,veolia.com,85,low,energy,Distinctive French environmental services brand
+waste management,wm|wm inc,wm.com,85,medium,energy,Common English phrase; US waste services
+coca cola,ko|coke|coca-cola company,coca-cola.com|coke.com,85,medium,food,Coke is global brand; complex bottler/franchise network
+pepsico,pep|pepsi|frito lay|quaker,pepsico.com|pepsi.com|fritolay.com|quaker.com,85,medium,food,Large beverage/food conglomerate
+nestle,nsrgy|nestle sa,nestle.com,85,medium,food,Large food conglomerate; many sub-brands
+unilever,ul|dove|knorr,unilever.com,85,medium,food,Large CPG conglomerate; many consumer sub-brands
+procter & gamble,p&g|pg|pampers|tide|gillette,pg.com|pampers.com|tide.com,85,low,food,P&G is universally recognized; distinctive despite common words
+mondelez,mdlz|nabisco|cadbury|oreo,mondelezinternational.com|nabisco.com,85,medium,food,Spun from Kraft 2012; Cadbury/Oreo are sub-brands
+kraft heinz,khc|kraft|heinz,kraftheinzcompany.com|heinz.com,85,medium,food,Merged 2015; distinctive brands
+general mills,gis|cheerios|pillsbury|betty crocker,generalmills.com,85,medium,food,Common phrase; large CPG brand
+kellogg,kellanova|kellogg company,kellogg.com|kellanova.com,85,medium,food,Rebranded WK Kellogg/Kellanova 2023; complex split
+mars,mars inc|m&ms|snickers|wrigley,mars.com,70,high,food,Common word; private company; many unrelated businesses with Mars name
+danone,dan|danone sa|activia|evian,danone.com|activia.com|evian.com,85,medium,food,French food/beverage brand; complex portfolio
+tyson foods,tsn|tyson|jimmy dean|hillshire farm,tysonfoodsitd.com|tysonfoods.com,85,medium,food,Large meat/protein brand; common surname
+cargill,cargill inc,cargill.com,85,low,food,Distinctive private agri/food brand
+adm,archer daniels midland|adm milling,adm.com,85,medium,food,3-char acronym; large agri-processing
+bunge,bg|bunge limited,bunge.com,85,low,food,Distinctive agri/food brand
+jbs,jbs sa|swift|pilgrim's pride,jbs.com.br|swiftbrands.com,85,medium,food,Brazilian meat giant; Swift and Pilgrim's sub-brands
+hormel,hrl|hormel foods|spam|jennie-o,hormel.com,85,low,food,Distinctive US food brand
+conagra,cag|conagra brands|birds eye|hunt's,conagrabrands.com,85,low,food,Distinctive US CPG brand
+hershey,hsy|hershey company,thehersheycompany.com,85,low,food,Distinctive chocolate brand
+lindt,lindt & sprungli|lindor,lindt.com|lindtusa.com,85,low,food,Distinctive Swiss chocolate brand
+ferrero,ferrero rocher|nutella|tic tac,ferrero.com,85,low,food,Distinctive Italian confectionery brand
+red bull,redbull,redbull.com,85,low,food,Distinctive energy drink brand
+starbucks,sbux,starbucks.com,85,low,food,Distinctive coffee brand
+mcdonald's,mcd|mcdonalds|golden arches,mcdonalds.com,70,high,food,Global franchise; individual operators vary; common brand name
+burger king,bk|bkc|restaurant brands,burgerking.com|rbi.com,70,high,food,Franchise chain; BK ambiguous
+kfc,yum brands|kentucky fried chicken,kfc.com|yum.com,70,high,food,Franchise chain under Yum! Brands
+subway,subway restaurants,subway.com,70,high,food,Largest franchise globally; individual operator risk
+domino's,dpz|dominos pizza,dominos.com,70,high,food,Franchise pizza chain
+wendy's,wen|the wendy's company,wendys.com,70,high,food,Franchise burger chain
+chipotle,cmg|chipotle mexican grill,chipotle.com,85,medium,food,Company-operated; lower franchise risk than peers
+tim hortons,tims|restaurant brands,timhortons.com|rbi.com,70,high,food,Canadian franchise chain; RBI parent
+popeyes,plki|restaurant brands|popeyes louisiana kitchen,popeyes.com|rbi.com,70,high,food,Franchise chain; RBI parent
+dairy queen,dq|international dairy queen,dairyqueen.com,70,high,food,Franchise chain; Berkshire Hathaway owned
+dunkin,dnkn|dunkin' donuts|inspire brands,dunkindonuts.com|dunkinbrands.com,70,high,food,Franchise chain under Inspire Brands
+walmart,wmt|walmart inc|asda|flipkart,walmart.com|asda.com|flipkart.com,85,medium,retail,Large global retailer; Asda/Flipkart sub-brands
+costco,cost|costco wholesale,costco.com,85,low,retail,Distinctive warehouse retailer brand
+target,tgt,target.com,70,high,retail,Common English word; many unrelated businesses
+kroger,kr|kroger company|fred meyer|smith's|king soopers,kroger.com|fredmeyer.com,85,medium,retail,Large US grocery; many regional banner brands
+carrefour,carr|carrefour sa,carrefour.com,85,medium,retail,Large French retailer; many country sub-brands
+tesco,tsco|tesco plc,tesco.com,85,medium,retail,Large UK retailer; common-word components
+aldi,aldi nord|aldi sud,aldi.com|aldi.us,85,medium,retail,Private German discount; two separate legal entities
+metro,metro inc|metro ag,metro.com,70,high,retail,Very common word; multiple unrelated companies globally
+home depot,hd|the home depot,homedepot.com,85,medium,retail,Distinctive US home improvement brand
+lowes,low|lowe's companies,lowes.com,85,medium,retail,Common surname; US home improvement brand
+ikea,ingvar kamprad|inter ikea,ikea.com,85,low,retail,Distinctive Swedish furniture brand; acronym but globally unique
+wayfair,wayfair inc,wayfair.com,85,low,retail,Distinctive online furniture brand
+tjx,tj maxx|marshalls|homegoods|sierra,tjx.com|tjmaxx.com|marshalls.com,85,medium,retail,Large off-price retailer; multiple banner brands
+nordstrom,jwn,nordstrom.com,85,low,retail,Distinctive US department store
+gap,gps|gap inc|banana republic|old navy|athleta,gap.com|bananarepublic.com|oldnavy.com,85,medium,retail,Common English word; multi-banner retailer
+zara,inditex,zara.com|inditex.com,85,medium,retail,Distinctive brand; Inditex is parent
+inditex,itx|zara|pull&bear|massimo dutti|bershka,inditex.com|zara.com,85,medium,retail,Spanish fast-fashion conglomerate
+h&m,hennes & mauritz|h&m group,hm.com,85,medium,retail,Distinctive Swedish fashion brand
+uniqlo,fast retailing,uniqlo.com|fastretailing.com,85,low,retail,Distinctive Japanese fashion brand
+nike,nke|nike inc|jordan brand|converse,nike.com|jordan.com|converse.com,85,low,retail,Distinctive footwear/apparel brand
+adidas,adidas ag|reebok,adidas.com|reebok.com,85,low,retail,Distinctive German sports brand; Reebok divested
+puma,puma ag|puma se,puma.com,85,low,retail,Distinctive sportswear brand
+under armour,uaa|ua,underarmour.com,85,low,retail,Distinctive US sportswear brand
+lululemon,lulu|lululemon athletica,lululemon.com,85,low,retail,Distinctive activewear brand
+levi's,levi strauss|levi jeans,levistrauss.com|levi.com,85,low,retail,Distinctive denim brand; common given name
+lvmh,louis vuitton moet hennessy|louis vuitton|dior|tag heuer|sephora,lvmh.com|louisvuitton.com|dior.com,85,medium,retail,French luxury conglomerate; many sub-brands
+gucci,kering|gucci guccio,gucci.com|kering.com,85,low,retail,Distinctive luxury brand; Kering is parent
+hermes,hermes international|birkin|kelly,hermes.com,85,low,retail,Distinctive French luxury brand; common name but brand is unique in context
+chanel,chanel sa,chanel.com,85,low,retail,Distinctive French luxury brand; private
+rolex,rolex sa|tudor,rolex.com|tudorwatch.com,85,low,retail,Distinctive Swiss luxury watch brand
+toyota,tm|toyota motor|lexus,toyota.com|lexus.com,85,low,auto,Distinctive Japanese automaker; Lexus is luxury sub-brand
+honda,hmc|honda motor|acura,honda.com|acura.com,85,low,auto,Distinctive Japanese automaker; Acura is luxury sub-brand
+nissan,nsany|nissan motor|infiniti,nissan.com|infiniti.com,70,high,auto,Japanese automaker; Nissan is also a common Israeli proper noun
+ford,ford motor|lincoln|ford credit,ford.com|lincoln.com,85,medium,auto,Common English surname; large auto brand
+general motors,gm|gmc|chevrolet|buick|cadillac|baojun,gm.com|chevrolet.com|gmc.com|cadillac.com,85,medium,auto,Large auto conglomerate; many sub-brands
+stellantis,stla|chrysler|fiat|jeep|dodge|ram|peugeot|citroen|opel,stellantis.com|jeep.com|fiat.com|dodge.com,85,medium,auto,Multi-brand auto conglomerate formed 2021
+volkswagen,vow|vw|volkswagen ag|audi|porsche|seat|skoda,volkswagen.com|vw.com|audi.com|porsche.com,85,medium,auto,Large German auto group; many sub-brands
+audi,audi ag,audi.com,85,medium,auto,Sub-brand of Volkswagen Group; distinctive
+bmw,bayerische motoren werke|mini|rolls royce motorcar,bmw.com|mini.com,85,medium,auto,Distinctive German automaker; Mini/RRMC sub-brands
+mercedes benz,mbg|daimler|mercedes|mbenz,mercedes-benz.com,85,medium,auto,Distinctive German luxury auto brand
+hyundai,hymtf|hyundai motor|genesis,hyundai.com|genesis.com,85,medium,auto,Distinctive Korean automaker; Genesis luxury sub-brand
+kia,kia motors|kia corporation,kia.com,85,medium,auto,Distinctive Korean automaker; 3-char brand
+tesla,tsla,tesla.com,85,low,auto,Distinctive EV brand
+volvo,ab volvo|volvo cars|volvo trucks,volvocars.com|volvotrucks.com|volvo.com,85,medium,auto,Distinctive Swedish brand; Volvo Cars and Volvo Trucks are separate companies
+renault,rnlt|renault sa|dacia|nissan alliance,renault.com|dacia.com,85,medium,auto,French automaker; Nissan/Mitsubishi alliance
+mazda,mzda|mazda motor,mazda.com,85,low,auto,Distinctive Japanese automaker
+subaru,fuji heavy industries|subaru corp,subaru.com,85,low,auto,Distinctive Japanese automaker
+bridgestone,bsto|bridgestone corporation,bridgestone.com,85,low,auto,Distinctive Japanese tire brand
+michelin,compagnie generale des etablissements michelin,michelin.com,85,low,auto,Distinctive French tire brand
+goodyear,gt|goodyear tire & rubber,goodyear.com,85,low,auto,Distinctive US tire brand; common English compound
+continental,ctt|continental ag|contitech,continental.com|contitech.com,85,medium,auto,German auto parts; common English word
+dhl,dhl express|deutsche post|dhl supply chain,dhl.com|deutschepost.com,85,medium,travel,3-char acronym; German logistics giant
+fedex,fdx|federal express|tnt,fedex.com|tnt.com,85,low,travel,Distinctive US logistics brand; TNT acquired
+ups,united parcel service|ups supply chain,ups.com,85,low,travel,3-char acronym; globally recognized logistics brand
+maersk,apmm|a.p. moller maersk,maersk.com,85,low,travel,Distinctive Danish shipping brand
+hapag lloyd,hlag|hapag-lloyd,hapag-lloyd.com,85,low,travel,Distinctive German container shipping brand
+xpo,xpo logistics,xpo.com,85,low,travel,Distinctive logistics brand
+ch robinson,chrw|c.h. robinson,chrobinson.com,85,low,travel,Distinctive US freight broker
+db schenker,dbs|deutsche bahn schenker,dbschenker.com,85,medium,travel,DB prefix ambiguous; subsidiary of Deutsche Bahn
+kuehne nagel,kn|kuehne+nagel,kuehne-nagel.com,85,low,travel,Distinctive Swiss logistics brand
+dsv,dsv panalpina,dsv.com,85,low,travel,Distinctive Danish logistics brand
+expeditors,expd|expeditors international,expeditors.com,85,low,travel,Distinctive logistics brand
+ceva logistics,ceva|ceva group,cevalogistics.com,85,low,travel,Distinctive logistics brand
+uber,uber technologies,uber.com,85,low,travel,Distinctive ride-share brand
+lyft,lyft inc,lyft.com,85,low,travel,Distinctive US ride-share brand
+at&t,att|american telephone & telegraph|directv|warner media,att.com|directv.com,70,high,telecom,AT&T is high due to complex brand/franchise structure and many operators
+verizon,vz|verizon communications|fios,verizon.com,85,medium,telecom,Distinctive US telecom brand
+t-mobile,tmus|t mobile|sprint|metro by t-mobile,t-mobile.com|sprint.com,85,medium,telecom,Sprint absorbed 2020; distinctive brand
+vodafone,vod|vodafone group,vodafone.com,70,high,telecom,Many country JVs/operators; complex franchise-like structure
+orange,orange sa,orange.com,70,high,telecom,Common English word; multiple unrelated businesses
+telefonica,tef|movistar|o2|vivo,telefonica.com|movistar.com|o2.com,85,medium,telecom,Spanish telecom; O2 and Movistar sub-brands
+bt,british telecom|bt group|ee|plusnet,bt.com|ee.co.uk|plusnet.com,85,medium,telecom,2-char abbreviation; UK telecom
+deutsche telekom,dteg|telekom|t-systems|magenta,telekom.com|t-systems.com,85,medium,telecom,German telecom; T-Mobile is subsidiary
+telenor,ten|telenor asa,telenor.com,85,low,telecom,Distinctive Norwegian telecom brand
+bell,bce|bell canada|bell mobility|virgin plus,bell.ca|bce.ca,70,high,telecom,Common English word; Canadian telecom franchise
+rogers,rci|rogers communications|fido,rogers.com|fido.ca,70,high,telecom,Common English surname; many unrelated businesses
+telus,telus corporation|koodo,telus.com|koodo.com,70,high,telecom,Canadian telecom; telecom franchise risk
+shaw,shaw communications,shaw.ca,70,high,telecom,Common English surname; Canadian telecom
+comcast,cmcsa|xfinity|nbcuniversal,comcast.com|xfinity.com|nbcuniversal.com,85,medium,telecom,Large US cable/media; Xfinity is retail brand
+disney,dis|the walt disney company|espn|hulu|abc|marvel,disney.com|espn.com|hulu.com|marvel.com,85,medium,media,Large media conglomerate; many sub-brands
+netflix,nflx,netflix.com,85,low,media,Distinctive streaming brand
+warner bros discovery,wbd|warner bros|discovery|hbo|cnn|turner,wbd.com|warnerbros.com|hbomax.com|discoveryplus.com,85,medium,media,Merged 2022; complex portfolio
+spotify,spot,spotify.com,85,low,media,Distinctive music streaming brand
+fox,foxa|fox corporation|fox news|fox sports,foxcorporation.com|foxnews.com,85,medium,media,Common English word; media brand
+thomson reuters,tri|reuters|westlaw,thomsonreuters.com|reuters.com|westlaw.com,85,low,media,Distinctive business information brand
+bloomberg,bloomberg lp|bloomberg media,bloomberg.com,85,low,media,Distinctive financial information brand
+relx,ren|reed elsevier|lexisnexis|elsevier,relx.com|lexisnexis.com|elsevier.com,85,low,media,Distinctive UK information brand; LexisNexis sub-brand
+springer nature,springer|nature publishing|macmillan,springernature.com|nature.com,85,low,media,Distinctive academic publisher
+wolters kluwer,wkl|wolters kluwer nv,wolterskluwer.com,85,low,media,Distinctive Dutch information brand
+pearson,pson|pearson plc|penguin|edexcel,pearson.com|edexcel.com,85,medium,media,Distinctive UK education brand; common surname
+accenture,acn|accenture plc,accenture.com,85,low,consulting,Distinctive consulting brand; coined word
+deloitte,dtte|deloitte touche|deloitte & touche,deloitte.com,85,medium,consulting,Distinctive but Big 4 have complex partnership structures
+pwc,pricewaterhousecoopers|pwc llp|price waterhouse,pwc.com,85,medium,consulting,3-char acronym; Big 4 global partnership
+ey,ernst & young|ey llp,ey.com,85,medium,consulting,2-char acronym; Big 4 global partnership
+kpmg,klynveld peat marwick goerdeler|kpmg llp,kpmg.com,85,medium,consulting,4-char acronym; Big 4 global partnership
+mckinsey,mck|mckinsey & company,mckinsey.com,85,low,consulting,Distinctive consulting brand; low ambiguity
+bcg,boston consulting group|bcg platinion,bcg.com,85,low,consulting,3-char acronym but highly distinctive in context
+bain,bain & company|bain capital,bain.com|baincapital.com,85,medium,consulting,Common English word; Bain & Co vs Bain Capital are separate
+capgemini,cap|capgemini se,capgemini.com,85,low,consulting,Distinctive French IT/consulting brand
+cognizant,ctsh|cognizant technology,cognizant.com,85,low,consulting,Distinctive US IT services brand
+infosys,infy|infosys technologies|finacle,infosys.com,85,low,consulting,Distinctive Indian IT brand
+tcs,tata consultancy services|tata consulting,tcs.com|tataconsultancy.com,85,low,consulting,TCS is universally recognized for Tata Consultancy Services
+wipro,wit|wipro limited|wipro technologies,wipro.com,85,low,consulting,Distinctive Indian IT brand
+hcltech,hcl|hcl technologies,hcltech.com,85,low,consulting,Distinctive Indian IT brand; HCL is known abbreviation
+genpact,genpact limited,genpact.com,85,low,consulting,Distinctive BPO brand
+ntt data,ntt data corporation|nippon telegraph,nttdata.com|ntt.com,85,medium,consulting,NTT is Japanese state telecom parent; NTT DATA is IT services
+atos,atos se|bull|evidian,atos.net,85,low,consulting,Distinctive French IT brand
+publicis,pub|publicis groupe|saatchi,publicis.com|saatchi.com,85,medium,consulting,French holding company; Saatchi & Saatchi sub-brand
+wpp,wpp plc|grey|ogilvy|jwt,wpp.com|ogilvy.com,85,medium,consulting,3-char acronym; large advertising holding
+omnicom,omc|omnicom group|bbdo|ddb|tbwa,omnicomgroup.com|bbdo.com,85,medium,consulting,Large US advertising holding company
+dentsu,dentsu inc|dentsu group,dentsu.com,85,low,consulting,Distinctive Japanese advertising brand
+ipg,interpublic group|mccann|foote cone & belding|fcb,interpublic.com|mccann.com,85,medium,consulting,3-char acronym; advertising holding company
+saatchi & saatchi,saatchi|saatchi and saatchi,saatchi.com,85,low,consulting,Distinctive advertising brand; subsidiary of Publicis
+securitas,securitas ab,securitas.com,85,low,facilities,Distinctive Swedish security services brand
+g4s,group 4 securicor|allied universal,g4s.com,85,medium,facilities,4-char acronym; merged into Allied Universal in some regions
+brinks,bcorp|brink's company,brinks.com,85,low,facilities,Distinctive US armored transport brand
+johnson controls,jci|tyco,johnsoncontrols.com|tyco.com,85,medium,facilities,Common surname; Tyco absorbed
+cbre,cb richard ellis|cbre group,cbre.com,85,low,facilities,Distinctive CRE services brand
+jll,jones lang lasalle,jll.com,85,low,facilities,Distinctive CRE services brand
+cushman wakefield,cwk|dtz,cushmanwakefield.com,85,low,facilities,Distinctive CRE services brand
+sodexo,sodexo sa,sodexo.com,85,low,facilities,Distinctive French facilities brand
+aramark,armk,aramark.com,85,low,facilities,Distinctive US facilities/food service brand
+compass group,cpg|eurest|chartwells|scolarest,compass-group.com|eurest.com,85,medium,facilities,Common English words; large facilities conglomerate
+iss,iss world services|integrated service solutions,issworld.com,85,medium,facilities,3-char acronym; Danish facilities brand
+rentokil,rkil|rentokil initial|terminix,rentokil.com|terminix.com,85,low,facilities,Distinctive UK facilities brand; Terminix acquired
+cintas,ctas|cintas corporation,cintas.com,85,low,facilities,Distinctive US uniform/facilities brand
+ecolab,ecl|ecolab inc|nalco,ecolab.com|nalco.com,85,low,facilities,Distinctive cleaning/hygiene brand
+marriott,mar|marriott international|sheraton|westin|ritz carlton|w hotels|courtyard|fairfield|ac hotels|renaissance,marriott.com|sheraton.com|westin.com|ritzcarlton.com,70,high,travel,Global hotel franchise; many independent franchisee operators
+hilton,hlt|hilton worldwide|hampton inn|doubletree|embassy suites|waldorf astoria|curio|tapestry,hilton.com|hamptoninn.com|doubletree.com,70,high,travel,Hotel franchise; high risk of independent operators
+hyatt,hyatt hotels|park hyatt|grand hyatt|andaz|alila,hyatt.com,85,medium,travel,Hotel brand; smaller franchise network than Marriott/Hilton
+ihg,intercontinental hotels|holiday inn|crowne plaza|staybridge|candlewood|six senses|voco,ihg.com|holidayinn.com|crowneplaza.com,70,high,travel,IHG is massive franchise network globally; Holiday Inn especially
+accor,aor|accor sa|sofitel|novotel|ibis|mercure|pullman|fairmont,accor.com|sofitel.com|novotel.com|ibis.com,85,medium,travel,French hotel group; large but more directly managed
+wyndham,wyn|wyndham hotels|days inn|super 8|ramada|la quinta,wyndham.com|daysinn.com|super8.com|ramada.com,70,high,travel,Largest hotel franchise by count; extremely high independent operator risk
+best western,bwi|best western international,bestwestern.com,70,high,travel,Independent hotel cooperative; each property is independently owned
+four seasons,four seasons hotels,fourseasons.com,85,low,travel,Distinctive luxury hotel brand; managed not franchised
+expedia,expe|expedia group|hotels.com|vrbo|hotwire|trivago,expedia.com|hotels.com|vrbo.com|hotwire.com,85,medium,travel,Distinctive OTA brand; hotels.com/VRBO sub-brands
+booking holdings,bkng|booking.com|priceline|agoda|kayak|opentable,bookingholdings.com|booking.com|priceline.com|agoda.com,85,medium,travel,Distinctive OTA holding brand
+hertz,htz|the hertz corporation|dollar|thrifty,hertz.com|dollar.com|thrifty.com,70,high,travel,Car rental franchise; high independent operator risk
+avis,carg|avis budget group|budget|zipcar|payless,avis.com|budget.com|zipcar.com,70,high,travel,Car rental franchise; Budget sub-brand
+enterprise,ehi|enterprise holdings|national car rental|alamo,enterprise.com|nationalcar.com|alamo.com,70,high,travel,Car rental franchise; many independent licensees globally
+airbnb,abnb,airbnb.com,85,medium,travel,Distinctive platform brand; individual hosts create risk

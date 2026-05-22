@@ -1,0 +1,92 @@
+acronym,full_form,canonical_brand,score_hint,risk_level,category,notes
+msft,microsoft corporation,microsoft,85,medium,tech,Stock ticker; widely accepted
+ms,microsoft,microsoft,70,medium,tech,2-char; ambiguous with Morgan Stanley; use with context
+aws,amazon web services,amazon,85,medium,tech,Cloud platform; universally recognized
+ibm,international business machines,ibm,85,medium,tech,Company itself is an acronym
+sap,systeme anwendungen produkte,sap,85,medium,tech,German acronym for SAP SE
+hpe,hewlett packard enterprise,hpe,85,medium,tech,Split from HP 2015
+hp,hp inc,hp,70,high,tech,Very short; high ambiguity
+amd,advanced micro devices,amd,85,medium,tech,CPU/GPU brand
+ge,general electric,ge,70,high,industrial,2-char acronym; very ambiguous per rules
+ge healthcare,ge healthcare,ge healthcare,85,medium,pharma,Spun off 2023; longer form is less ambiguous
+bms,bristol myers squibb,bristol myers squibb,85,low,pharma,Pharma abbreviation; distinctive in context
+jnj,johnson & johnson,johnson & johnson,85,low,pharma,Stock ticker; widely used
+jpm,jpmorgan chase,jpmorgan chase,85,medium,financial,Stock ticker; finance context
+bac,bank of america,bank of america,85,medium,financial,Stock ticker
+wfc,wells fargo,wells fargo,85,medium,financial,Stock ticker
+gs,goldman sachs,goldman sachs,85,medium,financial,Stock ticker; context needed
+ubs,union bank of switzerland,ubs,85,medium,financial,Company itself is an acronym; Swiss investment bank
+bnp,banque nationale de paris,bnp paribas,85,medium,financial,French bank abbreviation
+ing,internationale nederlanden groep,ing,85,medium,financial,Dutch conglomerate abbreviation
+hsbc,hongkong and shanghai banking corporation,hsbc,85,medium,financial,Full expansion rarely used
+rbc,royal bank of canada,rbc,85,medium,financial,Canadian bank acronym
+bmo,bank of montreal,bmo,85,medium,financial,Canadian bank acronym
+cibc,canadian imperial bank of commerce,cibc,85,medium,financial,Canadian bank acronym
+icbc,industrial and commercial bank of china,icbc,85,medium,financial,Chinese state bank acronym
+mufg,mitsubishi ufj financial group,mufg,85,medium,financial,Japanese banking acronym
+aig,american international group,aig,85,medium,financial,US insurance acronym
+ppg,pittsburgh plate glass,ppg,85,low,chemical,Former full name; now just PPG Industries
+3m,minnesota mining and manufacturing,3m,85,medium,industrial,Alphanumeric brand name
+abb,asea brown boveri,abb,85,medium,industrial,Swiss-Swedish industrial acronym
+uop,universal oil products,honeywell,85,medium,industrial,Honeywell process technology subsidiary
+gsk,glaxosmithkline,gsk,85,low,pharma,Pharma company itself is an acronym
+bp,british petroleum,bp,70,high,energy,2-char acronym; high risk per rules
+edf,electricite de france,edf,85,medium,energy,French state utility acronym
+rwe,rheinisch westfalisches elektrizitatswerk,rwe,85,medium,energy,German utility acronym
+eni,ente nazionale idrocarburi,eni,85,medium,energy,Italian national energy company acronym
+epc,enterprise products partners,epc,70,high,energy,Common acronym; also used for engineering/procurement/construction
+tcs,tata consultancy services,tcs,85,low,consulting,Indian IT services; universally recognized
+bcg,boston consulting group,bcg,85,low,consulting,Management consulting acronym
+pwc,pricewaterhousecoopers,pwc,85,medium,consulting,Big 4 accounting/consulting acronym
+ey,ernst & young,ey,85,medium,consulting,Big 4 accounting/consulting; 2-char but distinctive
+kpmg,klynveld peat marwick goerdeler,kpmg,85,medium,consulting,Big 4 accounting/consulting acronym
+mck,mckinsey,mckinsey,85,low,consulting,Common internal/trading shorthand
+wpp,wire and plastic products,wpp,85,medium,consulting,Advertising holding; original name was Wire Plastic Products
+ipg,interpublic group,ipg,85,medium,consulting,Advertising holding acronym
+tmo,thermo fisher scientific,thermo fisher,85,low,pharma,Stock ticker; distinctive in lab context
+dhr,danaher corporation,danaher,85,low,pharma,Stock ticker
+mdt,medtronic,medtronic,85,low,pharma,Stock ticker
+bd,becton dickinson and company,becton dickinson,85,low,pharma,Company abbreviation; widely recognized
+cvs,consumer value stores,cvs health,85,medium,retail,Historical name; now CVS Health
+jll,jones lang lasalle,jll,85,low,facilities,CRE services acronym
+cbre,coldwell banker richard ellis,cbre,85,low,facilities,CRE services acronym
+g4s,group 4 securicor,g4s,85,medium,facilities,Security services acronym
+dhl,dalsey hillblom lynn,dhl,85,medium,travel,Logistics; founder initials
+ups,united parcel service,ups,85,low,travel,Logistics; company itself is an acronym
+dbs,deutsche bahn schenker,db schenker,70,medium,travel,Freight acronym; ambiguous with DBS Bank Singapore
+rtx,raytheon technologies,raytheon,85,low,industrial,Post-merger ticker; distinctive in defense context
+lmt,lockheed martin,lockheed martin,85,low,industrial,Stock ticker; distinctive
+noc,northrop grumman corporation,northrop grumman,85,low,industrial,Stock ticker
+bae,british aerospace enterprise,bae systems,85,low,industrial,Defense company acronym
+sap,systems applications and products,sap,85,medium,tech,German business software acronym
+at&t,american telephone and telegraph,at&t,70,high,telecom,Telecom franchise; high risk
+att,american telephone and telegraph,at&t,70,high,telecom,No-ampersand variant; still high risk
+bt,british telecom,bt,85,medium,telecom,2-char; UK telecom abbreviation
+o2,oxygen,telefonica,70,high,telecom,2-char telecom sub-brand; also periodic table element symbol
+iss,integrated service solutions,iss,85,medium,facilities,Danish facilities; 3-char acronym
+wbd,warner bros discovery,warner bros discovery,85,medium,media,Post-merger ticker
+hbo,home box office,warner bros discovery,85,medium,media,Premium cable brand; distinctive despite common words
+cnn,cable news network,warner bros discovery,85,medium,media,News brand; distinctive
+espn,entertainment and sports programming network,disney,85,medium,media,Sports media; distinctive
+ntt,nippon telegraph and telephone,ntt data,85,medium,consulting,Japanese parent telecom; context needed for IT vs telecom
+az,astrazeneca,astrazeneca,70,low,pharma,2-char abbreviation; pharma context reduces risk
+bi,boehringer ingelheim,boehringer ingelheim,70,low,pharma,2-char abbreviation; pharma context
+se,schneider electric,schneider electric,70,medium,industrial,2-char; very ambiguous; also stock ticker for various firms
+lm,lockheed martin,lockheed martin,70,low,industrial,2-char abbreviation; defense context helps
+vw,volkswagen,volkswagen,85,medium,auto,Near-universal auto abbreviation
+gm,general motors,general motors,85,medium,auto,Common auto abbreviation
+bmw,bayerische motoren werke,bmw,85,medium,auto,Company itself is an acronym
+msd,merck sharp and dohme,merck,85,medium,pharma,US Merck's brand name used outside the US; maps to US Merck
+emd,e merck darmstadt,merck kgaa,85,medium,pharma,EMD is Merck KGaA's North American trading name; NOT US Merck
+tef,telefonica,telefonica,85,medium,telecom,Stock ticker for Telefonica
+rtz,reuters,thomson reuters,70,medium,media,Former Reuters ticker; check context; now tri
+tri,thomson reuters,thomson reuters,85,low,media,Current stock ticker for Thomson Reuters
+ren,relx group,relx,85,low,media,Stock ticker for RELX
+wkl,wolters kluwer,wolters kluwer,85,low,media,Stock ticker for Wolters Kluwer
+acn,accenture,accenture,85,low,consulting,Stock ticker for Accenture
+ctsh,cognizant technology solutions,cognizant,85,low,consulting,Stock ticker
+infy,infosys,infosys,85,low,consulting,Stock ticker for Infosys
+wit,wipro,wipro,85,low,consulting,Stock ticker for Wipro
+hcl,hcl technologies,hcltech,85,low,consulting,Common abbreviation; distinctive in IT services
+p&g,procter and gamble,procter & gamble,85,low,food,Universally recognized abbreviation
+j&j,johnson and johnson,johnson & johnson,85,low,pharma,Universally recognized abbreviation

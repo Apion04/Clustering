@@ -1,0 +1,961 @@
+alias,canonical_brand,score_hint,risk_level,category,notes
+msft,microsoft,85,medium,tech,Stock ticker; widely used
+ms,microsoft,70,medium,tech,2-char abbreviation; ambiguous (also Morgan Stanley)
+azure,microsoft,70,medium,tech,Cloud platform; ambiguous without corroboration
+office 365,microsoft,85,medium,tech,SaaS productivity suite
+o365,microsoft,85,medium,tech,Short form of Office 365
+linkedin,microsoft,85,medium,tech,Acquired 2016; distinctive sub-brand
+github,microsoft,85,medium,tech,Acquired 2018; distinctive developer platform
+visual studio,microsoft,85,medium,tech,Microsoft IDE brand
+windows,microsoft,70,medium,tech,OS brand; common English word
+bing,microsoft,85,medium,tech,Microsoft search engine; distinctive
+xbox,microsoft,85,medium,tech,Microsoft gaming brand; distinctive
+skype,microsoft,85,medium,tech,Acquired VoIP brand
+teams,microsoft,70,medium,tech,Collaboration tool; common English word; needs context
+goog,google,85,medium,tech,Stock ticker
+googl,google,85,medium,tech,Stock ticker class A shares
+alphabet,google,85,medium,tech,Parent company since 2015
+youtube,google,85,medium,tech,Acquired 2006; globally distinctive video platform
+gmail,google,85,medium,tech,Google email service; distinctive
+android,google,70,high,tech,Mobile OS; common platform word used broadly
+google cloud,google,85,medium,tech,Google cloud services division
+gcp,google,85,medium,tech,Google Cloud Platform acronym
+waymo,google,85,medium,tech,Alphabet self-driving subsidiary
+deepmind,google,85,medium,tech,Alphabet AI research subsidiary
+aws,amazon,85,medium,tech,Amazon Web Services; globally recognized
+amazon web services,amazon,85,medium,tech,Full name of AWS
+whole foods,amazon,85,medium,food,Acquired 2017; grocery chain
+twitch,amazon,85,medium,tech,Acquired 2014; game streaming platform
+imdb,amazon,85,medium,media,Acquired 1998; movie database
+ring,amazon,85,medium,tech,Smart home/doorbell brand
+alexa,amazon,70,medium,tech,Amazon voice assistant; also a common first name
+zappos,amazon,85,medium,retail,Acquired 2009; online shoe retailer
+aapl,apple,70,high,tech,Stock ticker for Apple; high risk due to common word
+iphone,apple,70,high,tech,Apple smartphone; high risk parent
+ipad,apple,70,high,tech,Apple tablet; high risk parent
+mac,apple,70,high,tech,Apple computer line; very common word
+macos,apple,70,high,tech,Apple operating system
+ios,apple,70,high,tech,Apple mobile OS; 3-char ambiguous
+facebook,meta,85,medium,tech,Legacy brand; Meta rebranded 2021
+instagram,meta,85,medium,tech,Acquired 2012; photo sharing platform
+whatsapp,meta,85,medium,tech,Acquired 2014; messaging platform
+oculus,meta,85,medium,tech,VR hardware brand
+meta platforms,meta,85,medium,tech,Full legal name of parent company
+ibm cloud,ibm,85,medium,tech,IBM cloud services
+red hat,ibm,85,medium,tech,Acquired 2019; Linux/open source brand
+kyndryl,ibm,85,medium,tech,Spun off IT infrastructure services 2021
+big blue,ibm,85,medium,tech,Informal nickname for IBM
+international business machines,ibm,85,medium,tech,Full legal name of IBM
+orcl,oracle,85,medium,tech,Stock ticker for Oracle
+oracle cloud,oracle,85,medium,tech,Oracle cloud services
+netsuite,oracle,85,medium,tech,Acquired 2016; ERP cloud software
+java,oracle,70,medium,tech,Programming language; Oracle owns brand
+sap se,sap,85,medium,tech,Full legal entity name for SAP
+s/4hana,sap,85,medium,tech,SAP main ERP product
+successfactors,sap,85,medium,tech,Acquired 2012; HR cloud software
+ariba,sap,85,medium,tech,Acquired 2012; procurement platform
+concur,sap,85,medium,tech,Acquired 2014; expense management
+sfdc,salesforce,85,low,tech,Internal/trading code for Salesforce
+crm,salesforce,70,low,tech,Salesforce stock ticker; also generic term
+slack,salesforce,85,low,tech,Acquired 2021; team messaging platform
+tableau,salesforce,85,low,tech,Acquired 2019; data visualization
+mulesoft,salesforce,85,low,tech,Acquired 2018; integration platform
+snow,servicenow,85,low,tech,Stock ticker; context-dependent
+service now,servicenow,85,low,tech,Space-separated variant
+adobe systems,adobe,85,low,tech,Former full legal name
+photoshop,adobe,85,low,tech,Flagship creative software; distinctive
+marketo,adobe,85,low,tech,Acquired 2018; marketing automation
+figma,adobe,85,low,tech,Associated with Adobe; design platform
+acrobat,adobe,85,low,tech,Adobe PDF software; distinctive brand
+cisco systems,cisco,85,medium,tech,Full legal name
+webex,cisco,85,medium,tech,Video conferencing brand
+meraki,cisco,85,medium,tech,Acquired 2012; cloud-managed IT
+intel corporation,intel,85,medium,tech,Full legal name
+mobileye,intel,85,medium,tech,Acquired 2017; autonomous driving
+advanced micro devices,amd,85,medium,tech,Full legal name for AMD
+radeon,amd,85,medium,tech,AMD GPU brand
+ryzen,amd,85,medium,tech,AMD CPU brand
+nvda,nvidia,85,low,tech,Stock ticker for Nvidia
+cuda,nvidia,85,low,tech,Nvidia parallel computing platform
+geforce,nvidia,85,low,tech,Nvidia consumer GPU brand
+brcm,broadcom,85,medium,tech,Former stock ticker
+ca technologies,broadcom,85,medium,tech,Acquired CA Technologies 2018
+symantec,broadcom,85,medium,tech,Acquired enterprise security division
+qcom,qualcomm,85,low,tech,Stock ticker for Qualcomm
+snapdragon,qualcomm,85,low,tech,Mobile processor brand; distinctive
+dell technologies,dell,85,medium,tech,Full corporate name post-merger
+emc,dell,85,medium,tech,Acquired 2016; storage brand
+alienware,dell,85,medium,tech,Gaming PC sub-brand; distinctive
+secureworks,dell,85,medium,tech,Cybersecurity subsidiary
+hpq,hp,70,high,tech,Stock ticker for HP Inc; HP is very short
+hewlett packard,hp,70,high,tech,Former full name
+hp inc,hp,70,high,tech,Current legal name for consumer/PC HP
+hewlett packard enterprise,hpe,85,medium,tech,Full legal name of HPE
+hpe aruba,hpe,85,medium,tech,HPE networking sub-brand
+lenovo group,lenovo,85,low,tech,Full holding company name
+vmw,vmware,85,medium,tech,Former stock ticker
+broadcom vmware,vmware,85,medium,tech,Current naming post-Broadcom acquisition
+wday,workday,85,low,tech,Stock ticker for Workday
+quickbooks,intuit,85,low,tech,Flagship accounting software
+turbotax,intuit,85,low,tech,Tax preparation software
+mint,intuit,85,low,tech,Personal finance tool
+mailchimp,intuit,85,low,tech,Acquired 2021; email marketing
+jira,atlassian,85,low,tech,Project tracking tool; distinctive
+confluence,atlassian,85,low,tech,Wiki/documentation tool; distinctive
+trello,atlassian,85,low,tech,Acquired 2017; kanban tool
+bitbucket,atlassian,85,low,tech,Code repository; distinctive
+shop pay,shopify,85,low,tech,Shopify checkout/payments brand
+zoom video,zoom,85,low,tech,Full company name variant
+zoom communications,zoom,85,low,tech,Communications brand
+dbx,dropbox,85,low,tech,Stock ticker for Dropbox
+pltr,palantir,85,low,tech,Stock ticker for Palantir
+gotham,palantir,85,low,tech,Palantir government analytics platform
+foundry,palantir,85,low,tech,Palantir enterprise analytics platform
+crwd,crowdstrike,85,low,tech,Stock ticker for CrowdStrike
+falcon,crowdstrike,85,low,tech,CrowdStrike security platform
+auth0,okta,85,low,tech,Acquired 2021; developer identity platform
+cloudflare workers,cloudflare,85,low,tech,Serverless compute platform
+twlo,twilio,85,low,tech,Stock ticker for Twilio
+hubs,hubspot,85,low,tech,Stock ticker shorthand for HubSpot
+stripe payments,stripe,85,low,tech,Full service description
+venmo,paypal,85,medium,tech,Acquired 2013; P2P payments app
+braintree,paypal,85,medium,tech,Acquired 2013; payment gateway
+xoom,paypal,85,medium,tech,Acquired 2015; international money transfer
+ebay inc,ebay,85,low,tech,Full legal name
+douyin,tiktok,85,medium,tech,TikTok Chinese domestic version
+qq,tencent,85,medium,tech,Tencent messaging/social platform
+wechat,tencent,85,medium,tech,Dominant Chinese messaging app; distinctive
+weixin,tencent,85,medium,tech,Chinese name for WeChat
+aliyun,alibaba,85,medium,tech,Alibaba cloud services China
+taobao,alibaba,85,medium,tech,C2C e-commerce platform
+tmall,alibaba,85,medium,tech,B2C e-commerce platform
+aliexpress,alibaba,85,medium,tech,International retail platform
+ant group,alibaba,85,medium,tech,Fintech affiliate; Alipay parent
+mi,xiaomi,85,medium,tech,Xiaomi consumer electronics sub-brand
+redmi,xiaomi,85,medium,tech,Xiaomi budget phone line
+huawei technologies,huawei,85,medium,tech,Full legal name
+honor,huawei,85,medium,tech,Spun off 2020; largely separate
+samsung electronics,samsung,85,medium,tech,Main operating subsidiary
+samsung sds,samsung,85,medium,tech,IT services subsidiary
+playstation,sony,85,medium,tech,Sony gaming brand; distinctive
+sony pictures,sony,85,medium,tech,Entertainment subsidiary
+sony music,sony,85,medium,tech,Music entertainment subsidiary
+panasonic holdings,panasonic,85,low,tech,Holding company name
+hitachi ltd,hitachi,85,medium,tech,Full corporate name
+toshiba corporation,toshiba,85,medium,tech,Full corporate name
+nippon electric company,nec,85,medium,tech,Full name of NEC
+fujitsu limited,fujitsu,85,low,tech,Full corporate name
+square,block,85,medium,tech,Former company name (Block was Square Inc)
+cash app,block,85,medium,tech,Block consumer payments app; distinctive
+spiral,block,85,medium,tech,Block bitcoin-focused subsidiary
+pfe,pfizer,85,low,pharma,Stock ticker for Pfizer
+msd,merck,85,medium,pharma,Merck Sharp & Dohme; Merck brand name outside US
+merck & co,merck,85,medium,pharma,Full legal name of US Merck
+merck sharp & dohme,merck,85,medium,pharma,Operating subsidiary name outside US
+emd,merck kgaa,85,medium,pharma,EMD is Merck KGaA US trading name
+merck group,merck kgaa,85,medium,pharma,German Merck holding company
+emd serono,merck kgaa,85,medium,pharma,Merck KGaA biopharma business in North America
+sigma aldrich,merck kgaa,85,medium,pharma,Acquired 2015; lab chemical/reagent brand
+emd millipore,merck kgaa,85,medium,pharma,Merck KGaA life science brand in North America
+merck millipore,merck kgaa,85,medium,pharma,Life science brand of Merck KGaA
+sigma-aldrich,merck kgaa,85,medium,pharma,Hyphenated variant of Sigma Aldrich
+j&j,johnson & johnson,85,low,pharma,Widely used abbreviation
+jnj,johnson & johnson,85,low,pharma,Stock ticker; distinctive
+janssen,johnson & johnson,85,low,pharma,Pharmaceutical subsidiary; distinctive
+kenvue,johnson & johnson,85,low,pharma,Consumer health spin-off 2023
+neutrogena,johnson & johnson,85,low,pharma,Consumer brand under Kenvue
+tylenol,johnson & johnson,85,low,pharma,OTC pain brand; highly distinctive
+nvs,novartis,85,low,pharma,Stock ticker for Novartis
+sandoz,novartis,85,low,pharma,Generics/biosimilars subsidiary
+roche holding,roche,85,low,pharma,Full corporate name
+genentech,roche,85,low,pharma,US biotech subsidiary; fully owned since 2009
+chugai,roche,85,low,pharma,Japanese pharma majority-owned by Roche
+sny,sanofi,85,low,pharma,Stock ticker for Sanofi
+genzyme,sanofi,85,low,pharma,Acquired 2011; rare disease biotech
+aventis,sanofi,85,low,pharma,Former company name pre-2004 merger
+glaxosmithkline,gsk,85,low,pharma,Former full legal name
+haleon,gsk,85,low,pharma,Consumer health spin-off 2022
+azn,astrazeneca,85,low,pharma,Stock ticker for AstraZeneca
+az,astrazeneca,70,low,pharma,2-char abbreviation; use with corroboration
+bayer ag,bayer,85,medium,pharma,Full corporate name
+bayer cropscience,bayer,85,medium,pharma,Agri-science division
+bi,boehringer ingelheim,70,low,pharma,2-char abbreviation; use with corroboration
+boehringer,boehringer ingelheim,85,low,pharma,Common shorthand
+lly,eli lilly,85,low,pharma,Stock ticker for Eli Lilly
+lilly,eli lilly,85,low,pharma,Common shorthand; distinctive in pharma context
+abbv,abbvie,85,low,pharma,Stock ticker for AbbVie
+humira,abbvie,85,low,pharma,Top-selling biologic drug; highly distinctive
+imbruvica,abbvie,85,low,pharma,Oncology drug brand
+amgn,amgen,85,low,pharma,Stock ticker for Amgen
+bms,bristol myers squibb,85,low,pharma,Widely used abbreviation; distinctive in pharma
+bmy,bristol myers squibb,85,low,pharma,Stock ticker for BMS
+gild,gilead,85,low,pharma,Stock ticker for Gilead
+gilead sciences,gilead,85,low,pharma,Full legal name
+biib,biogen,85,low,pharma,Stock ticker for Biogen
+mrna,moderna,85,low,pharma,Stock ticker for Moderna
+regn,regeneron,85,low,pharma,Stock ticker for Regeneron
+vrtx,vertex,85,low,pharma,Stock ticker for Vertex
+vertex pharmaceuticals,vertex,85,low,pharma,Full legal name
+tak,takeda,85,low,pharma,Stock ticker for Takeda
+takeda pharmaceutical,takeda,85,low,pharma,Full corporate name
+nvo,novo nordisk,85,low,pharma,Stock ticker for Novo Nordisk
+novonordisk,novo nordisk,85,low,pharma,Domain-style shortening
+bax,baxter,85,low,pharma,Stock ticker for Baxter
+baxter international,baxter,85,low,pharma,Full corporate name
+bd,becton dickinson,85,low,pharma,Ticker and universally known abbreviation
+bdx,becton dickinson,85,low,pharma,Stock ticker for BD
+carefusion,becton dickinson,85,low,pharma,Acquired 2015
+mdt,medtronic,85,low,pharma,Stock ticker for Medtronic
+siemens health,siemens healthineers,85,low,pharma,Common shorthand
+varian,siemens healthineers,85,low,pharma,Acquired 2021; radiation therapy brand
+gehc,ge healthcare,85,medium,pharma,Stock ticker for GE HealthCare post-spinoff
+ge health,ge healthcare,85,medium,pharma,Common shorthand
+royal philips,philips healthcare,85,medium,pharma,Parent company full name
+philips health,philips healthcare,85,medium,pharma,Common shorthand
+tmo,thermo fisher,85,low,pharma,Stock ticker for Thermo Fisher
+thermofisher,thermo fisher,85,low,pharma,Domain/shorthand variant
+fisher scientific,thermo fisher,85,low,pharma,Acquired 2006; lab supply brand
+applied biosystems,thermo fisher,85,low,pharma,Life Technologies brand; now ThermoFisher
+invitrogen,thermo fisher,85,low,pharma,Life Technologies brand; now ThermoFisher
+life technologies,thermo fisher,85,low,pharma,Acquired 2014; merged brand
+qgen,qiagen,85,low,pharma,Stock ticker for Qiagen
+ilmn,illumina,85,low,pharma,Stock ticker for Illumina
+agilent technologies,agilent,85,low,pharma,Full corporate name
+wat,waters,85,low,pharma,Stock ticker for Waters Corp
+waters corporation,waters,85,low,pharma,Full corporate name
+biorad,bio-rad,85,low,pharma,Space/hyphen variant
+bio rad laboratories,bio-rad,85,low,pharma,Full corporate name
+beckman,beckman coulter,85,low,pharma,Common shorthand
+dhr,danaher,85,low,pharma,Stock ticker for Danaher
+ge cytiva,cytiva,85,low,pharma,Former GE Life Sciences branding
+ge life sciences,cytiva,85,low,pharma,Former division name
+sar,sartorius,85,low,pharma,Stock ticker shorthand
+sartorius stedim,sartorius,85,low,pharma,Bioprocess subsidiary full name
+millipore,merck millipore,85,medium,pharma,Historical brand; now under Merck KGaA
+mck,mckesson,85,low,pharma,Stock ticker for McKesson
+cah,cardinal health,85,low,pharma,Stock ticker for Cardinal Health
+abc,amerisourcebergen,85,low,pharma,Stock ticker; also used for Cencora
+cencora,amerisourcebergen,85,low,pharma,Renamed to Cencora 2023
+cvs,cvs health,85,medium,retail,Consumer pharmacy brand
+cvs pharmacy,cvs health,85,medium,retail,Retail pharmacy chain
+aetna,cvs health,85,medium,pharma,Acquired 2018; health insurer
+wba,walgreens,85,medium,retail,Stock ticker for Walgreens Boots Alliance
+walgreens boots alliance,walgreens,85,medium,retail,Full holding company name
+boots,walgreens,85,medium,retail,UK pharmacy chain; sub-brand
+unh,unitedhealth,85,medium,pharma,Stock ticker for UnitedHealth Group
+optum,unitedhealth,85,medium,pharma,Health services sub-brand
+ci,cigna,85,medium,pharma,Stock ticker for Cigna
+evernorth,cigna,85,medium,pharma,Services subsidiary
+antm,elevance health,85,medium,pharma,Former stock ticker (Anthem)
+anthem,elevance health,85,medium,pharma,Former company name; rebranded 2022
+dgx,quest diagnostics,85,low,pharma,Stock ticker for Quest Diagnostics
+lh,labcorp,85,low,pharma,Stock ticker for Labcorp
+laboratory corporation,labcorp,85,low,pharma,Full legal name
+basf se,basf,85,low,chemical,Full corporate entity name
+dow inc,dow,85,medium,chemical,Current holding company name
+dow chemical,dow,85,medium,chemical,Former/operating name
+dow dupont,dow,70,medium,chemical,Brief merged entity (2017-2019); ambiguous
+dd,dupont,85,low,chemical,Stock ticker for DuPont
+dupont de nemours,dupont,85,low,chemical,Full current legal name
+corteva,dupont,85,low,chemical,Agri spin-off 2019; distinctive brand
+mmm,3m,85,medium,industrial,Stock ticker for 3M
+minnesota mining,3m,85,medium,industrial,Full historical name
+scotch,3m,85,medium,industrial,Tape product brand; well known sub-brand
+post-it,3m,85,medium,industrial,Sticky notes brand; highly distinctive
+hon,honeywell,85,medium,industrial,Stock ticker for Honeywell
+uop,honeywell,85,medium,industrial,Honeywell process technology subsidiary
+resideo,honeywell,85,medium,industrial,Spun off 2018; home/building controls
+siemens ag,siemens,85,medium,industrial,Full corporate entity name
+siemens energy,siemens,85,medium,industrial,Spun off 2020; energy equipment subsidiary
+siemens mobility,siemens,85,medium,industrial,Rail/transport division
+se,schneider electric,70,medium,industrial,2-char ambiguous; also used for other companies
+aveva,schneider electric,85,medium,industrial,Acquired 2023; industrial software
+abb ltd,abb,85,medium,industrial,Full corporate entity name
+asea brown boveri,abb,85,medium,industrial,Full historical name for ABB
+etn,eaton,85,low,industrial,Stock ticker for Eaton
+eaton corporation,eaton,85,low,industrial,Full corporate name
+emr,emerson,85,medium,industrial,Stock ticker for Emerson
+emerson electric,emerson,85,medium,industrial,Full corporate name
+rok,rockwell automation,85,low,industrial,Stock ticker for Rockwell Automation
+allen bradley,rockwell automation,85,low,industrial,Legacy brand; now part of Rockwell
+gww,grainger,85,low,industrial,Stock ticker for W.W. Grainger
+w.w. grainger,grainger,85,low,industrial,Full corporate name
+apd,air products,85,low,industrial,Stock ticker for Air Products
+air products and chemicals,air products,85,low,industrial,Full corporate name
+linde plc,linde,85,low,industrial,Full corporate entity name
+boc,linde,85,low,industrial,UK subsidiary; BOC gases brand
+solb,solvay,85,low,chemical,Stock ticker for Solvay
+solvay sa,solvay,85,low,chemical,Full corporate name
+evonik industries,evonik,85,low,chemical,Full corporate name
+bayer covestro,covestro,85,low,chemical,Reference to its origin from Bayer
+akzo,akzo nobel,85,low,chemical,Common shorthand
+dulux,akzo nobel,85,low,chemical,Paint sub-brand
+ppg industries,ppg,85,low,chemical,Full corporate name
+shw,sherwin williams,85,low,chemical,Stock ticker
+valspar,sherwin williams,85,low,chemical,Acquired 2017; paint brand
+emn,eastman,85,low,chemical,Stock ticker for Eastman Chemical
+eastman chemical,eastman,85,low,chemical,Full corporate name
+ce,celanese,85,low,chemical,Stock ticker for Celanese
+celanese corporation,celanese,85,low,chemical,Full corporate name
+hun,huntsman,85,low,chemical,Stock ticker for Huntsman
+huntsman corporation,huntsman,85,low,chemical,Full corporate name
+clari,clariant,85,low,chemical,Stock ticker shorthand
+arkema sa,arkema,85,low,chemical,Full corporate name
+ineos group,ineos,85,low,chemical,Full group name
+sabic sa,sabic,85,low,chemical,Full corporate name
+saudi basic industries,sabic,85,low,chemical,Full expanded name
+mcc,mitsubishi chemical,85,medium,chemical,Common shorthand; Mitsubishi Chemical Corporation
+lgc,lg chem,85,medium,chemical,Stock ticker shorthand
+posco holdings,posco,85,low,industrial,Current holding company name
+mt,arcelormittal,85,low,industrial,Stock ticker for ArcelorMittal
+arcelor,arcelormittal,85,low,industrial,Pre-merger name
+tkh,thyssenkrupp,85,low,industrial,Stock ticker
+thyssen krupp,thyssenkrupp,85,low,industrial,Space-separated variant
+cat,caterpillar,85,low,industrial,Brand and stock ticker for Caterpillar
+cat financial,caterpillar,85,low,industrial,Financial services subsidiary
+de,john deere,85,low,industrial,Stock ticker for Deere & Company
+deere & company,john deere,85,low,industrial,Full corporate name
+kmt,komatsu,85,low,industrial,Stock ticker for Komatsu
+komatsu ltd,komatsu,85,low,industrial,Full corporate name
+cmi,cummins,85,low,industrial,Stock ticker for Cummins
+cummins inc,cummins,85,low,industrial,Full corporate name
+rolls-royce holdings,rolls royce,85,medium,industrial,Full holding company name
+ba,boeing,85,low,industrial,Stock ticker for Boeing
+boeing company,boeing,85,low,industrial,Full corporate name
+airbus se,airbus,85,low,industrial,Full corporate entity name
+lmt,lockheed martin,85,low,industrial,Stock ticker for Lockheed Martin
+lm,lockheed martin,70,low,industrial,2-char abbreviation; check context
+noc,northrop grumman,85,low,industrial,Stock ticker for Northrop Grumman
+northrop,northrop grumman,85,low,industrial,Common shorthand
+rtx,raytheon,85,low,industrial,Post-merger ticker for Raytheon Technologies
+raytheon technologies,raytheon,85,low,industrial,Former corporate name (now RTX Corp)
+collins aerospace,raytheon,85,low,industrial,Sub-brand/division of RTX
+pratt & whitney,raytheon,85,low,industrial,Aerospace engine sub-brand of RTX
+thales group,thales,85,low,industrial,Full corporate name
+saf,safran,85,low,industrial,Stock ticker for Safran
+safran sa,safran,85,low,industrial,Full corporate name
+jpm,jpmorgan chase,85,medium,financial,Stock ticker for JPMorgan Chase
+chase,jpmorgan chase,85,medium,financial,Retail banking brand
+j.p. morgan,jpmorgan chase,85,medium,financial,Investment banking brand
+jpmc,jpmorgan chase,85,medium,financial,Commonly used 4-char abbreviation
+bac,bank of america,85,medium,financial,Stock ticker for Bank of America
+bofa,bank of america,85,medium,financial,Common shorthand
+merrill lynch,bank of america,85,medium,financial,Acquired 2009; investment banking brand
+merrill,bank of america,85,medium,financial,Short form of Merrill Lynch
+citi,citigroup,85,medium,financial,Common brand shorthand
+citibank,citigroup,85,medium,financial,Retail banking brand
+citicorp,citigroup,85,medium,financial,Historical corporate name
+wfc,wells fargo,85,medium,financial,Stock ticker for Wells Fargo
+wachovia,wells fargo,85,medium,financial,Acquired 2008; former regional bank brand
+gs,goldman sachs,85,medium,financial,Stock ticker for Goldman Sachs
+goldman,goldman sachs,85,medium,financial,Common shorthand
+marcus,goldman sachs,85,medium,financial,Consumer banking brand
+blk,blackrock,85,medium,financial,Stock ticker for BlackRock
+ishares,blackrock,85,medium,financial,ETF brand; subsidiary of BlackRock
+aladdin,blackrock,85,medium,financial,Portfolio management platform
+visa inc,visa,85,medium,financial,Full legal name
+mastercard worldwide,mastercard,85,medium,financial,Former legal name
+amex,american express,85,medium,financial,Universally recognized abbreviation
+axp,american express,85,medium,financial,Stock ticker for AmEx
+cof,capital one,85,medium,financial,Stock ticker for Capital One
+capitalone,capital one,85,medium,financial,Domain-style variant
+hongkong shanghai banking,hsbc,85,medium,financial,Historical full name for HSBC
+hsbc holdings,hsbc,85,medium,financial,Full current corporate name
+barc,barclays,85,medium,financial,Stock ticker for Barclays
+barclays bank,barclays,85,medium,financial,Retail banking entity
+barclays capital,barclays,85,medium,financial,Former investment banking brand
+deutsche bank ag,deutsche bank,85,medium,financial,Full corporate name
+ubs group,ubs,85,medium,financial,Full holding company name
+ubs ag,ubs,85,medium,financial,Operating entity name
+san,santander,85,medium,financial,Stock ticker for Banco Santander
+banco santander,santander,85,medium,financial,Full corporate name
+bnp,bnp paribas,85,medium,financial,Common shorthand
+bnpp,bnp paribas,85,medium,financial,4-char variant
+ing groep,ing,85,medium,financial,Full Dutch holding company name
+ing bank,ing,85,medium,financial,Banking subsidiary
+nwg,natwest,85,medium,financial,Stock ticker for NatWest Group
+national westminster,natwest,85,medium,financial,Historical full name
+rbs,natwest,85,medium,financial,Former name: Royal Bank of Scotland
+royal bank of scotland,natwest,85,medium,financial,Former brand name
+lloy,lloyds,85,medium,financial,Stock ticker for Lloyds Banking Group
+lloyds banking,lloyds,85,medium,financial,Current formal name
+lloyds tsb,lloyds,85,medium,financial,Former brand after Trustee Savings Bank merger
+royal bank of canada,rbc,85,medium,financial,Full corporate name
+rbc capital,rbc,85,medium,financial,Capital markets division
+td canada trust,td bank,85,medium,financial,Canadian retail brand
+toronto dominion,td bank,85,medium,financial,Full historical name
+bns,scotiabank,85,medium,financial,Stock ticker for Scotiabank
+bank of nova scotia,scotiabank,85,medium,financial,Full legal name
+bank of montreal,bmo,85,medium,financial,Full legal name
+bmo financial,bmo,85,medium,financial,Financial group name
+canadian imperial bank of commerce,cibc,85,medium,financial,Full legal name for CIBC
+industrial commercial bank of china,icbc,85,medium,financial,Full name for ICBC
+mitsubishi ufj,mufg,85,medium,financial,Key component name
+bank of tokyo,mufg,85,medium,financial,Historical component name
+mufg bank,mufg,85,medium,financial,Banking subsidiary
+nomura holdings,nomura,85,low,financial,Full corporate name
+allianz se,allianz,85,medium,financial,Full corporate entity name
+pimco,allianz,85,medium,financial,Majority-owned asset management subsidiary
+axa sa,axa,85,medium,financial,Full corporate entity name
+axa xl,axa,85,medium,financial,Commercial insurance sub-brand
+zurich insurance,zurich,85,medium,financial,Insurance brand
+zurich financial,zurich,85,medium,financial,Historical financial services name
+american international group,aig,85,medium,financial,Full corporate name
+met,metlife,85,medium,financial,Stock ticker for MetLife
+metropolitan life,metlife,85,medium,financial,Historical full name
+pru,prudential,85,medium,financial,Stock ticker for Prudential Financial US
+prudential financial,prudential,85,medium,financial,US life insurer
+prudential plc,prudential,85,medium,financial,UK insurer; separate company (ambiguous with US Prudential)
+aon plc,aon,85,low,financial,Full corporate entity name
+marsh mclennan,marsh,85,medium,financial,Current parent company name
+mmc,marsh,85,medium,financial,Stock ticker for Marsh McLennan
+oliver wyman,marsh,85,medium,financial,Consulting sub-brand
+guy carpenter,marsh,85,medium,financial,Reinsurance brokerage sub-brand
+swiss reinsurance,swiss re,85,low,financial,Full corporate name
+munichre,munich re,85,low,financial,Domain-style shortening
+muenchener rueck,munich re,85,low,financial,German name
+stt,state street,85,medium,financial,Stock ticker for State Street
+ssga,state street,85,medium,financial,Investment management arm: State Street Global Advisors
+bank of new york mellon,bny mellon,85,medium,financial,Full corporate name
+xom,exxonmobil,85,medium,energy,Stock ticker for ExxonMobil
+exxon,exxonmobil,85,medium,energy,US domestic brand
+mobil,exxonmobil,85,medium,energy,Former Mobil brand; now ExxonMobil
+esso,exxonmobil,85,medium,energy,International brand name for Exxon stations
+cvx,chevron,85,medium,energy,Stock ticker for Chevron
+chevron corporation,chevron,85,medium,energy,Full corporate name
+texaco,chevron,85,medium,energy,Acquired 2001; fuel brand still used
+caltex,chevron,85,medium,energy,Asian/Pacific brand name for Chevron
+shell plc,shell,70,high,energy,Current legal name
+royal dutch shell,shell,70,high,energy,Former corporate name pre-2022
+british petroleum,bp,70,high,energy,Former full name; high risk
+bp plc,bp,70,high,energy,Current legal entity name
+arco,bp,70,high,energy,West coast US fuel brand owned by BP
+total,totalenergies,70,high,energy,Former brand name; common English word
+total sa,totalenergies,70,high,energy,Former legal entity name
+total energies,totalenergies,70,high,energy,Space-separated variant
+eni spa,eni,85,medium,energy,Full corporate entity name
+agip,eni,85,medium,energy,Fuel brand owned by Eni
+eqnr,equinor,85,low,energy,Stock ticker for Equinor
+statoil,equinor,85,low,energy,Former company name; rebranded 2018
+aramco,saudi aramco,85,medium,energy,Common shorthand; distinctive
+saudi arabian oil,saudi aramco,85,medium,energy,Full formal name
+pbr,petrobras,85,medium,energy,Stock ticker for Petrobras
+petroleo brasileiro,petrobras,85,medium,energy,Full corporate name
+snp,sinopec,85,medium,energy,Stock ticker for Sinopec
+china petroleum,sinopec,85,medium,energy,Informal English translation
+sinopec corp,sinopec,85,medium,energy,Common short reference
+cop,conocophillips,85,medium,energy,Stock ticker for ConocoPhillips
+conoco,conocophillips,85,medium,energy,Former name; retained as brand
+mpc,marathon,85,medium,energy,Stock ticker for Marathon Petroleum
+marathon petroleum,marathon,85,medium,energy,Downstream company full name
+mro,marathon,70,medium,energy,Stock ticker for Marathon Oil; distinct from MPC
+marathon oil,marathon,85,medium,energy,Upstream company; separate from Marathon Petroleum
+vlo,valero,85,low,energy,Stock ticker for Valero Energy
+valero energy,valero,85,low,energy,Full corporate name
+psx,phillips 66,85,low,energy,Stock ticker for Phillips 66
+enb,enbridge,85,low,energy,Stock ticker for Enbridge
+enbridge inc,enbridge,85,low,energy,Full corporate name
+kmi,kinder morgan,85,low,energy,Stock ticker for Kinder Morgan
+duk,duke energy,85,medium,energy,Stock ticker for Duke Energy
+nee,nextera energy,85,low,energy,Stock ticker for NextEra Energy
+florida power & light,nextera energy,85,low,energy,Major utility subsidiary
+fpl,nextera energy,85,low,energy,Florida Power & Light abbreviation
+national grid plc,national grid,70,high,energy,Full corporate name
+iber,iberdrola,85,low,energy,Stock ticker shorthand
+enel spa,enel,85,low,energy,Full corporate name
+engie sa,engie,85,low,energy,Full corporate entity name
+gdf suez,engie,85,low,energy,Former company name; rebranded 2015
+electricite de france,edf,85,medium,energy,Full French corporate name
+edf energy,edf,85,medium,energy,UK operations sub-brand
+eon,e.on,85,medium,energy,Common spelling variant without period
+e.on se,e.on,85,medium,energy,Full corporate entity name
+rwe ag,rwe,85,medium,energy,Full corporate entity name
+veolia environment,veolia,85,low,energy,Historical full name
+veolia water,veolia,85,low,energy,Water services division brand
+wm,waste management,85,medium,energy,Stock ticker for Waste Management
+wm inc,waste management,85,medium,energy,Common shorthand
+ko,coca cola,85,medium,food,Stock ticker for Coca-Cola
+coke,coca cola,85,medium,food,Globally recognized brand shorthand
+coca-cola company,coca cola,85,medium,food,Full legal name
+pep,pepsico,85,medium,food,Stock ticker for PepsiCo
+pepsi,pepsico,85,medium,food,Beverage brand shorthand
+frito lay,pepsico,85,medium,food,Snacks subsidiary; distinctive brand
+quaker,pepsico,85,medium,food,Acquired 2001; foods brand
+nsrgy,nestle,85,medium,food,Stock ticker for Nestle
+nestle sa,nestle,85,medium,food,Full corporate entity name
+ul,unilever,85,medium,food,Stock ticker for Unilever
+dove,unilever,85,medium,food,Personal care brand; distinctive
+knorr,unilever,85,medium,food,Food brand; distinctive
+p&g,procter & gamble,85,low,food,Universally recognized abbreviation
+pg,procter & gamble,85,low,food,Stock ticker for P&G
+pampers,procter & gamble,85,low,food,Baby care brand; distinctive
+tide,procter & gamble,85,low,food,Laundry brand; distinctive
+gillette,procter & gamble,85,low,food,Personal care brand; acquired 2005
+mdlz,mondelez,85,medium,food,Stock ticker for Mondelez
+nabisco,mondelez,85,medium,food,Brand under Mondelez; crackers/cookies
+cadbury,mondelez,85,medium,food,UK/global chocolate brand
+oreo,mondelez,85,medium,food,Cookie brand; globally distinctive
+khc,kraft heinz,85,medium,food,Stock ticker for Kraft Heinz
+kraft,kraft heinz,85,medium,food,US food brand
+heinz,kraft heinz,85,medium,food,Ketchup/condiment brand; iconic
+gis,general mills,85,medium,food,Stock ticker for General Mills
+cheerios,general mills,85,medium,food,Cereal brand; distinctive
+pillsbury,general mills,85,medium,food,Baking brand; distinctive
+betty crocker,general mills,85,medium,food,Baking brand; distinctive
+kellanova,kellogg,85,medium,food,Renamed international snacks business 2023
+kellogg company,kellogg,85,medium,food,Former full name
+mars inc,mars,70,high,food,Full corporate name; common English word
+m&ms,mars,70,high,food,Candy brand under Mars; high risk parent
+snickers,mars,70,high,food,Candy bar brand; distinctive but parent is high risk
+wrigley,mars,70,high,food,Acquired gum brand; now subsidiary of Mars
+dan,danone,85,medium,food,Stock ticker shorthand
+danone sa,danone,85,medium,food,Full corporate entity name
+activia,danone,85,medium,food,Yogurt brand; distinctive
+evian,danone,85,medium,food,Water brand; distinctive
+tsn,tyson foods,85,medium,food,Stock ticker for Tyson Foods
+tyson,tyson foods,85,medium,food,Common shorthand; distinctive meat brand
+jimmy dean,tyson foods,85,medium,food,Sausage sub-brand
+hillshire farm,tyson foods,85,medium,food,Acquired 2014; deli brand
+cargill inc,cargill,85,low,food,Full corporate name
+archer daniels midland,adm,85,medium,food,Full name for ADM
+adm milling,adm,85,medium,food,Milling division brand
+bg,bunge,85,low,food,Stock ticker for Bunge Ltd
+bunge limited,bunge,85,low,food,Full corporate name
+jbs sa,jbs,85,medium,food,Full Brazilian corporate name
+swift,jbs,85,medium,food,Beef brand under JBS; US operations
+pilgrim's pride,jbs,85,medium,food,Poultry subsidiary majority-owned by JBS
+hrl,hormel,85,low,food,Stock ticker for Hormel Foods
+hormel foods,hormel,85,low,food,Full corporate name
+spam,hormel,85,low,food,Iconic canned meat brand
+jennie-o,hormel,85,low,food,Turkey brand subsidiary
+cag,conagra,85,low,food,Stock ticker for Conagra Brands
+conagra brands,conagra,85,low,food,Full corporate name
+birds eye,conagra,85,low,food,Frozen food brand; distinctive
+hunt's,conagra,85,low,food,Tomato brand; distinctive
+hsy,hershey,85,low,food,Stock ticker for The Hershey Company
+hershey company,hershey,85,low,food,Full corporate name
+lindt & sprungli,lindt,85,low,food,Full corporate name
+lindor,lindt,85,low,food,Premium chocolate truffle brand
+ferrero rocher,ferrero,85,low,food,Flagship confectionery product
+nutella,ferrero,85,low,food,Hazelnut spread; highly distinctive
+tic tac,ferrero,85,low,food,Mint brand under Ferrero
+sbux,starbucks,85,low,food,Stock ticker for Starbucks
+mcd,mcdonald's,70,high,food,Stock ticker for McDonald's; franchise risk
+mcdonalds,mcdonald's,70,high,food,Domain-style variant without apostrophe
+golden arches,mcdonald's,70,high,food,Informal nickname for McDonald's
+bkc,burger king,70,high,food,Burger King Corporation abbreviation
+restaurant brands,burger king,70,high,food,Parent RBI owns BK Tim Hortons Popeyes
+yum brands,kfc,70,high,food,Parent company of KFC Pizza Hut Taco Bell
+kentucky fried chicken,kfc,70,high,food,Full historical name
+subway restaurants,subway,70,high,food,Full company name
+dpz,domino's,70,high,food,Stock ticker for Domino's Pizza
+dominos pizza,domino's,70,high,food,No-apostrophe variant
+wen,wendy's,70,high,food,Stock ticker for Wendy's
+the wendy's company,wendy's,70,high,food,Full corporate name
+cmg,chipotle,85,medium,food,Stock ticker for Chipotle
+chipotle mexican grill,chipotle,85,medium,food,Full corporate name
+tims,tim hortons,70,high,food,Common Canadian nickname
+timhortons,tim hortons,70,high,food,Domain-style variant
+plki,popeyes,70,high,food,Former stock ticker for Popeyes Louisiana Kitchen
+popeyes louisiana kitchen,popeyes,70,high,food,Full brand name
+dq,dairy queen,70,high,food,Common abbreviation
+international dairy queen,dairy queen,70,high,food,Full corporate name
+dnkn,dunkin,70,high,food,Former stock ticker
+dunkin' donuts,dunkin,70,high,food,Former brand name with apostrophe
+inspire brands,dunkin,70,high,food,Parent company also owns Arby's etc
+wmt,walmart,85,medium,retail,Stock ticker for Walmart
+walmart inc,walmart,85,medium,retail,Full corporate name
+asda,walmart,85,medium,retail,UK supermarket owned by Walmart
+flipkart,walmart,85,medium,retail,Indian e-commerce; majority owned by Walmart
+cost,costco,85,low,retail,Stock ticker for Costco
+costco wholesale,costco,85,low,retail,Full corporate name
+tgt,target,70,high,retail,Stock ticker; target itself is high risk
+kr,kroger,85,medium,retail,Stock ticker for Kroger
+fred meyer,kroger,85,medium,retail,Pacific NW banner brand
+smith's,kroger,85,medium,retail,Regional supermarket banner
+king soopers,kroger,85,medium,retail,Colorado banner brand
+carr,carrefour,85,medium,retail,Stock ticker shorthand
+carrefour sa,carrefour,85,medium,retail,Full corporate name
+tsco,tesco,85,medium,retail,Stock ticker for Tesco
+tesco plc,tesco,85,medium,retail,Full corporate name
+aldi nord,aldi,85,medium,retail,Northern German Aldi group
+aldi sud,aldi,85,medium,retail,Southern German Aldi group
+metro inc,metro,70,high,retail,Canadian grocery
+metro ag,metro,70,high,retail,German wholesale
+hd,home depot,85,medium,retail,Stock ticker for Home Depot
+the home depot,home depot,85,medium,retail,Full brand name
+low,lowes,85,medium,retail,Stock ticker for Lowe's
+lowe's companies,lowes,85,medium,retail,Full corporate name
+ingvar kamprad,ikea,85,low,retail,Founder name; IKEA acronym derives from it
+inter ikea,ikea,85,low,retail,Holding company that owns the IKEA concept
+wayfair inc,wayfair,85,low,retail,Full corporate name
+tj maxx,tjx,85,medium,retail,Flagship off-price banner
+marshalls,tjx,85,medium,retail,Off-price banner
+homegoods,tjx,85,medium,retail,Home goods banner
+sierra,tjx,85,medium,retail,Outdoor/sporting banner
+jwn,nordstrom,85,low,retail,Stock ticker for Nordstrom
+gps,gap,85,medium,retail,Stock ticker for Gap Inc
+gap inc,gap,85,medium,retail,Full holding company name
+banana republic,gap,85,medium,retail,Premium apparel brand
+old navy,gap,85,medium,retail,Value apparel brand; distinctive
+athleta,gap,85,medium,retail,Women's activewear brand
+inditex,zara,85,medium,retail,Parent holding company
+itx,inditex,85,medium,retail,Stock ticker for Inditex
+pull&bear,inditex,85,medium,retail,Youth fashion brand
+massimo dutti,inditex,85,medium,retail,Premium brand
+bershka,inditex,85,medium,retail,Youth fashion brand
+hennes & mauritz,h&m,85,medium,retail,Full Swedish corporate name
+h&m group,h&m,85,medium,retail,Group holding name
+fast retailing,uniqlo,85,low,retail,Parent company of Uniqlo
+nke,nike,85,low,retail,Stock ticker for Nike
+nike inc,nike,85,low,retail,Full corporate name
+jordan brand,nike,85,low,retail,Air Jordan sub-brand
+converse,nike,85,low,retail,Acquired 2003; sneaker brand
+adidas ag,adidas,85,low,retail,Full corporate entity name
+reebok,adidas,85,low,retail,Acquired 2006; sold 2022; historically associated
+puma ag,puma,85,low,retail,Former corporate name
+puma se,puma,85,low,retail,Current corporate entity
+uaa,under armour,85,low,retail,Stock ticker (class A)
+underarmour,under armour,85,low,retail,No-space variant
+lulu,lululemon,85,low,retail,Common shorthand
+lululemon athletica,lululemon,85,low,retail,Full corporate name
+levi strauss,levi's,85,low,retail,Full corporate name
+levi jeans,levi's,85,low,retail,Common product reference
+louis vuitton moet hennessy,lvmh,85,medium,retail,Full expansion of LVMH acronym
+louis vuitton,lvmh,85,medium,retail,Flagship brand
+dior,lvmh,85,medium,retail,Fashion/beauty brand; distinctive
+tag heuer,lvmh,85,medium,retail,Watch brand under LVMH
+sephora,lvmh,85,medium,retail,Beauty retail brand under LVMH
+kering,gucci,85,low,retail,Parent company; Gucci is leading brand
+gucci guccio,gucci,85,low,retail,Full brand name with founder surname
+hermes international,hermes,85,low,retail,Full corporate name
+birkin,hermes,85,low,retail,Iconic handbag; distinctive
+kelly,hermes,85,low,retail,Iconic handbag; distinctive
+chanel sa,chanel,85,low,retail,Full legal entity name
+rolex sa,rolex,85,low,retail,Full corporate name
+tudor,rolex,85,low,retail,Entry-luxury watch brand owned by Rolex
+tm,toyota,85,low,auto,Stock ticker for Toyota Motor
+toyota motor,toyota,85,low,auto,Full corporate name
+lexus,toyota,85,low,auto,Luxury vehicle brand; distinctive
+hmc,honda,85,low,auto,Stock ticker for Honda Motor
+honda motor,honda,85,low,auto,Full corporate name
+acura,honda,85,low,auto,US luxury brand
+nsany,nissan,70,high,auto,Stock ticker for Nissan; nissan itself is high risk
+nissan motor,nissan,70,high,auto,Full corporate name; high risk brand
+infiniti,nissan,70,high,auto,Luxury sub-brand of Nissan; inherits parent risk
+ford motor,ford,85,medium,auto,Full corporate name
+lincoln,ford,85,medium,auto,Luxury brand; distinctive
+ford credit,ford,85,medium,auto,Financial services arm
+gm,general motors,85,medium,auto,Common abbreviation for General Motors
+gmc,general motors,85,medium,auto,Truck/SUV brand
+chevrolet,general motors,85,medium,auto,Mainstream auto brand
+buick,general motors,85,medium,auto,Premium brand; distinctive
+cadillac,general motors,85,medium,auto,Luxury brand; distinctive
+baojun,general motors,85,medium,auto,Chinese JV brand
+stla,stellantis,85,medium,auto,Stock ticker for Stellantis
+chrysler,stellantis,85,medium,auto,US brand; distinctive
+fiat,stellantis,85,medium,auto,Italian brand; distinctive
+jeep,stellantis,85,medium,auto,Off-road brand; very distinctive
+dodge,stellantis,85,medium,auto,US performance brand
+ram,stellantis,85,medium,auto,Truck brand; common word but brand is strong
+peugeot,stellantis,85,medium,auto,French brand; distinctive
+citroen,stellantis,85,medium,auto,French brand; distinctive
+opel,stellantis,85,medium,auto,German brand; distinctive
+vow,volkswagen,85,medium,auto,Stock ticker for VW
+vw,volkswagen,85,medium,auto,Universal abbreviation
+volkswagen ag,volkswagen,85,medium,auto,Full corporate name
+audi ag,audi,85,medium,auto,Full corporate name
+porsche,volkswagen,85,medium,auto,Premium brand; majority owned by VW Group
+seat,volkswagen,85,medium,auto,Spanish brand under VW Group
+skoda,volkswagen,85,medium,auto,Czech brand under VW Group
+bayerische motoren werke,bmw,85,medium,auto,Full German corporate name
+mini,bmw,85,medium,auto,British brand owned by BMW Group
+rolls royce motorcar,bmw,85,medium,auto,Luxury auto brand (separate from Rolls-Royce aerospace)
+mbg,mercedes benz,85,medium,auto,Stock ticker for Mercedes-Benz Group
+daimler,mercedes benz,85,medium,auto,Former parent company name
+mercedes,mercedes benz,85,medium,auto,Common brand shorthand
+mbenz,mercedes benz,85,medium,auto,Informal abbreviation
+hymtf,hyundai,85,medium,auto,Stock ticker shorthand
+hyundai motor,hyundai,85,medium,auto,Full corporate name
+genesis,hyundai,85,medium,auto,Luxury sub-brand
+kia motors,kia,85,medium,auto,Former full corporate name
+kia corporation,kia,85,medium,auto,Current full corporate name
+tsla,tesla,85,low,auto,Stock ticker for Tesla
+ab volvo,volvo,85,medium,auto,Commercial vehicles parent (trucks/buses)
+volvo cars,volvo,85,medium,auto,Passenger cars; owned by Geely
+volvo trucks,volvo,85,medium,auto,Commercial truck brand under AB Volvo
+rnlt,renault,85,medium,auto,Stock ticker shorthand
+renault sa,renault,85,medium,auto,Full corporate name
+dacia,renault,85,medium,auto,Romanian value brand under Renault
+mzda,mazda,85,low,auto,Stock ticker shorthand
+mazda motor,mazda,85,low,auto,Full corporate name
+fuji heavy industries,subaru,85,low,auto,Former corporate name of Subaru parent
+subaru corp,subaru,85,low,auto,Current formal corporate name
+bsto,bridgestone,85,low,auto,Stock ticker shorthand
+bridgestone corporation,bridgestone,85,low,auto,Full corporate name
+compagnie generale des etablissements michelin,michelin,85,low,auto,Full French corporate name
+gt,goodyear,85,low,auto,Stock ticker for Goodyear
+goodyear tire & rubber,goodyear,85,low,auto,Full corporate name
+ctt,continental,85,medium,auto,Stock ticker for Continental AG
+continental ag,continental,85,medium,auto,Full German corporate name
+contitech,continental,85,medium,auto,Industrial division sub-brand
+dhl express,dhl,85,medium,travel,Express courier division
+deutsche post,dhl,85,medium,travel,German postal parent company
+dhl supply chain,dhl,85,medium,travel,Supply chain/logistics division
+fdx,fedex,85,low,travel,Stock ticker for FedEx
+federal express,fedex,85,low,travel,Historical full name
+tnt,fedex,85,low,travel,Acquired 2016; European express brand
+united parcel service,ups,85,low,travel,Full corporate name
+ups supply chain,ups,85,low,travel,Supply chain services division
+apmm,maersk,85,low,travel,A.P. Moller-Maersk Group abbreviation
+a.p. moller maersk,maersk,85,low,travel,Full corporate name
+hlag,hapag lloyd,85,low,travel,Stock ticker for Hapag-Lloyd
+hapag-lloyd,hapag lloyd,85,low,travel,Hyphen variant
+xpo logistics,xpo,85,low,travel,Former full corporate name
+chrw,ch robinson,85,low,travel,Stock ticker for C.H. Robinson
+c.h. robinson,ch robinson,85,low,travel,Full corporate name
+dbs,db schenker,70,medium,travel,Common abbreviation; ambiguous with DBS Bank
+deutsche bahn schenker,db schenker,85,medium,travel,Full parent reference
+kn,kuehne nagel,85,low,travel,Stock ticker for Kuehne+Nagel
+kuehne+nagel,kuehne nagel,85,low,travel,Plus-sign variant
+dsv panalpina,dsv,85,low,travel,Former name post Panalpina acquisition
+expd,expeditors,85,low,travel,Stock ticker for Expeditors
+expeditors international,expeditors,85,low,travel,Full corporate name
+ceva group,ceva logistics,85,low,travel,Parent holding group
+uber technologies,uber,85,low,travel,Full corporate name
+lyft inc,lyft,85,low,travel,Full corporate name
+att,at&t,70,high,telecom,No-ampersand variant; still high risk
+american telephone & telegraph,at&t,70,high,telecom,Historical full name
+directv,at&t,70,high,telecom,Satellite TV brand; divested interest
+warner media,at&t,70,high,telecom,Former media arm; sold to Discovery
+vz,verizon,85,medium,telecom,Stock ticker for Verizon
+verizon communications,verizon,85,medium,telecom,Full corporate name
+fios,verizon,85,medium,telecom,Fiber internet brand
+tmus,t-mobile,85,medium,telecom,Stock ticker for T-Mobile
+t mobile,t-mobile,85,medium,telecom,No-hyphen variant
+sprint,t-mobile,85,medium,telecom,Acquired 2020; legacy brand
+metro by t-mobile,t-mobile,85,medium,telecom,Prepaid sub-brand
+vodafone group,vodafone,70,high,telecom,Full corporate name
+orange sa,orange,70,high,telecom,Full corporate entity name
+tef,telefonica,85,medium,telecom,Stock ticker for Telefonica
+movistar,telefonica,85,medium,telecom,Latin America/Spain brand
+o2,telefonica,70,high,telecom,UK/Germany brand; O2 itself is very short and ambiguous
+vivo,telefonica,85,medium,telecom,Brazilian mobile brand
+british telecom,bt,85,medium,telecom,Historical full name; BT widely known
+bt group,bt,85,medium,telecom,Current holding group name
+ee,bt,85,medium,telecom,UK mobile brand owned by BT
+plusnet,bt,85,medium,telecom,Budget ISP brand owned by BT
+dteg,deutsche telekom,85,medium,telecom,Stock ticker shorthand
+telekom,deutsche telekom,85,medium,telecom,Brand shorthand
+t-systems,deutsche telekom,85,medium,telecom,IT services subsidiary
+magenta,deutsche telekom,85,medium,telecom,Brand color/identity name
+ten,telenor,85,low,telecom,Stock ticker for Telenor
+telenor asa,telenor,85,low,telecom,Full corporate entity name
+bce,bell,70,high,telecom,Stock ticker for BCE Inc (Bell Canada parent)
+bell canada,bell,70,high,telecom,Main operating entity; Bell is common English word
+bell mobility,bell,70,high,telecom,Mobile services brand
+virgin plus,bell,70,high,telecom,Prepaid/youth brand under Bell
+rci,rogers,70,high,telecom,Stock ticker for Rogers Communications
+rogers communications,rogers,70,high,telecom,Full corporate name; Rogers is common surname
+fido,rogers,70,high,telecom,Prepaid brand owned by Rogers; also a common pet name
+telus corporation,telus,70,high,telecom,Full corporate name
+koodo,telus,70,high,telecom,Budget prepaid brand under Telus
+shaw communications,shaw,70,high,telecom,Full corporate name
+cmcsa,comcast,85,medium,telecom,Stock ticker for Comcast
+xfinity,comcast,85,medium,telecom,Consumer internet/TV brand
+nbcuniversal,comcast,85,medium,telecom,Media/entertainment subsidiary
+dis,disney,85,medium,media,Stock ticker for The Walt Disney Company
+the walt disney company,disney,85,medium,media,Full corporate name
+espn,disney,85,medium,media,Sports media brand
+hulu,disney,85,medium,media,Streaming service (majority owned)
+abc,disney,85,medium,media,Television network owned by Disney
+marvel,disney,85,medium,media,Entertainment brand; acquired 2009
+nflx,netflix,85,low,media,Stock ticker for Netflix
+wbd,warner bros discovery,85,medium,media,Stock ticker for Warner Bros Discovery
+warner bros,warner bros discovery,85,medium,media,Film/TV studio brand
+discovery,warner bros discovery,85,medium,media,Cable TV brand; merged with Warner
+hbo,warner bros discovery,85,medium,media,Premium cable brand; highly distinctive
+cnn,warner bros discovery,85,medium,media,News network brand
+turner,warner bros discovery,85,medium,media,Historical cable TV brand
+spot,spotify,85,low,media,Stock ticker for Spotify
+foxa,fox,85,medium,media,Stock ticker for Fox Corporation (class A)
+fox corporation,fox,85,medium,media,Full corporate name
+fox news,fox,85,medium,media,News channel brand
+fox sports,fox,85,medium,media,Sports media brand
+tri,thomson reuters,85,low,media,Stock ticker for Thomson Reuters
+reuters,thomson reuters,85,low,media,News agency brand; sub-brand
+westlaw,thomson reuters,85,low,media,Legal research platform
+rtz,thomson reuters,70,medium,media,Former Reuters ticker RTZ; check context carefully
+bloomberg lp,bloomberg,85,low,media,Full corporate name
+bloomberg media,bloomberg,85,low,media,Media division
+ren,relx,85,low,media,Stock ticker for RELX
+reed elsevier,relx,85,low,media,Former corporate name pre-2015
+lexisnexis,relx,85,low,media,Legal/news information sub-brand
+elsevier,relx,85,low,media,Academic publisher; distinctive
+springer,springer nature,85,low,media,Publishing brand shorthand
+nature publishing,springer nature,85,low,media,Academic journals brand
+macmillan,springer nature,85,low,media,Book publisher; associated with Springer Nature
+wkl,wolters kluwer,85,low,media,Stock ticker for Wolters Kluwer
+wolters kluwer nv,wolters kluwer,85,low,media,Full corporate entity name
+pson,pearson,85,medium,media,Stock ticker for Pearson
+pearson plc,pearson,85,medium,media,Full corporate name
+penguin,pearson,85,medium,media,Publishing brand; Penguin Random House
+edexcel,pearson,85,medium,media,UK exam board brand
+acn,accenture,85,low,consulting,Stock ticker for Accenture
+accenture plc,accenture,85,low,consulting,Full corporate entity name
+dtte,deloitte,85,medium,consulting,Informal abbreviation
+deloitte touche,deloitte,85,medium,consulting,Common informal name
+deloitte & touche,deloitte,85,medium,consulting,Former formal entity name
+pricewaterhousecoopers,pwc,85,medium,consulting,Full expanded name
+pwc llp,pwc,85,medium,consulting,Partnership entity name
+price waterhouse,pwc,85,medium,consulting,Pre-merger name
+ernst & young,ey,85,medium,consulting,Full expanded name for EY
+ey llp,ey,85,medium,consulting,Partnership entity name
+klynveld peat marwick goerdeler,kpmg,85,medium,consulting,Full historical name for KPMG
+kpmg llp,kpmg,85,medium,consulting,Partnership entity name
+mck,mckinsey,85,low,consulting,Common shorthand
+mckinsey & company,mckinsey,85,low,consulting,Full formal name
+boston consulting group,bcg,85,low,consulting,Full name for BCG
+bcg platinion,bcg,85,low,consulting,Tech consulting sub-brand of BCG
+bain & company,bain,85,medium,consulting,Full formal name; management consulting
+bain capital,bain,70,medium,consulting,Separate investment firm; same founders; ambiguous
+cap,capgemini,70,low,consulting,Stock ticker; 3-char; check context
+capgemini se,capgemini,85,low,consulting,Full corporate entity name
+ctsh,cognizant,85,low,consulting,Stock ticker for Cognizant
+cognizant technology,cognizant,85,low,consulting,Full name variant
+infy,infosys,85,low,consulting,Stock ticker for Infosys
+infosys technologies,infosys,85,low,consulting,Former longer name
+finacle,infosys,85,low,consulting,Banking software product brand
+tata consultancy services,tcs,85,low,consulting,Full expanded name; universally maps to TCS
+tata consulting,tcs,85,low,consulting,Informal variant
+wit,wipro,85,low,consulting,Stock ticker for Wipro
+wipro limited,wipro,85,low,consulting,Full corporate name
+wipro technologies,wipro,85,low,consulting,IT services division name
+hcl,hcltech,85,low,consulting,Common abbreviation for HCL Technologies
+hcl technologies,hcltech,85,low,consulting,Full corporate name
+genpact limited,genpact,85,low,consulting,Full corporate name
+ntt data corporation,ntt data,85,medium,consulting,Full corporate name
+nippon telegraph,ntt data,85,medium,consulting,Parent company reference
+atos se,atos,85,low,consulting,Full corporate entity name
+bull,atos,85,low,consulting,IT brand acquired by Atos; legacy
+evidian,atos,85,low,consulting,Cybersecurity brand under Atos
+pub,publicis,85,medium,consulting,Stock ticker for Publicis Groupe
+publicis groupe,publicis,85,medium,consulting,Full corporate name
+saatchi,publicis,85,medium,consulting,Saatchi & Saatchi; advertising sub-brand
+wpp plc,wpp,85,medium,consulting,Full corporate entity name
+grey,wpp,85,medium,consulting,Advertising agency under WPP
+ogilvy,wpp,85,medium,consulting,Advertising agency under WPP
+jwt,wpp,85,medium,consulting,J. Walter Thompson; now Wunderman Thompson
+omc,omnicom,85,medium,consulting,Stock ticker for Omnicom Group
+omnicom group,omnicom,85,medium,consulting,Full corporate name
+bbdo,omnicom,85,medium,consulting,Advertising agency network
+ddb,omnicom,85,medium,consulting,Advertising agency network
+tbwa,omnicom,85,medium,consulting,Advertising agency network
+dentsu inc,dentsu,85,low,consulting,Full Japanese corporate name
+dentsu group,dentsu,85,low,consulting,Holding company name
+interpublic group,ipg,85,medium,consulting,Full name for IPG
+mccann,ipg,85,medium,consulting,McCann Worldgroup; advertising agency
+foote cone & belding,ipg,85,medium,consulting,FCB advertising agency under IPG
+fcb,ipg,85,medium,consulting,FCB agency abbreviation
+saatchi and saatchi,saatchi & saatchi,85,low,consulting,Variant without ampersand
+securitas ab,securitas,85,low,facilities,Full corporate entity name
+group 4 securicor,g4s,85,medium,facilities,Full historical name for G4S
+allied universal,g4s,85,medium,facilities,G4S merged into Allied Universal in Americas
+bcorp,brinks,85,low,facilities,Stock ticker shorthand
+brink's company,brinks,85,low,facilities,Full corporate name
+jci,johnson controls,85,medium,facilities,Stock ticker for Johnson Controls
+tyco,johnson controls,85,medium,facilities,Acquired security business 2016
+cb richard ellis,cbre,85,low,facilities,Full historical name for CBRE
+cbre group,cbre,85,low,facilities,Full current corporate name
+jones lang lasalle,jll,85,low,facilities,Full corporate name for JLL
+cwk,cushman wakefield,85,low,facilities,Stock ticker for Cushman & Wakefield
+dtz,cushman wakefield,85,low,facilities,Acquired DTZ; legacy brand
+sodexo sa,sodexo,85,low,facilities,Full corporate entity name
+armk,aramark,85,low,facilities,Stock ticker for Aramark
+eurest,compass group,85,medium,facilities,Contract catering brand
+chartwells,compass group,85,medium,facilities,Education dining brand
+scolarest,compass group,85,medium,facilities,Education catering brand
+rkil,rentokil,85,low,facilities,Stock ticker for Rentokil Initial
+rentokil initial,rentokil,85,low,facilities,Full corporate name
+terminix,rentokil,85,low,facilities,Acquired 2022; US pest control brand
+ctas,cintas,85,low,facilities,Stock ticker for Cintas
+cintas corporation,cintas,85,low,facilities,Full corporate name
+ecl,ecolab,85,low,facilities,Stock ticker for Ecolab
+ecolab inc,ecolab,85,low,facilities,Full corporate name
+nalco,ecolab,85,low,facilities,Acquired 2011; water treatment brand
+mar,marriott,70,high,travel,Stock ticker; marriott is high risk franchise
+marriott international,marriott,70,high,travel,Full corporate name
+sheraton,marriott,70,high,travel,Upper-upscale hotel brand
+westin,marriott,70,high,travel,Premium hotel brand
+ritz carlton,marriott,70,high,travel,Luxury brand; distinctive even within high-risk parent
+w hotels,marriott,70,high,travel,Lifestyle brand
+courtyard,marriott,70,high,travel,Midscale brand
+fairfield,marriott,70,high,travel,Budget brand
+ac hotels,marriott,70,high,travel,European-origin lifestyle brand
+renaissance,marriott,70,high,travel,Upper-upscale brand
+hlt,hilton,70,high,travel,Stock ticker; hilton is high risk franchise
+hilton worldwide,hilton,70,high,travel,Full corporate name
+hampton inn,hilton,70,high,travel,Midscale brand; high franchise count
+doubletree,hilton,70,high,travel,Upper-midscale brand
+embassy suites,hilton,70,high,travel,All-suite brand
+waldorf astoria,hilton,70,high,travel,Ultra-luxury brand
+curio,hilton,70,high,travel,Soft brand collection
+tapestry,hilton,70,high,travel,Soft brand collection
+hyatt hotels,hyatt,85,medium,travel,Full corporate name
+park hyatt,hyatt,85,medium,travel,Luxury brand
+grand hyatt,hyatt,85,medium,travel,Premium brand
+andaz,hyatt,85,medium,travel,Lifestyle brand
+alila,hyatt,85,medium,travel,Luxury spa brand acquired by Hyatt
+intercontinental hotels,ihg,70,high,travel,Full name for IHG
+holiday inn,ihg,70,high,travel,Largest franchise brand in IHG; very high operator risk
+crowne plaza,ihg,70,high,travel,Upscale brand
+staybridge,ihg,70,high,travel,Extended stay brand
+candlewood,ihg,70,high,travel,Extended stay value brand
+six senses,ihg,70,high,travel,Luxury wellness brand
+voco,ihg,70,high,travel,Soft brand
+aor,accor,85,medium,travel,Stock ticker shorthand
+accor sa,accor,85,medium,travel,Full corporate entity name
+sofitel,accor,85,medium,travel,Luxury brand
+novotel,accor,85,medium,travel,Midscale brand
+ibis,accor,85,medium,travel,Budget brand; strong brand identity
+mercure,accor,85,medium,travel,Midscale brand
+pullman,accor,85,medium,travel,Upper-upscale brand
+fairmont,accor,85,medium,travel,Luxury brand acquired by Accor
+wyn,wyndham,70,high,travel,Stock ticker; wyndham is high risk
+wyndham hotels,wyndham,70,high,travel,Full corporate name
+days inn,wyndham,70,high,travel,Budget brand; very high franchise count
+super 8,wyndham,70,high,travel,Budget brand
+ramada,wyndham,70,high,travel,Midscale brand; high franchise count
+la quinta,wyndham,70,high,travel,Midscale brand
+bwi,best western,70,high,travel,Best Western International abbreviation
+best western international,best western,70,high,travel,Full cooperative name
+expe,expedia,85,medium,travel,Stock ticker for Expedia
+expedia group,expedia,85,medium,travel,Full corporate name
+hotels.com,expedia,85,medium,travel,Online hotel booking brand
+vrbo,expedia,85,medium,travel,Vacation rental brand
+hotwire,expedia,85,medium,travel,Discount travel brand
+trivago,expedia,85,medium,travel,Hotel comparison brand; majority owned by Expedia
+bkng,booking holdings,85,medium,travel,Stock ticker for Booking Holdings
+booking.com,booking holdings,85,medium,travel,Primary brand
+priceline,booking holdings,85,medium,travel,US travel brand
+agoda,booking holdings,85,medium,travel,Asia-Pacific travel brand
+kayak,booking holdings,85,medium,travel,Search brand
+opentable,booking holdings,85,medium,travel,Restaurant reservation brand
+htz,hertz,70,high,travel,Stock ticker; hertz is high risk franchise
+the hertz corporation,hertz,70,high,travel,Full corporate name
+dollar,hertz,70,high,travel,Dollar Car Rental; owned by Hertz
+thrifty,hertz,70,high,travel,Thrifty Car Rental; owned by Hertz
+carg,avis,70,high,travel,Parent company ticker (Avis Budget Group)
+avis budget group,avis,70,high,travel,Full holding company name
+budget,avis,70,high,travel,Budget Car Rental; sister brand to Avis
+zipcar,avis,70,high,travel,Car sharing brand; owned by Avis Budget
+payless,avis,70,high,travel,Budget car rental brand
+ehi,enterprise,70,high,travel,Enterprise Holdings abbreviation
+enterprise holdings,enterprise,70,high,travel,Full corporate name
+national car rental,enterprise,70,high,travel,Mid-tier brand owned by Enterprise Holdings
+alamo,enterprise,70,high,travel,Budget brand owned by Enterprise Holdings
+abnb,airbnb,85,medium,travel,Stock ticker for Airbnb
+amazon,amazon,85,medium,tech,Canonical self-reference; needed for alias resolution
+microsoft,microsoft,85,medium,tech,Canonical self-reference; needed for alias resolution
+merck,merck,85,medium,pharma,US Merck canonical self-reference
+merck kgaa,merck kgaa,85,medium,pharma,German Merck canonical self-reference; separate from US Merck

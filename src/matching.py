@@ -29,6 +29,7 @@ from src.config import (
 from src.matching_types import MatchResult
 from src.guardrails import apply_guardrails
 from src.preprocessing import extract_supplier_identity_core, _extract_domain_sld
+from src.brand_families import AliasEvidence, get_alias_tables, _resolve_row_to_brand
 
 # Stopwords and legal stops for acronym generation (not the same as generic root tokens)
 _ACRONYM_STOPWORDS: frozenset = frozenset({
@@ -710,6 +711,77 @@ def _names_are_article_reordered(name_a: str, name_b: str) -> bool:
     return bool(tokens_a & articles)
 
 
+def _alias_bridge(
+    row_a: Dict[str, Any],
+    row_b: Dict[str, Any],
+    config: ClusteringConfig,
+) -> "Optional[AliasEvidence]":
+    """Return AliasEvidence when both rows resolve to the same canonical brand via alias tables.
+
+    Returns None when alias tables are empty (graceful degradation — identical to pre-alias
+    behavior) or when rows resolve to different canonicals.
+
+    Scoring rules applied by the caller:
+      low  risk + no conflict → ceiling 85 (alias alone can support 85)
+      medium risk alone       → ceiling 70 (needs domain/address/tax/name support for 85)
+      high risk alone         → no match (alias alone never creates a cluster)
+    Deterministic support (same tax / same owned domain / address) can still push to 98/85
+    via existing passes — this function only provides the alias evidence signal.
+    """
+    tables = get_alias_tables(getattr(config, "alias_tables_dir", "data"))
+    if tables.is_empty:
+        return None
+
+    ignored = config.ignore_client_domains if config is not None else frozenset()
+
+    res_a = _resolve_row_to_brand(
+        str(row_a.get("supplier_identity_core", "") or ""),
+        str(row_a.get("name_norm", "") or ""),
+        str(row_a.get("domain", "") or ""),
+        bool(row_a.get("is_generic_domain", False)),
+        tables,
+        ignored,
+    )
+    if res_a is None:
+        return None
+
+    res_b = _resolve_row_to_brand(
+        str(row_b.get("supplier_identity_core", "") or ""),
+        str(row_b.get("name_norm", "") or ""),
+        str(row_b.get("domain", "") or ""),
+        bool(row_b.get("is_generic_domain", False)),
+        tables,
+        ignored,
+    )
+    if res_b is None:
+        return None
+
+    # Both rows must resolve to the same canonical brand.
+    if res_a[0] != res_b[0]:
+        return None
+
+    canonical, score_a, risk_a, type_a = res_a
+    _,          score_b, risk_b, type_b = res_b
+
+    # Score ceiling = minimum of both CSV hints (most conservative).
+    score_ceiling = min(score_a, score_b)
+
+    # Risk = most restrictive: high > medium > low
+    risk_order = {"low": 0, "medium": 1, "high": 2}
+    risk_level = max(risk_a, risk_b, key=lambda r: risk_order.get(r, 1))
+
+    match_type = type_a if type_a == type_b else "brand_alias"
+
+    return AliasEvidence(
+        canonical_brand=canonical,
+        alias_match_type=match_type,
+        score_ceiling=score_ceiling,
+        risk_level=risk_level,
+        alias_a=str(row_a.get("supplier_identity_core", "") or row_a.get("name_norm", "")),
+        alias_b=str(row_b.get("supplier_identity_core", "") or row_b.get("name_norm", "")),
+    )
+
+
 def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: Dict[str, int], config: ClusteringConfig = None) -> MatchResult:
     if config is None:
         config = ClusteringConfig()
@@ -783,6 +855,15 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
     regulatory_relation = _regulatory_task_force_relation(row_a, row_b)
     institutional_ecosystem = _institutional_ecosystem_relation(row_a, row_b)
     root_is_risky = _root_is_risky_single(row_a, row_b)
+
+    # --- Global brand alias bridge (Phase B) ---
+    # Additive evidence only — does not replace any existing pass or guardrail.
+    # When alias tables are empty, alias_ev=None and behavior is identical to pre-alias.
+    alias_ev = _alias_bridge(row_a, row_b, config)
+    # Low/medium risk aliases augment related_root so existing passes can use them.
+    # High-risk aliases do NOT set related_root (they must not auto-85 via existing passes).
+    if alias_ev is not None and alias_ev.risk_level != "high":
+        related_root = True
 
     # PASS 1: tax exact overlap, including multi-tax/JSON-derived IDs.
     if tax_match:
@@ -1383,10 +1464,15 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         # Same-country or unknown-country with shared brand root but no city/domain/address support.
         # Previously fell through to no_match; now 70 so same-brand sub-brands reach review queue.
         # Examples: Bell Canada vs Bell Aliant, Rogers Communications vs Rogers Cable.
-        return R(MatchResult(True, 70.0, "weak_brand_root_candidate",
-                             {**_root_evidence, "candidate_type": "possible_sub_brand"},
-                             needs_review=True,
-                             review_reason="Shared brand root without address/domain/city support; LLM review required"))
+        # Exception: when a low-risk alias is the sole evidence, fall through to the alias
+        # fallback below which correctly returns 85 instead of this generic 70 bucket.
+        if alias_ev is not None and alias_ev.risk_level == "low":
+            pass  # let alias fallback produce the authoritative 85 result
+        else:
+            return R(MatchResult(True, 70.0, "weak_brand_root_candidate",
+                                 {**_root_evidence, "candidate_type": "possible_sub_brand"},
+                                 needs_review=True,
+                                 review_reason="Shared brand root without address/domain/city support; LLM review required"))
 
     # PASS 9: sub-brand prefix safety net.
     # One name is a distinctive prefix of the other (≥5 chars) but shared root ≥4 chars
@@ -1409,5 +1495,35 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
                                      },
                                      needs_review=True,
                                      review_reason="One supplier name is a brand-prefix of the other; LLM review required"))
+
+    # --- Alias bridge fallback (Phase B) ---
+    # Fires only when no earlier pass produced a result.  Scoring rules:
+    #   low  risk: 85 (distinctive brand, alias alone is reliable evidence)
+    #   medium risk: 70 (plausible family match — needs human/LLM review)
+    #   high risk: no match (common word / franchise / banner — alias alone is unsafe)
+    # All existing guardrails still apply via R().
+    if alias_ev is not None:
+        if alias_ev.risk_level == "high":
+            pass  # high-risk alias alone never creates a cluster — fall through to no_match
+        else:
+            _alias_score = (
+                min(85.0, float(alias_ev.score_ceiling))
+                if alias_ev.risk_level == "low"
+                else 70.0  # medium risk alone
+            )
+            return R(MatchResult(
+                True,
+                _alias_score,
+                "brand_alias_candidate",
+                {
+                    "canonical_brand": alias_ev.canonical_brand,
+                    "alias_match_type": alias_ev.alias_match_type,
+                    "alias_a": alias_ev.alias_a,
+                    "alias_b": alias_ev.alias_b,
+                    "risk_level": alias_ev.risk_level,
+                },
+                needs_review=True,
+                review_reason=f"Global brand alias match ({alias_ev.risk_level} risk); manual review recommended",
+            ))
 
     return R(MatchResult(False, 0.0, "no_match", {}))

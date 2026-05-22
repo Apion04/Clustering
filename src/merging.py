@@ -22,6 +22,9 @@ WEAK_EDGE_TYPES = {
     # Phase 3A: domain-only with unrelated names — safe for single pair, chain-blocked.
     # Prevents shared client-contact domains (e.g. pharma.com) from bridging unrelated suppliers.
     "domain_review_candidate",
+    # Phase B alias framework: alias-only evidence is inherently weak — chain-blocked to
+    # prevent A=alias=B + B=alias=C from auto-merging A with C without direct evidence.
+    "brand_alias_candidate",
 }
 
 DOMAIN_SUPPORTED_EDGE_TYPES = {"address_domain", "domain_name_related"}

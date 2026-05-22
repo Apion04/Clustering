@@ -613,6 +613,9 @@ class ClusteringConfig:
     generic_non_bridge_file: str = "data/generic_non_bridge_keywords.csv"
     location_modifiers_file: str = "data/location_modifiers.csv"
     support_field_strengths: Dict[str, str] = field(default_factory=lambda: dict(DEFAULT_SUPPORT_FIELD_STRENGTHS))
+    # Directory containing alias CSV files (trusted_family_brands, brand_aliases,
+    # domain_aliases, acronym_aliases). Defaults to "data" alongside source.
+    alias_tables_dir: str = "data"
     # Domains explicitly provided by the user that should be excluded from all domain-based
     # clustering evidence (same_domain, same_sld, domain_review_candidate, etc.).
     # Typical use: client/internal contact email domains recorded on unrelated supplier rows.

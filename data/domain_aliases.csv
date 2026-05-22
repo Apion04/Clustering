@@ -1,0 +1,638 @@
+domain,canonical_domain_family,canonical_brand,score_hint,risk_level,category,notes
+microsoft.com,microsoft.com,microsoft,85,medium,tech,Primary domain
+azure.com,microsoft.com,microsoft,85,medium,tech,Cloud services domain
+office.com,microsoft.com,microsoft,85,medium,tech,Office 365 portal
+outlook.com,microsoft.com,microsoft,85,medium,tech,Consumer email service
+linkedin.com,microsoft.com,microsoft,85,medium,tech,Acquired 2016
+github.com,microsoft.com,microsoft,85,medium,tech,Acquired 2018
+xbox.com,microsoft.com,microsoft,85,medium,tech,Gaming brand domain
+bing.com,microsoft.com,microsoft,85,medium,tech,Search engine domain
+skype.com,microsoft.com,microsoft,85,medium,tech,VoIP brand domain
+teams.microsoft.com,microsoft.com,microsoft,85,medium,tech,Collaboration platform subdomain
+google.com,google.com,google,85,medium,tech,Primary domain
+alphabet.com,google.com,google,85,medium,tech,Parent company domain
+youtube.com,google.com,google,85,medium,tech,Video platform domain
+googl.com,google.com,google,85,medium,tech,Redirect ticker domain
+gcp.google.com,google.com,google,85,medium,tech,Google Cloud Platform subdomain
+waymo.com,google.com,google,85,medium,tech,Alphabet self-driving subsidiary
+deepmind.com,google.com,google,85,medium,tech,Alphabet AI research subsidiary
+amazon.com,amazon.com,amazon,85,medium,tech,Primary domain
+amazon.in,amazon.com,amazon,85,medium,tech,India TLD variant
+amazon.co.uk,amazon.com,amazon,85,medium,tech,UK TLD variant
+amazon.de,amazon.com,amazon,85,medium,tech,Germany TLD variant
+amazon.fr,amazon.com,amazon,85,medium,tech,France TLD variant
+amazon.ca,amazon.com,amazon,85,medium,tech,Canada TLD variant
+amazon.com.au,amazon.com,amazon,85,medium,tech,Australia TLD variant
+amazonaws.com,amazon.com,amazon,85,medium,tech,AWS infrastructure domain
+aws.amazon.com,amazon.com,amazon,85,medium,tech,AWS subdomain
+wholefoodsmarket.com,amazon.com,amazon,85,medium,food,Whole Foods domain
+twitch.tv,amazon.com,amazon,85,medium,tech,Game streaming domain
+imdb.com,amazon.com,amazon,85,medium,media,Movie database domain
+apple.com,apple.com,apple,70,high,tech,Primary domain; high risk brand
+apple.co,apple.com,apple,70,high,tech,Short redirect domain
+meta.com,meta.com,meta,85,medium,tech,Primary domain (post-2021 rebrand)
+facebook.com,meta.com,meta,85,medium,tech,Legacy social network domain
+instagram.com,meta.com,meta,85,medium,tech,Photo sharing platform
+whatsapp.com,meta.com,meta,85,medium,tech,Messaging platform
+oculus.com,meta.com,meta,85,medium,tech,VR hardware domain
+ibm.com,ibm.com,ibm,85,medium,tech,Primary domain
+redhat.com,ibm.com,ibm,85,medium,tech,Acquired 2019; Linux/open source
+oracle.com,oracle.com,oracle,85,medium,tech,Primary domain
+netsuite.com,oracle.com,oracle,85,medium,tech,Acquired 2016; ERP cloud
+java.com,oracle.com,oracle,70,medium,tech,Java programming language domain
+sap.com,sap.com,sap,85,medium,tech,Primary domain
+successfactors.com,sap.com,sap,85,medium,tech,HR cloud software domain
+ariba.com,sap.com,sap,85,medium,tech,Procurement platform domain
+concur.com,sap.com,sap,85,medium,tech,Expense management domain
+salesforce.com,salesforce.com,salesforce,85,low,tech,Primary domain
+slack.com,salesforce.com,salesforce,85,low,tech,Acquired 2021
+tableau.com,salesforce.com,salesforce,85,low,tech,Acquired 2019
+mulesoft.com,salesforce.com,salesforce,85,low,tech,Acquired 2018
+servicenow.com,servicenow.com,servicenow,85,low,tech,Primary domain
+adobe.com,adobe.com,adobe,85,low,tech,Primary domain
+marketo.com,adobe.com,adobe,85,low,tech,Acquired 2018
+figma.com,adobe.com,adobe,85,low,tech,Associated design platform
+cisco.com,cisco.com,cisco,85,medium,tech,Primary domain
+webex.com,cisco.com,cisco,85,medium,tech,Video conferencing domain
+meraki.com,cisco.com,cisco,85,medium,tech,Cloud networking domain
+intel.com,intel.com,intel,85,medium,tech,Primary domain
+mobileye.com,intel.com,intel,85,medium,tech,Autonomous driving subsidiary
+amd.com,amd.com,amd,85,medium,tech,Primary domain
+nvidia.com,nvidia.com,nvidia,85,low,tech,Primary domain
+broadcom.com,broadcom.com,broadcom,85,medium,tech,Primary domain
+ca.com,broadcom.com,broadcom,85,medium,tech,CA Technologies; acquired
+qualcomm.com,qualcomm.com,qualcomm,85,low,tech,Primary domain
+dell.com,dell.com,dell,85,medium,tech,Primary domain
+emc.com,dell.com,dell,85,medium,tech,Acquired 2016; storage
+vmware.com,dell.com,dell,85,medium,tech,Now part of Broadcom
+alienware.com,dell.com,dell,85,medium,tech,Gaming PC sub-brand
+secureworks.com,dell.com,dell,85,medium,tech,Cybersecurity subsidiary
+hp.com,hp.com,hp,70,high,tech,Primary domain for HP Inc; high risk
+hpe.com,hpe.com,hpe,85,medium,tech,Hewlett Packard Enterprise
+arubanetworks.com,hpe.com,hpe,85,medium,tech,HPE networking sub-brand
+lenovo.com,lenovo.com,lenovo,85,low,tech,Primary domain
+workday.com,workday.com,workday,85,low,tech,Primary domain
+intuit.com,intuit.com,intuit,85,low,tech,Primary domain
+quickbooks.com,intuit.com,intuit,85,low,tech,Accounting software domain
+turbotax.com,intuit.com,intuit,85,low,tech,Tax prep software domain
+mailchimp.com,intuit.com,intuit,85,low,tech,Acquired 2021
+atlassian.com,atlassian.com,atlassian,85,low,tech,Primary domain
+trello.com,atlassian.com,atlassian,85,low,tech,Acquired 2017
+bitbucket.org,atlassian.com,atlassian,85,low,tech,Code repository domain
+shopify.com,shopify.com,shopify,85,low,tech,Primary domain
+zoom.us,zoom.us,zoom,85,low,tech,Primary domain
+slack.com,slack.com,slack,85,low,tech,Primary domain
+dropbox.com,dropbox.com,dropbox,85,low,tech,Primary domain
+snowflake.com,snowflake.com,snowflake,85,low,tech,Primary domain
+databricks.com,databricks.com,databricks,85,low,tech,Primary domain
+palantir.com,palantir.com,palantir,85,low,tech,Primary domain
+crowdstrike.com,crowdstrike.com,crowdstrike,85,low,tech,Primary domain
+okta.com,okta.com,okta,85,low,tech,Primary domain
+auth0.com,okta.com,okta,85,low,tech,Acquired 2021
+cloudflare.com,cloudflare.com,cloudflare,85,low,tech,Primary domain
+twilio.com,twilio.com,twilio,85,low,tech,Primary domain
+hubspot.com,hubspot.com,hubspot,85,low,tech,Primary domain
+stripe.com,stripe.com,stripe,85,low,tech,Primary domain
+paypal.com,paypal.com,paypal,85,medium,tech,Primary domain
+venmo.com,paypal.com,paypal,85,medium,tech,P2P payments app
+braintree.com,paypal.com,paypal,85,medium,tech,Payment gateway
+ebay.com,ebay.com,ebay,85,low,tech,Primary domain
+tiktok.com,tiktok.com,tiktok,85,medium,tech,Primary domain
+bytedance.com,tiktok.com,tiktok,85,medium,tech,Parent company domain
+tencent.com,tencent.com,tencent,85,medium,tech,Primary domain
+qq.com,tencent.com,tencent,85,medium,tech,QQ platform domain
+wechat.com,tencent.com,tencent,85,medium,tech,WeChat global domain
+alibaba.com,alibaba.com,alibaba,85,medium,tech,Primary domain
+alibabacloud.com,alibaba.com,alibaba,85,medium,tech,Cloud services domain
+taobao.com,alibaba.com,alibaba,85,medium,tech,C2C marketplace
+tmall.com,alibaba.com,alibaba,85,medium,tech,B2C marketplace
+aliexpress.com,alibaba.com,alibaba,85,medium,tech,International retail
+xiaomi.com,xiaomi.com,xiaomi,85,medium,tech,Primary domain
+mi.com,xiaomi.com,xiaomi,85,medium,tech,Mi sub-brand domain
+huawei.com,huawei.com,huawei,85,medium,tech,Primary domain
+samsung.com,samsung.com,samsung,85,medium,tech,Primary domain
+sony.com,sony.com,sony,85,medium,tech,Primary domain
+playstation.com,sony.com,sony,85,medium,tech,Gaming brand domain
+panasonic.com,panasonic.com,panasonic,85,low,tech,Primary domain
+canon.com,canon.com,canon,85,low,tech,Primary domain
+hitachi.com,hitachi.com,hitachi,85,medium,tech,Primary domain
+toshiba.com,toshiba.com,toshiba,85,medium,tech,Primary domain
+nec.com,nec.com,nec,85,medium,tech,Primary domain
+fujitsu.com,fujitsu.com,fujitsu,85,low,tech,Primary domain
+block.xyz,block.xyz,block,85,medium,tech,Primary domain
+squareup.com,block.xyz,block,85,medium,tech,Former Square brand
+cash.app,block.xyz,block,85,medium,tech,Cash App domain
+pfizer.com,pfizer.com,pfizer,85,low,pharma,Primary domain
+merck.com,merck.com,merck,85,medium,pharma,US Merck primary domain; NOT merck kgaa
+merckgroup.com,merckgroup.com,merck kgaa,85,medium,pharma,German Merck primary domain
+emdgroup.com,merckgroup.com,merck kgaa,85,medium,pharma,EMD group domain; German Merck
+sigmaaldrich.com,merckgroup.com,merck kgaa,85,medium,pharma,Sigma-Aldrich domain; Merck KGaA subsidiary
+emdserono.com,merckgroup.com,merck kgaa,85,medium,pharma,EMD Serono biopharma domain
+emdmillipore.com,merckgroup.com,merck kgaa,85,medium,pharma,EMD Millipore life science domain
+merckmillipore.com,merckgroup.com,merck kgaa,85,medium,pharma,Merck Millipore alternate domain
+jnj.com,jnj.com,johnson & johnson,85,low,pharma,Primary domain
+janssen.com,jnj.com,johnson & johnson,85,low,pharma,Pharmaceutical subsidiary domain
+kenvue.com,jnj.com,johnson & johnson,85,low,pharma,Consumer health spin-off 2023
+novartis.com,novartis.com,novartis,85,low,pharma,Primary domain
+sandoz.com,novartis.com,novartis,85,low,pharma,Generics subsidiary domain
+roche.com,roche.com,roche,85,low,pharma,Primary domain
+genentech.com,roche.com,roche,85,low,pharma,US biotech subsidiary domain
+chugai-pharm.co.jp,roche.com,roche,85,low,pharma,Japanese pharma subsidiary domain
+sanofi.com,sanofi.com,sanofi,85,low,pharma,Primary domain
+genzyme.com,sanofi.com,sanofi,85,low,pharma,Absorbed rare disease brand
+gsk.com,gsk.com,gsk,85,low,pharma,Primary domain
+haleon.com,gsk.com,gsk,85,low,pharma,Consumer health spin-off 2022
+astrazeneca.com,astrazeneca.com,astrazeneca,85,low,pharma,Primary domain
+bayer.com,bayer.com,bayer,85,medium,pharma,Primary domain
+boehringer-ingelheim.com,boehringer-ingelheim.com,boehringer ingelheim,85,low,pharma,Primary domain
+lilly.com,lilly.com,eli lilly,85,low,pharma,Primary domain
+abbvie.com,abbvie.com,abbvie,85,low,pharma,Primary domain
+amgen.com,amgen.com,amgen,85,low,pharma,Primary domain
+bms.com,bms.com,bristol myers squibb,85,low,pharma,Primary domain
+bristolmyerssquibb.com,bms.com,bristol myers squibb,85,low,pharma,Full name domain variant
+gilead.com,gilead.com,gilead,85,low,pharma,Primary domain
+biogen.com,biogen.com,biogen,85,low,pharma,Primary domain
+moderna.com,moderna.com,moderna,85,low,pharma,Primary domain
+regeneron.com,regeneron.com,regeneron,85,low,pharma,Primary domain
+vertexpharmaceuticals.com,vertexpharmaceuticals.com,vertex,85,low,pharma,Primary domain
+takeda.com,takeda.com,takeda,85,low,pharma,Primary domain
+novonordisk.com,novonordisk.com,novo nordisk,85,low,pharma,Primary domain
+baxter.com,baxter.com,baxter,85,low,pharma,Primary domain
+bd.com,bd.com,becton dickinson,85,low,pharma,Primary domain
+carefusion.com,bd.com,becton dickinson,85,low,pharma,Acquired 2015
+medtronic.com,medtronic.com,medtronic,85,low,pharma,Primary domain
+siemens-healthineers.com,siemens-healthineers.com,siemens healthineers,85,low,pharma,Primary domain
+varian.com,siemens-healthineers.com,siemens healthineers,85,low,pharma,Acquired 2021
+gehealthcare.com,gehealthcare.com,ge healthcare,85,medium,pharma,Primary domain post-spinoff
+philips.com,philips.com,philips healthcare,85,medium,pharma,Parent company primary domain
+thermofisher.com,thermofisher.com,thermo fisher,85,low,pharma,Primary domain
+fishersci.com,thermofisher.com,thermo fisher,85,low,pharma,Fisher Scientific brand domain
+qiagen.com,qiagen.com,qiagen,85,low,pharma,Primary domain
+illumina.com,illumina.com,illumina,85,low,pharma,Primary domain
+agilent.com,agilent.com,agilent,85,low,pharma,Primary domain
+waters.com,waters.com,waters,85,low,pharma,Primary domain
+bio-rad.com,bio-rad.com,bio-rad,85,low,pharma,Primary domain
+beckmancoulter.com,beckmancoulter.com,beckman coulter,85,low,pharma,Primary domain
+danaher.com,danaher.com,danaher,85,low,pharma,Primary domain
+cytiva.com,cytiva.com,cytiva,85,low,pharma,Primary domain
+sartorius.com,sartorius.com,sartorius,85,low,pharma,Primary domain
+sartoriusstedimbiotech.com,sartorius.com,sartorius,85,low,pharma,Bioprocess subsidiary domain
+emdmillipore.com,merckgroup.com,merck kgaa,85,medium,pharma,Duplicate entry; same as above
+mckesson.com,mckesson.com,mckesson,85,low,pharma,Primary domain
+cardinalhealth.com,cardinalhealth.com,cardinal health,85,low,pharma,Primary domain
+amerisourcebergen.com,amerisourcebergen.com,amerisourcebergen,85,low,pharma,Primary domain
+cencora.com,amerisourcebergen.com,amerisourcebergen,85,low,pharma,Renamed to Cencora 2023
+cvshealth.com,cvshealth.com,cvs health,85,medium,pharma,Primary domain
+cvs.com,cvshealth.com,cvs health,85,medium,retail,Retail pharmacy domain
+aetna.com,cvshealth.com,cvs health,85,medium,pharma,Acquired 2018; health insurer
+walgreens.com,walgreens.com,walgreens,85,medium,retail,Primary domain
+boots.com,walgreens.com,walgreens,85,medium,retail,UK subsidiary domain
+unitedhealthgroup.com,unitedhealthgroup.com,unitedhealth,85,medium,pharma,Primary domain
+optum.com,unitedhealthgroup.com,unitedhealth,85,medium,pharma,Health services sub-brand
+cigna.com,cigna.com,cigna,85,medium,pharma,Primary domain
+evernorth.com,cigna.com,cigna,85,medium,pharma,Services subsidiary domain
+elevancehealth.com,elevancehealth.com,elevance health,85,medium,pharma,Primary domain
+anthem.com,elevancehealth.com,elevance health,85,medium,pharma,Former brand domain
+questdiagnostics.com,questdiagnostics.com,quest diagnostics,85,low,pharma,Primary domain
+labcorp.com,labcorp.com,labcorp,85,low,pharma,Primary domain
+basf.com,basf.com,basf,85,low,chemical,Primary domain
+dow.com,dow.com,dow,85,medium,chemical,Primary domain
+dupont.com,dupont.com,dupont,85,low,chemical,Primary domain
+corteva.com,dupont.com,dupont,85,low,chemical,Agri spin-off domain
+3m.com,3m.com,3m,85,medium,industrial,Primary domain
+honeywell.com,honeywell.com,honeywell,85,medium,industrial,Primary domain
+uop.com,honeywell.com,honeywell,85,medium,industrial,Process technology subsidiary
+resideo.com,honeywell.com,honeywell,85,medium,industrial,Spun off 2018
+siemens.com,siemens.com,siemens,85,medium,industrial,Primary domain
+siemens-energy.com,siemens.com,siemens,85,medium,industrial,Spun off 2020; energy equipment
+schneider-electric.com,schneider-electric.com,schneider electric,85,medium,industrial,Primary domain
+aveva.com,schneider-electric.com,schneider electric,85,medium,industrial,Acquired 2023; industrial software
+abb.com,abb.com,abb,85,medium,industrial,Primary domain
+eaton.com,eaton.com,eaton,85,low,industrial,Primary domain
+emerson.com,emerson.com,emerson,85,medium,industrial,Primary domain
+rockwellautomation.com,rockwellautomation.com,rockwell automation,85,low,industrial,Primary domain
+ab.com,rockwellautomation.com,rockwell automation,85,low,industrial,Allen Bradley brand domain
+grainger.com,grainger.com,grainger,85,low,industrial,Primary domain
+airliquide.com,airliquide.com,air liquide,85,low,industrial,Primary domain
+airproducts.com,airproducts.com,air products,85,low,industrial,Primary domain
+linde.com,linde.com,linde,85,low,industrial,Primary domain
+boc.com,linde.com,linde,85,low,industrial,UK/international subsidiary domain
+solvay.com,solvay.com,solvay,85,low,chemical,Primary domain
+evonik.com,evonik.com,evonik,85,low,chemical,Primary domain
+covestro.com,covestro.com,covestro,85,low,chemical,Primary domain
+akzonobel.com,akzonobel.com,akzo nobel,85,low,chemical,Primary domain
+dulux.com,akzonobel.com,akzo nobel,85,low,chemical,Paint sub-brand domain
+ppg.com,ppg.com,ppg,85,low,chemical,Primary domain
+sherwin-williams.com,sherwin-williams.com,sherwin williams,85,low,chemical,Primary domain
+valspar.com,sherwin-williams.com,sherwin williams,85,low,chemical,Acquired 2017
+eastman.com,eastman.com,eastman,85,low,chemical,Primary domain
+celanese.com,celanese.com,celanese,85,low,chemical,Primary domain
+huntsman.com,huntsman.com,huntsman,85,low,chemical,Primary domain
+clariant.com,clariant.com,clariant,85,low,chemical,Primary domain
+arkema.com,arkema.com,arkema,85,low,chemical,Primary domain
+ineos.com,ineos.com,ineos,85,low,chemical,Primary domain
+sabic.com,sabic.com,sabic,85,low,chemical,Primary domain
+m-chemical.com,m-chemical.com,mitsubishi chemical,85,medium,chemical,Primary domain
+lgchem.com,lgchem.com,lg chem,85,medium,chemical,Primary domain
+posco.com,posco.com,posco,85,low,industrial,Primary domain
+arcelormittal.com,arcelormittal.com,arcelormittal,85,low,industrial,Primary domain
+thyssenkrupp.com,thyssenkrupp.com,thyssenkrupp,85,low,industrial,Primary domain
+caterpillar.com,caterpillar.com,caterpillar,85,low,industrial,Primary domain
+cat.com,caterpillar.com,caterpillar,85,low,industrial,Short brand domain
+deere.com,deere.com,john deere,85,low,industrial,Primary domain
+johndeere.com,deere.com,john deere,85,low,industrial,Alternate brand domain
+komatsu.com,komatsu.com,komatsu,85,low,industrial,Primary domain
+cummins.com,cummins.com,cummins,85,low,industrial,Primary domain
+rolls-royce.com,rolls-royce.com,rolls royce,85,medium,industrial,Primary aerospace domain
+boeing.com,boeing.com,boeing,85,low,industrial,Primary domain
+airbus.com,airbus.com,airbus,85,low,industrial,Primary domain
+lockheedmartin.com,lockheedmartin.com,lockheed martin,85,low,industrial,Primary domain
+northropgrumman.com,northropgrumman.com,northrop grumman,85,low,industrial,Primary domain
+rtx.com,rtx.com,raytheon,85,low,industrial,Post-merger RTX primary domain
+raytheon.com,rtx.com,raytheon,85,low,industrial,Legacy brand domain
+collinsaerospace.com,rtx.com,raytheon,85,low,industrial,Sub-brand/division domain
+baesystems.com,baesystems.com,bae systems,85,low,industrial,Primary domain
+thalesgroup.com,thalesgroup.com,thales,85,low,industrial,Primary domain
+safran.com,safran.com,safran,85,low,industrial,Primary domain
+jpmorganchase.com,jpmorganchase.com,jpmorgan chase,85,medium,financial,Primary holding company domain
+chase.com,jpmorganchase.com,jpmorgan chase,85,medium,financial,Retail banking domain
+jpmorgan.com,jpmorganchase.com,jpmorgan chase,85,medium,financial,Investment banking domain
+bankofamerica.com,bankofamerica.com,bank of america,85,medium,financial,Primary domain
+ml.com,bankofamerica.com,bank of america,85,medium,financial,Merrill Lynch domain
+merrilledge.com,bankofamerica.com,bank of america,85,medium,financial,Retail investment domain
+citigroup.com,citigroup.com,citigroup,85,medium,financial,Primary holding company domain
+citi.com,citigroup.com,citigroup,85,medium,financial,Consumer brand domain
+citibank.com,citigroup.com,citigroup,85,medium,financial,Retail banking domain
+wellsfargo.com,wellsfargo.com,wells fargo,85,medium,financial,Primary domain
+goldmansachs.com,goldmansachs.com,goldman sachs,85,medium,financial,Primary domain
+marcus.com,goldmansachs.com,goldman sachs,85,medium,financial,Consumer banking brand domain
+morganstanley.com,morganstanley.com,morgan stanley,85,medium,financial,Primary domain
+blackrock.com,blackrock.com,blackrock,85,medium,financial,Primary domain
+ishares.com,blackrock.com,blackrock,85,medium,financial,ETF brand domain
+visa.com,visa.com,visa,85,medium,financial,Primary domain
+mastercard.com,mastercard.com,mastercard,85,medium,financial,Primary domain
+americanexpress.com,americanexpress.com,american express,85,medium,financial,Primary domain
+amex.com,americanexpress.com,american express,85,medium,financial,Short brand domain
+capitalone.com,capitalone.com,capital one,85,medium,financial,Primary domain
+hsbc.com,hsbc.com,hsbc,85,medium,financial,Primary domain
+barclays.com,barclays.com,barclays,85,medium,financial,Primary domain
+db.com,db.com,deutsche bank,85,medium,financial,Primary short domain
+deutsche-bank.com,db.com,deutsche bank,85,medium,financial,Full name domain
+ubs.com,ubs.com,ubs,85,medium,financial,Primary domain
+santander.com,santander.com,santander,85,medium,financial,Primary domain
+bnpparibas.com,bnpparibas.com,bnp paribas,85,medium,financial,Primary domain
+ing.com,ing.com,ing,85,medium,financial,Primary domain
+natwest.com,natwest.com,natwest,85,medium,financial,Primary domain
+rbs.com,natwest.com,natwest,85,medium,financial,Former RBS domain
+lloyds.com,lloyds.com,lloyds,85,medium,financial,Primary domain
+lloydsbankinggroup.com,lloyds.com,lloyds,85,medium,financial,Group entity domain
+rbc.com,rbc.com,rbc,85,medium,financial,Primary domain
+td.com,td.com,td bank,85,medium,financial,Primary domain
+tdbank.com,td.com,td bank,85,medium,financial,US banking domain
+scotiabank.com,scotiabank.com,scotiabank,85,medium,financial,Primary domain
+bmo.com,bmo.com,bmo,85,medium,financial,Primary domain
+cibc.com,cibc.com,cibc,85,medium,financial,Primary domain
+icbc.com,icbc.com,icbc,85,medium,financial,Primary domain
+mufg.jp,mufg.jp,mufg,85,medium,financial,Primary Japanese domain
+nomura.com,nomura.com,nomura,85,low,financial,Primary domain
+allianz.com,allianz.com,allianz,85,medium,financial,Primary domain
+pimco.com,allianz.com,allianz,85,medium,financial,Asset management subsidiary
+axa.com,axa.com,axa,85,medium,financial,Primary domain
+zurich.com,zurich.com,zurich,85,medium,financial,Primary domain
+aig.com,aig.com,aig,85,medium,financial,Primary domain
+metlife.com,metlife.com,metlife,85,medium,financial,Primary domain
+prudential.com,prudential.com,prudential,85,medium,financial,US Prudential primary domain
+aon.com,aon.com,aon,85,low,financial,Primary domain
+marshmclennan.com,marshmclennan.com,marsh,85,medium,financial,Parent company domain
+marsh.com,marshmclennan.com,marsh,85,medium,financial,Insurance brand domain
+oliverwyman.com,marshmclennan.com,marsh,85,medium,financial,Consulting sub-brand domain
+swissre.com,swissre.com,swiss re,85,low,financial,Primary domain
+munichre.com,munichre.com,munich re,85,low,financial,Primary domain
+statestreet.com,statestreet.com,state street,85,medium,financial,Primary domain
+ssga.com,statestreet.com,state street,85,medium,financial,Investment management arm domain
+bnymellon.com,bnymellon.com,bny mellon,85,medium,financial,Primary domain
+exxonmobil.com,exxonmobil.com,exxonmobil,85,medium,energy,Primary domain
+exxon.com,exxonmobil.com,exxonmobil,85,medium,energy,US brand domain
+esso.com,exxonmobil.com,exxonmobil,85,medium,energy,International brand domain
+chevron.com,chevron.com,chevron,85,medium,energy,Primary domain
+texaco.com,chevron.com,chevron,85,medium,energy,Acquired fuel brand domain
+shell.com,shell.com,shell,70,high,energy,Primary domain; high risk
+bp.com,bp.com,bp,70,high,energy,Primary domain; high risk 2-char
+arco.com,bp.com,bp,70,high,energy,West coast US brand domain
+totalenergies.com,totalenergies.com,totalenergies,70,high,energy,Primary domain
+eni.com,eni.com,eni,85,medium,energy,Primary domain
+agip.com,eni.com,eni,85,medium,energy,Fuel brand domain
+equinor.com,equinor.com,equinor,85,low,energy,Primary domain
+aramco.com,aramco.com,saudi aramco,85,medium,energy,Primary domain
+saudiaramco.com,aramco.com,saudi aramco,85,medium,energy,Full name domain variant
+petrobras.com.br,petrobras.com.br,petrobras,85,medium,energy,Primary domain
+sinopec.com,sinopec.com,sinopec,85,medium,energy,Primary domain
+conocophillips.com,conocophillips.com,conocophillips,85,medium,energy,Primary domain
+phillips66.com,phillips66.com,phillips 66,85,low,energy,Primary domain
+marathonpetroleum.com,marathonpetroleum.com,marathon,85,medium,energy,Marathon Petroleum domain
+marathonoil.com,marathonpetroleum.com,marathon,85,medium,energy,Marathon Oil domain (separate company)
+valero.com,valero.com,valero,85,low,energy,Primary domain
+enbridge.com,enbridge.com,enbridge,85,low,energy,Primary domain
+kindermorgan.com,kindermorgan.com,kinder morgan,85,low,energy,Primary domain
+duke-energy.com,duke-energy.com,duke energy,85,medium,energy,Primary domain
+nexteraenergy.com,nexteraenergy.com,nextera energy,85,low,energy,Primary domain
+fpl.com,nexteraenergy.com,nextera energy,85,low,energy,Florida Power & Light domain
+nationalgrid.com,nationalgrid.com,national grid,70,high,energy,Primary domain; high risk phrase
+iberdrola.com,iberdrola.com,iberdrola,85,low,energy,Primary domain
+enel.com,enel.com,enel,85,low,energy,Primary domain
+engie.com,engie.com,engie,85,low,energy,Primary domain
+edf.com,edf.com,edf,85,medium,energy,Primary domain
+edfenergy.com,edf.com,edf,85,medium,energy,UK operations domain
+eon.com,eon.com,e.on,85,medium,energy,Primary domain
+rwe.com,rwe.com,rwe,85,medium,energy,Primary domain
+veolia.com,veolia.com,veolia,85,low,energy,Primary domain
+wm.com,wm.com,waste management,85,medium,energy,Primary domain
+coca-cola.com,coca-cola.com,coca cola,85,medium,food,Primary domain
+coke.com,coca-cola.com,coca cola,85,medium,food,Brand shorthand domain
+pepsico.com,pepsico.com,pepsico,85,medium,food,Primary domain
+pepsi.com,pepsico.com,pepsico,85,medium,food,Brand domain
+fritolay.com,pepsico.com,pepsico,85,medium,food,Snacks subsidiary domain
+quaker.com,pepsico.com,pepsico,85,medium,food,Foods brand domain
+nestle.com,nestle.com,nestle,85,medium,food,Primary domain
+unilever.com,unilever.com,unilever,85,medium,food,Primary domain
+pg.com,pg.com,procter & gamble,85,low,food,Primary domain
+pampers.com,pg.com,procter & gamble,85,low,food,Baby care brand
+tide.com,pg.com,procter & gamble,85,low,food,Laundry brand
+mondelezinternational.com,mondelezinternational.com,mondelez,85,medium,food,Primary domain
+nabisco.com,mondelezinternational.com,mondelez,85,medium,food,Brand domain
+kraftheinzcompany.com,kraftheinzcompany.com,kraft heinz,85,medium,food,Primary domain
+heinz.com,kraftheinzcompany.com,kraft heinz,85,medium,food,Brand domain
+generalmills.com,generalmills.com,general mills,85,medium,food,Primary domain
+kellogg.com,kellogg.com,kellogg,85,medium,food,Primary domain
+kellanova.com,kellogg.com,kellogg,85,medium,food,International snacks brand domain
+mars.com,mars.com,mars,70,high,food,Primary domain; high risk common word
+danone.com,danone.com,danone,85,medium,food,Primary domain
+activia.com,danone.com,danone,85,medium,food,Yogurt brand domain
+evian.com,danone.com,danone,85,medium,food,Water brand domain
+tysonfoods.com,tysonfoods.com,tyson foods,85,medium,food,Primary domain
+cargill.com,cargill.com,cargill,85,low,food,Primary domain
+adm.com,adm.com,adm,85,medium,food,Primary domain
+bunge.com,bunge.com,bunge,85,low,food,Primary domain
+jbs.com.br,jbs.com.br,jbs,85,medium,food,Primary Brazilian domain
+swiftbrands.com,jbs.com.br,jbs,85,medium,food,US beef brand domain
+hormel.com,hormel.com,hormel,85,low,food,Primary domain
+conagrabrands.com,conagrabrands.com,conagra,85,low,food,Primary domain
+thehersheycompany.com,thehersheycompany.com,hershey,85,low,food,Primary domain
+lindt.com,lindt.com,lindt,85,low,food,Primary domain
+ferrero.com,ferrero.com,ferrero,85,low,food,Primary domain
+redbull.com,redbull.com,red bull,85,low,food,Primary domain
+starbucks.com,starbucks.com,starbucks,85,low,food,Primary domain
+mcdonalds.com,mcdonalds.com,mcdonald's,70,high,food,Primary domain; high risk franchise
+burgerking.com,burgerking.com,burger king,70,high,food,Primary domain; franchise
+rbi.com,burgerking.com,burger king,70,high,food,Restaurant Brands International parent
+kfc.com,kfc.com,kfc,70,high,food,Primary domain; franchise
+yum.com,kfc.com,kfc,70,high,food,Parent Yum! Brands domain
+subway.com,subway.com,subway,70,high,food,Primary domain; franchise
+dominos.com,dominos.com,domino's,70,high,food,Primary domain; franchise
+wendys.com,wendys.com,wendy's,70,high,food,Primary domain; franchise
+chipotle.com,chipotle.com,chipotle,85,medium,food,Primary domain; company-operated
+timhortons.com,timhortons.com,tim hortons,70,high,food,Primary domain; franchise
+popeyes.com,popeyes.com,popeyes,70,high,food,Primary domain; franchise
+dairyqueen.com,dairyqueen.com,dairy queen,70,high,food,Primary domain; franchise
+dunkindonuts.com,dunkindonuts.com,dunkin,70,high,food,Primary domain; franchise
+dunkinbrands.com,dunkindonuts.com,dunkin,70,high,food,Parent brand domain
+walmart.com,walmart.com,walmart,85,medium,retail,Primary domain
+asda.com,walmart.com,walmart,85,medium,retail,UK subsidiary domain
+flipkart.com,walmart.com,walmart,85,medium,retail,Indian e-commerce domain
+costco.com,costco.com,costco,85,low,retail,Primary domain
+target.com,target.com,target,70,high,retail,Primary domain; high risk common word
+kroger.com,kroger.com,kroger,85,medium,retail,Primary domain
+fredmeyer.com,kroger.com,kroger,85,medium,retail,Pacific NW banner domain
+carrefour.com,carrefour.com,carrefour,85,medium,retail,Primary domain
+tesco.com,tesco.com,tesco,85,medium,retail,Primary domain
+aldi.com,aldi.com,aldi,85,medium,retail,Primary domain
+aldi.us,aldi.com,aldi,85,medium,retail,US market domain
+metro.com,metro.com,metro,70,high,retail,Primary domain; common word risk
+homedepot.com,homedepot.com,home depot,85,medium,retail,Primary domain
+lowes.com,lowes.com,lowes,85,medium,retail,Primary domain
+ikea.com,ikea.com,ikea,85,low,retail,Primary domain
+wayfair.com,wayfair.com,wayfair,85,low,retail,Primary domain
+tjx.com,tjx.com,tjx,85,medium,retail,Primary domain
+tjmaxx.com,tjx.com,tjx,85,medium,retail,TJ Maxx brand domain
+marshalls.com,tjx.com,tjx,85,medium,retail,Marshalls brand domain
+nordstrom.com,nordstrom.com,nordstrom,85,low,retail,Primary domain
+gap.com,gap.com,gap,85,medium,retail,Primary domain
+bananarepublic.com,gap.com,gap,85,medium,retail,Premium brand domain
+oldnavy.com,gap.com,gap,85,medium,retail,Value brand domain
+zara.com,zara.com,zara,85,medium,retail,Primary domain
+inditex.com,inditex.com,inditex,85,medium,retail,Parent company domain
+hm.com,hm.com,h&m,85,medium,retail,Primary domain
+uniqlo.com,uniqlo.com,uniqlo,85,low,retail,Primary domain
+fastretailing.com,uniqlo.com,uniqlo,85,low,retail,Parent company domain
+nike.com,nike.com,nike,85,low,retail,Primary domain
+jordan.com,nike.com,nike,85,low,retail,Air Jordan domain
+converse.com,nike.com,nike,85,low,retail,Acquired brand domain
+adidas.com,adidas.com,adidas,85,low,retail,Primary domain
+reebok.com,adidas.com,adidas,85,low,retail,Acquired brand (sold 2022; historical)
+puma.com,puma.com,puma,85,low,retail,Primary domain
+underarmour.com,underarmour.com,under armour,85,low,retail,Primary domain
+lululemon.com,lululemon.com,lululemon,85,low,retail,Primary domain
+levistrauss.com,levistrauss.com,levi's,85,low,retail,Primary domain
+levi.com,levistrauss.com,levi's,85,low,retail,Short brand domain
+lvmh.com,lvmh.com,lvmh,85,medium,retail,Primary domain
+louisvuitton.com,lvmh.com,lvmh,85,medium,retail,Flagship brand domain
+dior.com,lvmh.com,lvmh,85,medium,retail,Fashion brand domain
+gucci.com,gucci.com,gucci,85,low,retail,Primary domain
+kering.com,gucci.com,gucci,85,low,retail,Parent company domain
+hermes.com,hermes.com,hermes,85,low,retail,Primary domain
+chanel.com,chanel.com,chanel,85,low,retail,Primary domain
+rolex.com,rolex.com,rolex,85,low,retail,Primary domain
+tudorwatch.com,rolex.com,rolex,85,low,retail,Entry-luxury watch brand domain
+toyota.com,toyota.com,toyota,85,low,auto,Primary domain
+lexus.com,toyota.com,toyota,85,low,auto,Luxury brand domain
+honda.com,honda.com,honda,85,low,auto,Primary domain
+acura.com,honda.com,honda,85,low,auto,US luxury brand domain
+nissan.com,nissan.com,nissan,70,high,auto,Primary domain; high risk brand
+infiniti.com,nissan.com,nissan,70,high,auto,Luxury sub-brand domain
+ford.com,ford.com,ford,85,medium,auto,Primary domain
+lincoln.com,ford.com,ford,85,medium,auto,Luxury brand domain
+gm.com,gm.com,general motors,85,medium,auto,Primary domain
+chevrolet.com,gm.com,general motors,85,medium,auto,Brand domain
+gmc.com,gm.com,general motors,85,medium,auto,Truck brand domain
+cadillac.com,gm.com,general motors,85,medium,auto,Luxury brand domain
+stellantis.com,stellantis.com,stellantis,85,medium,auto,Primary domain
+jeep.com,stellantis.com,stellantis,85,medium,auto,Off-road brand domain
+fiat.com,stellantis.com,stellantis,85,medium,auto,Italian brand domain
+dodge.com,stellantis.com,stellantis,85,medium,auto,US brand domain
+volkswagen.com,volkswagen.com,volkswagen,85,medium,auto,Primary domain
+vw.com,volkswagen.com,volkswagen,85,medium,auto,Short brand domain
+audi.com,volkswagen.com,volkswagen,85,medium,auto,Sub-brand domain
+porsche.com,volkswagen.com,volkswagen,85,medium,auto,Premium brand domain
+bmw.com,bmw.com,bmw,85,medium,auto,Primary domain
+mini.com,bmw.com,bmw,85,medium,auto,Sub-brand domain
+mercedes-benz.com,mercedes-benz.com,mercedes benz,85,medium,auto,Primary domain
+hyundai.com,hyundai.com,hyundai,85,medium,auto,Primary domain
+genesis.com,hyundai.com,hyundai,85,medium,auto,Luxury sub-brand domain
+kia.com,kia.com,kia,85,medium,auto,Primary domain
+tesla.com,tesla.com,tesla,85,low,auto,Primary domain
+volvocars.com,volvocars.com,volvo,85,medium,auto,Passenger cars domain
+volvotrucks.com,volvocars.com,volvo,85,medium,auto,Commercial trucks domain
+volvo.com,volvocars.com,volvo,85,medium,auto,Primary domain
+renault.com,renault.com,renault,85,medium,auto,Primary domain
+dacia.com,renault.com,renault,85,medium,auto,Romanian value brand domain
+mazda.com,mazda.com,mazda,85,low,auto,Primary domain
+subaru.com,subaru.com,subaru,85,low,auto,Primary domain
+bridgestone.com,bridgestone.com,bridgestone,85,low,auto,Primary domain
+michelin.com,michelin.com,michelin,85,low,auto,Primary domain
+goodyear.com,goodyear.com,goodyear,85,low,auto,Primary domain
+continental.com,continental.com,continental,85,medium,auto,Primary domain
+contitech.com,continental.com,continental,85,medium,auto,Industrial division domain
+dhl.com,dhl.com,dhl,85,medium,travel,Primary domain
+deutschepost.com,dhl.com,dhl,85,medium,travel,Parent company domain
+fedex.com,fedex.com,fedex,85,low,travel,Primary domain
+tnt.com,fedex.com,fedex,85,low,travel,Acquired European brand domain
+ups.com,ups.com,ups,85,low,travel,Primary domain
+maersk.com,maersk.com,maersk,85,low,travel,Primary domain
+hapag-lloyd.com,hapag-lloyd.com,hapag lloyd,85,low,travel,Primary domain
+xpo.com,xpo.com,xpo,85,low,travel,Primary domain
+chrobinson.com,chrobinson.com,ch robinson,85,low,travel,Primary domain
+dbschenker.com,dbschenker.com,db schenker,85,medium,travel,Primary domain
+kuehne-nagel.com,kuehne-nagel.com,kuehne nagel,85,low,travel,Primary domain
+dsv.com,dsv.com,dsv,85,low,travel,Primary domain
+expeditors.com,expeditors.com,expeditors,85,low,travel,Primary domain
+cevalogistics.com,cevalogistics.com,ceva logistics,85,low,travel,Primary domain
+uber.com,uber.com,uber,85,low,travel,Primary domain
+lyft.com,lyft.com,lyft,85,low,travel,Primary domain
+att.com,att.com,at&t,70,high,telecom,Primary domain; high risk franchise
+directv.com,att.com,at&t,70,high,telecom,Satellite TV brand domain
+verizon.com,verizon.com,verizon,85,medium,telecom,Primary domain
+t-mobile.com,t-mobile.com,t-mobile,85,medium,telecom,Primary domain
+sprint.com,t-mobile.com,t-mobile,85,medium,telecom,Acquired brand domain
+vodafone.com,vodafone.com,vodafone,70,high,telecom,Primary domain; high risk
+orange.com,orange.com,orange,70,high,telecom,Primary domain; common word risk
+telefonica.com,telefonica.com,telefonica,85,medium,telecom,Primary domain
+movistar.com,telefonica.com,telefonica,85,medium,telecom,Latin America/Spain brand domain
+o2.com,telefonica.com,telefonica,70,high,telecom,UK/Germany brand domain; O2 is short and ambiguous
+bt.com,bt.com,bt,85,medium,telecom,Primary domain
+ee.co.uk,bt.com,bt,85,medium,telecom,UK mobile brand domain
+plusnet.com,bt.com,bt,85,medium,telecom,Budget ISP domain
+telekom.com,telekom.com,deutsche telekom,85,medium,telecom,Primary domain
+t-systems.com,telekom.com,deutsche telekom,85,medium,telecom,IT services subsidiary domain
+telenor.com,telenor.com,telenor,85,low,telecom,Primary domain
+bell.ca,bell.ca,bell,70,high,telecom,Primary domain; common English word
+bce.ca,bell.ca,bell,70,high,telecom,Parent BCE domain
+rogers.com,rogers.com,rogers,70,high,telecom,Primary domain; common surname
+fido.ca,rogers.com,rogers,70,high,telecom,Prepaid brand domain
+telus.com,telus.com,telus,70,high,telecom,Primary domain; telecom franchise risk
+koodo.com,telus.com,telus,70,high,telecom,Budget brand domain
+shaw.ca,shaw.ca,shaw,70,high,telecom,Primary domain; common surname
+comcast.com,comcast.com,comcast,85,medium,telecom,Primary domain
+xfinity.com,comcast.com,comcast,85,medium,telecom,Consumer brand domain
+nbcuniversal.com,comcast.com,comcast,85,medium,telecom,Media subsidiary domain
+disney.com,disney.com,disney,85,medium,media,Primary domain
+espn.com,disney.com,disney,85,medium,media,Sports media domain
+hulu.com,disney.com,disney,85,medium,media,Streaming service domain
+marvel.com,disney.com,disney,85,medium,media,Entertainment brand domain
+netflix.com,netflix.com,netflix,85,low,media,Primary domain
+wbd.com,wbd.com,warner bros discovery,85,medium,media,Primary domain
+warnerbros.com,wbd.com,warner bros discovery,85,medium,media,Film studio domain
+hbomax.com,wbd.com,warner bros discovery,85,medium,media,Streaming platform domain
+discoveryplus.com,wbd.com,warner bros discovery,85,medium,media,Streaming platform domain
+spotify.com,spotify.com,spotify,85,low,media,Primary domain
+foxcorporation.com,foxcorporation.com,fox,85,medium,media,Primary domain
+foxnews.com,foxcorporation.com,fox,85,medium,media,News channel domain
+thomsonreuters.com,thomsonreuters.com,thomson reuters,85,low,media,Primary domain
+reuters.com,thomsonreuters.com,thomson reuters,85,low,media,News agency domain
+westlaw.com,thomsonreuters.com,thomson reuters,85,low,media,Legal research platform
+bloomberg.com,bloomberg.com,bloomberg,85,low,media,Primary domain
+relx.com,relx.com,relx,85,low,media,Primary domain
+lexisnexis.com,relx.com,relx,85,low,media,Legal info domain
+elsevier.com,relx.com,relx,85,low,media,Academic publisher domain
+springernature.com,springernature.com,springer nature,85,low,media,Primary domain
+nature.com,springernature.com,springer nature,85,low,media,Academic journal domain
+wolterskluwer.com,wolterskluwer.com,wolters kluwer,85,low,media,Primary domain
+pearson.com,pearson.com,pearson,85,medium,media,Primary domain
+edexcel.com,pearson.com,pearson,85,medium,media,UK exam board domain
+accenture.com,accenture.com,accenture,85,low,consulting,Primary domain
+deloitte.com,deloitte.com,deloitte,85,medium,consulting,Primary domain
+pwc.com,pwc.com,pwc,85,medium,consulting,Primary domain
+ey.com,ey.com,ey,85,medium,consulting,Primary domain
+kpmg.com,kpmg.com,kpmg,85,medium,consulting,Primary domain
+mckinsey.com,mckinsey.com,mckinsey,85,low,consulting,Primary domain
+bcg.com,bcg.com,bcg,85,low,consulting,Primary domain
+bain.com,bain.com,bain,85,medium,consulting,Primary domain
+baincapital.com,bain.com,bain,70,medium,consulting,Separate investment firm; check context carefully
+capgemini.com,capgemini.com,capgemini,85,low,consulting,Primary domain
+cognizant.com,cognizant.com,cognizant,85,low,consulting,Primary domain
+infosys.com,infosys.com,infosys,85,low,consulting,Primary domain
+tcs.com,tcs.com,tcs,85,low,consulting,Primary domain
+tataconsultancy.com,tcs.com,tcs,85,low,consulting,Alternate domain
+wipro.com,wipro.com,wipro,85,low,consulting,Primary domain
+hcltech.com,hcltech.com,hcltech,85,low,consulting,Primary domain
+genpact.com,genpact.com,genpact,85,low,consulting,Primary domain
+nttdata.com,nttdata.com,ntt data,85,medium,consulting,Primary domain
+ntt.com,nttdata.com,ntt data,85,medium,consulting,Parent NTT domain
+atos.net,atos.net,atos,85,low,consulting,Primary domain
+publicis.com,publicis.com,publicis,85,medium,consulting,Primary domain
+saatchi.com,publicis.com,publicis,85,medium,consulting,Advertising sub-brand domain
+wpp.com,wpp.com,wpp,85,medium,consulting,Primary domain
+ogilvy.com,wpp.com,wpp,85,medium,consulting,Agency domain
+omnicomgroup.com,omnicomgroup.com,omnicom,85,medium,consulting,Primary domain
+bbdo.com,omnicomgroup.com,omnicom,85,medium,consulting,Agency domain
+dentsu.com,dentsu.com,dentsu,85,low,consulting,Primary domain
+interpublic.com,interpublic.com,ipg,85,medium,consulting,Primary domain
+mccann.com,interpublic.com,ipg,85,medium,consulting,Agency domain
+saatchi.com,saatchi.com,saatchi & saatchi,85,low,consulting,Primary brand domain (sub of Publicis)
+securitas.com,securitas.com,securitas,85,low,facilities,Primary domain
+g4s.com,g4s.com,g4s,85,medium,facilities,Primary domain
+brinks.com,brinks.com,brinks,85,low,facilities,Primary domain
+johnsoncontrols.com,johnsoncontrols.com,johnson controls,85,medium,facilities,Primary domain
+tyco.com,johnsoncontrols.com,johnson controls,85,medium,facilities,Acquired security brand domain
+cbre.com,cbre.com,cbre,85,low,facilities,Primary domain
+jll.com,jll.com,jll,85,low,facilities,Primary domain
+cushmanwakefield.com,cushmanwakefield.com,cushman wakefield,85,low,facilities,Primary domain
+sodexo.com,sodexo.com,sodexo,85,low,facilities,Primary domain
+aramark.com,aramark.com,aramark,85,low,facilities,Primary domain
+compass-group.com,compass-group.com,compass group,85,medium,facilities,Primary domain
+eurest.com,compass-group.com,compass group,85,medium,facilities,Catering brand domain
+issworld.com,issworld.com,iss,85,medium,facilities,Primary domain
+rentokil.com,rentokil.com,rentokil,85,low,facilities,Primary domain
+terminix.com,rentokil.com,rentokil,85,low,facilities,Acquired US brand domain
+cintas.com,cintas.com,cintas,85,low,facilities,Primary domain
+ecolab.com,ecolab.com,ecolab,85,low,facilities,Primary domain
+nalco.com,ecolab.com,ecolab,85,low,facilities,Acquired water treatment domain
+marriott.com,marriott.com,marriott,70,high,travel,Primary domain; high risk franchise
+sheraton.com,marriott.com,marriott,70,high,travel,Upper-upscale brand domain
+westin.com,marriott.com,marriott,70,high,travel,Premium brand domain
+ritzcarlton.com,marriott.com,marriott,70,high,travel,Luxury brand domain
+hilton.com,hilton.com,hilton,70,high,travel,Primary domain; high risk franchise
+hamptoninn.com,hilton.com,hilton,70,high,travel,Midscale brand domain
+doubletree.com,hilton.com,hilton,70,high,travel,Upper-midscale brand domain
+hyatt.com,hyatt.com,hyatt,85,medium,travel,Primary domain; medium risk
+ihg.com,ihg.com,ihg,70,high,travel,Primary domain; high risk franchise
+holidayinn.com,ihg.com,ihg,70,high,travel,Largest franchise brand domain
+crowneplaza.com,ihg.com,ihg,70,high,travel,Upscale brand domain
+accor.com,accor.com,accor,85,medium,travel,Primary domain
+sofitel.com,accor.com,accor,85,medium,travel,Luxury brand domain
+novotel.com,accor.com,accor,85,medium,travel,Midscale brand domain
+ibis.com,accor.com,accor,85,medium,travel,Budget brand domain
+wyndham.com,wyndham.com,wyndham,70,high,travel,Primary domain; high risk franchise
+daysinn.com,wyndham.com,wyndham,70,high,travel,Budget brand domain
+super8.com,wyndham.com,wyndham,70,high,travel,Budget brand domain
+ramada.com,wyndham.com,wyndham,70,high,travel,Midscale brand domain
+bestwestern.com,bestwestern.com,best western,70,high,travel,Primary domain; hotel cooperative
+fourseasons.com,fourseasons.com,four seasons,85,low,travel,Primary domain; luxury managed
+expedia.com,expedia.com,expedia,85,medium,travel,Primary domain
+hotels.com,expedia.com,expedia,85,medium,travel,Hotel booking brand domain
+vrbo.com,expedia.com,expedia,85,medium,travel,Vacation rental domain
+hotwire.com,expedia.com,expedia,85,medium,travel,Discount travel domain
+bookingholdings.com,bookingholdings.com,booking holdings,85,medium,travel,Primary domain
+booking.com,bookingholdings.com,booking holdings,85,medium,travel,Primary booking brand
+priceline.com,bookingholdings.com,booking holdings,85,medium,travel,US travel brand domain
+agoda.com,bookingholdings.com,booking holdings,85,medium,travel,Asia-Pacific brand domain
+kayak.com,bookingholdings.com,booking holdings,85,medium,travel,Search brand domain
+hertz.com,hertz.com,hertz,70,high,travel,Primary domain; high risk franchise
+dollar.com,hertz.com,hertz,70,high,travel,Dollar Car Rental domain
+thrifty.com,hertz.com,hertz,70,high,travel,Thrifty Car Rental domain
+avis.com,avis.com,avis,70,high,travel,Primary domain; high risk franchise
+budget.com,avis.com,avis,70,high,travel,Budget Car Rental domain
+zipcar.com,avis.com,avis,70,high,travel,Car sharing domain
+enterprise.com,enterprise.com,enterprise,70,high,travel,Primary domain; high risk franchise
+nationalcar.com,enterprise.com,enterprise,70,high,travel,Mid-tier brand domain
+alamo.com,enterprise.com,enterprise,70,high,travel,Budget brand domain
+airbnb.com,airbnb.com,airbnb,85,medium,travel,Primary domain
