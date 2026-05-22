@@ -15,6 +15,7 @@ from src.config import (
     KNOWN_FAMILY_TOKEN_GROUPS,
     KNOWN_RELATED_NAME_PAIRS,
     LOCATION_ROOT_TOKENS,
+    MEDICAL_TOPIC_TOKENS,
     PERSON_TITLE_TOKENS,
     AMBIGUOUS_REVIEW_CORES,
     PROTECTED_COMPOUND_IDENTITY_PHRASES,
@@ -555,6 +556,15 @@ def _core_identity_relation(row_a: Dict[str, Any], row_b: Dict[str, Any], name_s
         and t not in COMMON_FIRST_NAMES
         and not (t in SUPPLIER_IDENTITY_RISKY_SINGLE_TOKENS and t not in SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS)
     ]
+    # is_topic_only_core: fires when every shared distinctive token is a broad
+    # medical/research/topic word (cancer, melanoma, nature, …) and there is no
+    # trusted brand token.  Mirrors is_banner_only_core: without deterministic
+    # support (same domain / address / tax) these pairs route to 70 not 85.
+    is_topic_only_core = (
+        bool(shared_long_safe)
+        and all(t in MEDICAL_TOPIC_TOKENS for t in shared_long_safe)
+        and not shared_trusted_core_tokens
+    )
     prefix_related = False
     for a in tokens_a:
         for b in tokens_b:
@@ -603,6 +613,7 @@ def _core_identity_relation(row_a: Dict[str, Any], row_b: Dict[str, Any], name_s
         "exact_full_name": exact_full_name,
         "bare_core_row": bare_core_row,
         "is_banner_only_core": is_banner_only_core,
+        "is_topic_only_core": is_topic_only_core,
     }
 
 
@@ -1069,7 +1080,13 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
         broad_global_core = bool(supplier_identity.get("is_broad_global_supplier_core"))
         ambiguous_review_core = bool(supplier_identity.get("is_ambiguous_review_core"))
         is_banner_only_core = bool(supplier_identity.get("is_banner_only_core"))
+        is_topic_only_core = bool(supplier_identity.get("is_topic_only_core"))
         if is_banner_only_core and not (same_domain or address_supported or tax_match):
+            ambiguous_review_core = True
+        # Topic/disease/research words (cancer, melanoma, nature, …) must not be
+        # the sole bridge for 85% without deterministic support.  Same guard
+        # pattern as is_banner_only_core above.
+        if is_topic_only_core and not (same_domain or address_supported or tax_match):
             ambiguous_review_core = True
         score = 86.0
         needs_review = False

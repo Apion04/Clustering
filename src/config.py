@@ -448,6 +448,33 @@ def _load_risky_banner_brand_tokens() -> FrozenSet[str]:
 
 RISKY_BANNER_BRAND_TOKENS: FrozenSet[str] = _load_risky_banner_brand_tokens()
 
+# Topic/disease/research words that are too broad to be the SOLE identity bridge
+# for an 85% cluster.  They can still support a match when there is also a
+# distinctive brand token, OR when deterministic evidence (same domain / same
+# address / same tax) is present.  The guardrail mirrors is_banner_only_core:
+# if every shared_long_safe token is in this set and no trusted brand token is
+# present, the pair is routed to 70 (LLM/manual review) instead of 85.
+#
+# Words already covered by GENERIC_ROOT_TOKENS (research, institute, foundation,
+# society, association, university, medical, health, clinical, laboratory, etc.)
+# are intentionally excluded here — they are stripped during core extraction and
+# never reach the identity-matching stage in the first place.
+MEDICAL_TOPIC_TOKENS: FrozenSet[str] = frozenset({
+    # Disease / condition topic words
+    "cancer", "melanoma", "tumor", "tumour", "oncology", "oncological",
+    "cardiac", "cardiology", "neurology", "neurological",
+    "diabetes", "diabetic", "leukemia", "lymphoma", "sarcoma", "carcinoma",
+    # Therapeutic / genomic research-area descriptors (not in GENERIC_ROOT_TOKENS)
+    "therapeutics", "therapeutic",
+    "genomics", "genomic", "genetics", "genetic",
+    # Nature / environmental topic words (common English words; not brand-distinctive alone)
+    "nature", "natural", "environment", "environmental", "ecology", "ecological",
+    # Broad organisational-sector topic words
+    "department",
+    # Additional life-science sector words (complement to GENERIC_ROOT_TOKENS)
+    "wellness",
+})
+
 # Column name patterns for worldwide tax/legal registration identifiers.
 # We do not validate every country's checksum in this engine. Instead, we normalize and use these IDs as matching signals.
 TAX_COLUMN_PATTERNS: Set[str] = {
