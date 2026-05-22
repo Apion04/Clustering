@@ -135,13 +135,18 @@ def generate_candidate_pairs(df: pl.DataFrame, config: ClusteringConfig = None) 
         first_token_is_weak = first_token in COMMON_FIRST_NAMES or first_token in GENERIC_ROOT_TOKENS or first_token in LOCATION_ROOT_TOKENS
         root_is_weak = not root_brand or root_brand in COMMON_FIRST_NAMES or root_brand in GENERIC_ROOT_TOKENS or root_brand in LOCATION_ROOT_TOKENS
         allow_brand_name_blocks = not is_individual and not is_hospitality and not first_token_is_weak and not root_is_weak
-        if name_norm and allow_brand_name_blocks:
+        # Safety guard: never emit name-prefix blocks whose first 5 chars are
+        # all digits — a residual numeric ERP/vendor-ID prefix that wasn't
+        # stripped in preprocessing would otherwise create huge junk blocks
+        # like N5_00202, N5_00203 that dominate the candidate pair budget.
+        _name_prefix_is_numeric = bool(name_norm and name_norm[:5].isdigit())
+        if name_norm and allow_brand_name_blocks and not _name_prefix_is_numeric:
             _add_block(blocks, row_id, f"N5_{name_norm[:5]}", "name_prefix")
             if len(name_norm) >= 8:
                 _add_block(blocks, row_id, f"N8_{name_norm[:8]}", "name_prefix")
-        if name_phonetic and len(name_phonetic) >= 4 and allow_brand_name_blocks:
+        if name_phonetic and len(name_phonetic) >= 4 and allow_brand_name_blocks and not _name_prefix_is_numeric:
             _add_block(blocks, row_id, f"PHO_{name_phonetic}", "phonetic")
-        if name_token_sort and len(name_token_sort) >= 4 and allow_brand_name_blocks:
+        if name_token_sort and len(name_token_sort) >= 4 and allow_brand_name_blocks and not _name_prefix_is_numeric:
             _add_block(blocks, row_id, f"TOK_{name_token_sort}", "token_sort")
         if domain and not is_generic:
             _add_block(blocks, row_id, f"DOM_{domain}", "domain")

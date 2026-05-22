@@ -78,6 +78,7 @@ def build_run_metadata(
     input_row_count: int,
     config: Any,
     run_timestamp: Optional[str] = None,
+    supplier_name_id_prefix_pct: float = 0.0,
 ) -> Dict[str, Any]:
     """Build a metadata dict capturing version, mapping, and config for this run.
 
@@ -122,6 +123,8 @@ def build_run_metadata(
         "llm_mode": str(getattr(config, "llm_execution_mode", "disabled") or "disabled"),
         "review_output_enabled": True,
         "audit_output_enabled": True,
+        "supplier_name_id_prefix_warning": supplier_name_id_prefix_pct > 0.10,
+        "supplier_name_id_prefix_pct": round(supplier_name_id_prefix_pct, 3),
     }
 
 

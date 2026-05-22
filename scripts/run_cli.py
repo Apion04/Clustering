@@ -99,6 +99,20 @@ def main():
         mapping = auto_detect_columns(df.columns)
         print(f"Auto-detected mapping: {mapping}", flush=True)
 
+    # Warn if the selected supplier-name column contains numeric ERP/vendor-ID
+    # prefixes (e.g. "0020276471-B LAB CO.").  These are stripped during
+    # normalization but the warning confirms which column was chosen.
+    _id_prefix_pct = _check_supplier_name_id_prefixes(df, mapping)
+    if _id_prefix_pct > 0.10:
+        print(
+            f"⚠️  WARNING: {_id_prefix_pct:.0%} of sampled rows in supplier-name "
+            f"column {mapping.get('supplier_name')!r} start with a numeric "
+            f"ERP/vendor-ID prefix (e.g. '0020276471-'). "
+            f"These prefixes are stripped before name normalization. "
+            f"If the wrong column was selected, use --mapping to override.",
+            flush=True,
+        )
+
     # Config
     config = ClusteringConfig.from_env()
     config.auto_cluster_threshold = args.threshold
@@ -147,6 +161,7 @@ def main():
         mapping=mapping,
         input_row_count=len(df),
         config=config,
+        supplier_name_id_prefix_pct=_id_prefix_pct,
     )
     save_run_metadata(run_meta, metadata_path)
     print(f"✅ Run metadata saved: {metadata_path}", flush=True)
@@ -493,21 +508,58 @@ def _smoke_check_b_lab(result: dict, mapping: dict) -> None:
         print("[SMOKE] ❌ B LAB rows NOT in the same cluster", flush=True)
 
 
+def _check_supplier_name_id_prefixes(df: pl.DataFrame, mapping: dict) -> float:
+    """Return the fraction of non-null supplier-name values that start with a
+    numeric ERP/vendor-ID prefix (e.g. '0020276471-').  Samples up to 500 rows
+    for speed.  Returns 0.0 if the column is absent or empty.
+    """
+    col = mapping.get("supplier_name", "")
+    if not col or col not in df.columns:
+        return 0.0
+    _prefix_re = re.compile(r'^\d{6,}[\s\-_:]+')
+    sample = df[col].drop_nulls().head(500).to_list()
+    if not sample:
+        return 0.0
+    matches = sum(1 for v in sample if isinstance(v, str) and _prefix_re.match(v.strip()))
+    return matches / len(sample)
+
+
 def auto_detect_columns(columns):
     """Auto-detect common supplier column names."""
     col_lower = {c.lower(): c for c in columns}
 
     mapping = {"supplier_name": columns[0]}  # Default to first column
 
-    # Name variations
-    name_patterns = ["name", "vendor", "supplier", "company", "organization", "organisation"]
-    for pattern in name_patterns:
-        for lower, orig in col_lower.items():
-            if pattern in lower and "2" not in lower and "3" not in lower and "4" not in lower:
-                mapping["supplier_name"] = orig
-                break
-        if "supplier_name" in mapping:
+    # Priority 1: Prefer unambiguous stand-alone name columns over composite
+    # column names like "Supplier Common Name".  This ensures "CommonName" is
+    # preferred over "Supplier Common Name" when both are present in the file.
+    _EXACT_NAME_PRIORITY = [
+        "commonname", "common name", "common_name",
+        "suppliername", "supplier name", "supplier_name",
+        "vendorname", "vendor name", "vendor_name",
+        "name",
+        "companyname", "company name", "company_name",
+        "organisationname", "organisation name", "organisation_name",
+        "organizationname", "organization name", "organization_name",
+    ]
+    _found_name = False
+    for _ecol in _EXACT_NAME_PRIORITY:
+        if _ecol in col_lower:
+            mapping["supplier_name"] = col_lower[_ecol]
+            _found_name = True
             break
+
+    if not _found_name:
+        # Priority 2: Pattern-based fallback for less common column names.
+        name_patterns = ["name", "vendor", "supplier", "company", "organization", "organisation"]
+        for pattern in name_patterns:
+            for lower, orig in col_lower.items():
+                if pattern in lower and "2" not in lower and "3" not in lower and "4" not in lower:
+                    mapping["supplier_name"] = orig
+                    _found_name = True
+                    break
+            if _found_name:
+                break
 
     # Address
     for lower, orig in col_lower.items():

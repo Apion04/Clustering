@@ -197,7 +197,37 @@ def remove_store_numbers(name: str) -> str:
     return re.sub(r"\s+", " ", name).strip()
 
 
+# Matches a leading numeric ERP/vendor-ID prefix such as:
+#   "0020276471-B LAB CO."   →  strip "0020276471-"
+#   "0020219751 B LAB COMPANY"  →  strip "0020219751 "
+# Requires 6+ leading digits so short codes ("3M", "4Life") are never stripped.
+_NUMERIC_ID_PREFIX_RE = re.compile(r'^\s*\d{6,}[\s\-_:]+')
+
+
+def strip_numeric_id_prefix(name: Any) -> str:
+    """Strip a leading numeric ERP/vendor-ID prefix from a raw supplier name.
+
+    Only affects the normalized matching fields — original column values are
+    never modified by this function.  Returns the original value unchanged
+    when no prefix is detected or when stripping would leave nothing.
+    """
+    if name is None:
+        return ""
+    text = str(name).strip()
+    if not text:
+        return text
+    m = _NUMERIC_ID_PREFIX_RE.match(text)
+    if m:
+        result = text[m.end():]
+        if result.strip():          # guard: don't strip if nothing meaningful remains
+            return result
+    return text
+
+
 def normalize_supplier_name(name: Optional[Any], legal_keywords: Optional[LegalKeywordDictionary] = None) -> str:
+    # Strip numeric ERP/vendor-ID prefix before any normalization so that
+    # "0020276471-B LAB CO." is normalized as "B LAB CO." not "0020276471 b lab co".
+    name = strip_numeric_id_prefix(name)
     name = normalize_text(name)
     if not name:
         return ""
