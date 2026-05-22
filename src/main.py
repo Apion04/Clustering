@@ -25,6 +25,7 @@ from src.sorting import sort_by_clusters
 from src.output import save_main_output, save_audit_file, generate_processing_report
 from src.ai_review import should_ai_review, ai_review_pair
 from src.llm_workflow import apply_llm_decisions, build_llm_review_groups, build_llm_review_groups_from_review_candidates
+from src.audit_review import build_review_pairs, build_cluster_audit
 
 
 REVIEW_ONLY_PASS_TYPES = frozenset({
@@ -607,6 +608,27 @@ def cluster_suppliers(
         f"Review rows: {review_rows} | Review candidates: {len(review_candidates)} | Singletons: {singletons}"
     )
 
+    # Build audit/review output DataFrames (additive — do NOT touch main_df columns)
+    # cluster_number_map: root -> 1-based display number (same ordering as sort_by_clusters)
+    unique_roots = sorted(
+        set(output_cluster_map.values()),
+        key=lambda r: min(
+            (rid for rid, root in output_cluster_map.items() if root == r),
+            default=r,
+        ),
+    )
+    cluster_number_map: Dict[int, int] = {root: i + 1 for i, root in enumerate(unique_roots)}
+
+    # Flatten all edges from merger.edges into a single list for review_pairs
+    all_edges_flat: list = []
+    for edge_list in merger.edges.values():
+        all_edges_flat.extend(edge_list)
+
+    review_pairs_df = build_review_pairs(all_edges_flat, rows_dict, config)
+    cluster_audit_df = build_cluster_audit(
+        clusters, merger.edges, rows_dict, cluster_number_map, config
+    )
+
     return {
         "main_df": output_df,
         "preprocessed_df": df,
@@ -619,4 +641,6 @@ def cluster_suppliers(
         "output_cluster_map": output_cluster_map,
         "output_match_pcts": output_match_pcts,
         "pre_llm_match_pcts": pre_llm_match_pcts,
+        "review_pairs_df": review_pairs_df,
+        "cluster_audit_df": cluster_audit_df,
     }

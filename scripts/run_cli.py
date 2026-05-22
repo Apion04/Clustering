@@ -60,6 +60,16 @@ def main():
         default="",
         help="Semicolon-separated list of client/internal domains to exclude from clustering evidence, e.g. merck.com;gilead.com;pfizer.com",
     )
+    parser.add_argument(
+        "--review-pairs-output",
+        default="",
+        help="Path for review_pairs.csv (70%% candidates and review-level pairs)",
+    )
+    parser.add_argument(
+        "--cluster-audit-output",
+        default="",
+        help="Path for cluster_audit.csv (cluster risk and classification audit)",
+    )
 
     args = parser.parse_args()
     output_paths = _resolve_output_paths(args)
@@ -119,6 +129,15 @@ def main():
     # Run clustering
     result = cluster_suppliers(df, mapping, config)
     result["stats"].setdefault("stage_timings", {})["file_load_seconds"] = file_load_seconds
+
+    # Optional audit/review output files
+    if args.review_pairs_output and result.get("review_pairs_df") is not None:
+        result["review_pairs_df"].write_csv(args.review_pairs_output)
+        print(f"✅ Review pairs saved: {args.review_pairs_output} ({len(result['review_pairs_df'])} pairs)", flush=True)
+
+    if args.cluster_audit_output and result.get("cluster_audit_df") is not None:
+        result["cluster_audit_df"].write_csv(args.cluster_audit_output)
+        print(f"✅ Cluster audit saved: {args.cluster_audit_output} ({len(result['cluster_audit_df'])} clusters)", flush=True)
 
     # Save deterministic main output. In directory mode this is an internal
     # deterministic artifact; final_supplier_clustered.csv is written after

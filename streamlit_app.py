@@ -191,6 +191,11 @@ if run_clicked and uploaded is not None:
     if show_70_candidates:
         cmd += ["--allow-unresolved-llm-candidates-in-final-output"]
 
+    review_pairs_path = os.path.join(output_dir, "review_pairs.csv")
+    cluster_audit_path = os.path.join(output_dir, "cluster_audit.csv")
+    cmd += ["--review-pairs-output", review_pairs_path]
+    cmd += ["--cluster-audit-output", cluster_audit_path]
+
     # Inject API key via env — never passed as CLI arg or shown in UI
     env = os.environ.copy()
     api_key = _get_api_key()
@@ -294,6 +299,8 @@ if run_clicked and uploaded is not None:
             "readiness_md": os.path.join(output_dir, "final_production_readiness_report.md"),
             "queue_csv": os.path.join(output_dir, "llm_queue_breakdown.csv"),
             "unresolved_csv": os.path.join(output_dir, "unresolved_llm_exception_report.csv"),
+            "review_pairs_csv": review_pairs_path,
+            "cluster_audit_csv": cluster_audit_path,
             "log": "\n".join(log_lines),
         }
     else:
@@ -327,6 +334,17 @@ if st.session_state.get("run_result"):
             )
     else:
         st.warning("final_supplier_clustered.csv was not produced.")
+
+    _optional_download(
+        result.get("review_pairs_csv"),
+        "📋 Download Review Pairs (CSV)",
+        "review_pairs.csv",
+    )
+    _optional_download(
+        result.get("cluster_audit_csv"),
+        "🔍 Download Cluster Audit (CSV)",
+        "cluster_audit.csv",
+    )
 
     with st.expander("Internal / debug files", expanded=False):
         _optional_download(
