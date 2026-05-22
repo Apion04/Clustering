@@ -22,6 +22,7 @@ from src.config import (
     SUPPLIER_IDENTITY_TRUSTED_SINGLE_TOKENS,
     TRUSTED_SUPPLIER_IDENTITY_CORES,
 )
+from src.legal_keywords import strip_legal_suffixes as _lsuf_strip
 
 
 def _add_block(blocks: List[Tuple[int, str, str]], row_id: int, key: str, block_type: str):
@@ -146,6 +147,15 @@ def generate_candidate_pairs(df: pl.DataFrame, config: ClusteringConfig = None) 
             _add_block(blocks, row_id, f"DOM_{domain}", "domain")
         if addr_norm:
             _add_block(blocks, row_id, f"ADR_{addr_norm}", "address")
+        # LSUF_ block: ensures legal-suffix variants of weak-root names (e.g.
+        # "B LAB CO." / "B LAB COMPANY") become candidate pairs even when
+        # root_is_weak suppresses N5/N8/phonetic/token_sort blocks.  The block
+        # key is the legal-stripped form (capped to 12 chars) so that PASS 0B
+        # in evaluate_pair can confirm address identity before clustering.
+        if root_is_weak and name_norm and not is_individual and not is_hospitality:
+            _lsuf_name = _lsuf_strip(name_norm)[0] or ""
+            if _lsuf_name and _lsuf_name != name_norm and len(_lsuf_name.split()) >= 2:
+                _add_block(blocks, row_id, f"LSUF_{_lsuf_name[:12]}", "legal_suffix_variant")
         if postal_norm and country_norm and not is_individual:
             _add_block(blocks, row_id, f"PC_{postal_norm}_{country_norm}", "postal_country")
         # City-country alone is too broad. Use it only with a non-generic, non-hospitality root.
@@ -240,6 +250,7 @@ def generate_candidate_pairs(df: pl.DataFrame, config: ClusteringConfig = None) 
         "trusted_core": min(300, weak_block_max),
         "known_brand_family": min(int(getattr(config, "max_known_brand_family_block_size", 300)), weak_block_max),
         "location_core": min(150, weak_block_max),
+        "legal_suffix_variant": min(50, weak_block_max),
         "support_same_entity_id": int(getattr(config, "max_tax_block_size", 5000)),
         "support_same_entity_name": min(300, weak_block_max),
         "support_family": min(300, weak_block_max),
@@ -266,6 +277,7 @@ def generate_candidate_pairs(df: pl.DataFrame, config: ClusteringConfig = None) 
         "support_family": 11,
         "support_review": 12,
         "location_core": 10,
+        "legal_suffix_variant": 6,
     }
     ordered_blocks = sorted(
         by_key.items(),
