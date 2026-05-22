@@ -1,14 +1,23 @@
 """Streamlit web UI for the Supplier Clustering Engine."""
 
+import io
 import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
+import polars as pl
 import streamlit as st
 
 APP_DIR = Path(__file__).parent.resolve()
+
+# Make src/ and scripts/ importable without a subprocess.
+if str(APP_DIR) not in sys.path:
+    sys.path.insert(0, str(APP_DIR))
+
+from src.run_metadata import get_app_version          # noqa: E402
+from scripts.run_cli import auto_detect_columns       # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -62,6 +71,7 @@ st.caption(
     "brand/group identities. Output adds only **Cluster Number** and "
     "**Match Percentage** to your original columns."
 )
+st.caption(f"App version: `{get_app_version()}`")
 
 # ---------------------------------------------------------------------------
 # File upload
@@ -73,6 +83,43 @@ uploaded = st.file_uploader(
 )
 if uploaded is not None:
     st.caption(f"Uploaded: {uploaded.name}  ·  {uploaded.size:,} bytes")
+
+    # --- Mapping confirmation: show auto-detected column mapping before run ---
+    try:
+        buf = io.BytesIO(uploaded.getvalue())
+        if uploaded.name.lower().endswith(".csv"):
+            _preview_df = pl.read_csv(buf, n_rows=1, infer_schema_length=0)
+        else:
+            _preview_df = pl.read_excel(buf)
+        _detected_cols = _preview_df.columns
+        _preview_mapping = auto_detect_columns(_detected_cols)
+    except Exception as _exc:
+        _detected_cols = []
+        _preview_mapping = {}
+
+    if _preview_mapping:
+        _FIELD_LABELS = [
+            ("supplier_name", "Supplier Name"),
+            ("address",       "Address"),
+            ("city",          "City"),
+            ("country",       "Country"),
+            ("postal_code",   "Postal Code"),
+            ("email",         "Email"),
+            ("tax_id",        "Tax ID"),
+            ("website",       "Website"),
+        ]
+        _mapping_lines = [
+            f"{label} = {_preview_mapping.get(field) or '—'}"
+            for field, label in _FIELD_LABELS
+        ]
+        with st.expander("📋 Column mapping (auto-detected)", expanded=True):
+            st.code("\n".join(_mapping_lines), language=None)
+            if not _preview_mapping.get("address"):
+                st.warning(
+                    "⚠️ No address column detected. "
+                    "Same-address clustering (including legal-suffix variant recovery) "
+                    "requires a column whose name contains 'address' or 'street'."
+                )
 
 st.divider()
 
@@ -193,8 +240,10 @@ if run_clicked and uploaded is not None:
 
     review_pairs_path = os.path.join(output_dir, "review_pairs.csv")
     cluster_audit_path = os.path.join(output_dir, "cluster_audit.csv")
+    run_metadata_path = os.path.join(output_dir, "run_metadata.json")
     cmd += ["--review-pairs-output", review_pairs_path]
     cmd += ["--cluster-audit-output", cluster_audit_path]
+    cmd += ["--run-metadata-output", run_metadata_path]
 
     # Inject API key via env — never passed as CLI arg or shown in UI
     env = os.environ.copy()
@@ -301,6 +350,7 @@ if run_clicked and uploaded is not None:
             "unresolved_csv": os.path.join(output_dir, "unresolved_llm_exception_report.csv"),
             "review_pairs_csv": review_pairs_path,
             "cluster_audit_csv": cluster_audit_path,
+            "run_metadata_json": run_metadata_path,
             "log": "\n".join(log_lines),
         }
     else:
@@ -348,6 +398,12 @@ if st.session_state.get("run_result"):
 
     with st.expander("Internal / debug files", expanded=False):
         _optional_download(
+            result.get("run_metadata_json"),
+            "🔧 Download run_metadata.json (version · mapping · config)",
+            "run_metadata.json",
+            mime="application/json",
+        )
+        _optional_download(
             result.get("readiness_md"),
             "Download  final_production_readiness_report.md",
             "final_production_readiness_report.md",
@@ -364,6 +420,7 @@ if st.session_state.get("run_result"):
             "unresolved_llm_exception_report.csv",
         )
         if not any([
+            result.get("run_metadata_json") and os.path.isfile(result["run_metadata_json"]),
             result.get("readiness_md") and os.path.isfile(result["readiness_md"]),
             result.get("queue_csv") and os.path.isfile(result["queue_csv"]),
             result.get("unresolved_csv") and os.path.isfile(result["unresolved_csv"]),

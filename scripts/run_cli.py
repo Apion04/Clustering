@@ -26,6 +26,7 @@ from src.output import (
     save_top_suspicious_clusters_report,
     save_unresolved_llm_exception_report,
 )
+from src.run_metadata import build_run_metadata, save_run_metadata
 
 
 def main():
@@ -69,6 +70,12 @@ def main():
         "--cluster-audit-output",
         default="",
         help="Path for cluster_audit.csv (cluster risk and classification audit)",
+    )
+    parser.add_argument(
+        "--run-metadata-output",
+        default="",
+        help="Path for run_metadata.json (version, mapping, config snapshot for debug/audit). "
+             "Defaults to run_metadata.json in the output directory.",
     )
 
     args = parser.parse_args()
@@ -129,6 +136,27 @@ def main():
     # Run clustering
     result = cluster_suppliers(df, mapping, config)
     result["stats"].setdefault("stage_timings", {})["file_load_seconds"] = file_load_seconds
+
+    # Debug smoke check: log B LAB / same-address variant pairing details.
+    # Only fires when rows containing "b lab" are found; no-op otherwise.
+    _smoke_check_b_lab(result, mapping)
+
+    # Write run_metadata.json — lightweight version/mapping/config snapshot.
+    metadata_path = args.run_metadata_output or output_paths["run_metadata"]
+    run_meta = build_run_metadata(
+        mapping=mapping,
+        input_row_count=len(df),
+        config=config,
+    )
+    save_run_metadata(run_meta, metadata_path)
+    print(f"✅ Run metadata saved: {metadata_path}", flush=True)
+    print(
+        f"   commit={run_meta['app_commit_hash'] or '(unavailable)'}  "
+        f"supplier_name={run_meta['mapped_supplier_name']!r}  "
+        f"address={run_meta['mapped_address']!r}  "
+        f"country={run_meta['mapped_country']!r}",
+        flush=True,
+    )
 
     # Optional audit/review output files
     if args.review_pairs_output and result.get("review_pairs_df") is not None:
@@ -305,6 +333,7 @@ def _resolve_output_paths(args):
         "top_suspicious": os.path.join(output_dir, "top_suspicious_clusters.md"),
         "report": os.path.join(output_dir, "processing_report.txt"),
         "metrics": os.path.join(output_dir, "metrics.json"),
+        "run_metadata": os.path.join(output_dir, "run_metadata.json"),
     }
 
 
@@ -366,6 +395,102 @@ def _write_final_production_readiness_report(path, args, result, llm_backend, ou
     os.makedirs(os.path.dirname(path) if os.path.dirname(path) else ".", exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
+
+
+def _smoke_check_b_lab(result: dict, mapping: dict) -> None:
+    """Debug: log the full pairing path for B LAB CO. / B LAB COMPANY rows.
+
+    Only fires when 2+ rows whose name_norm contains 'b lab' are present.
+    Answers in order:
+      1. Are both rows present?
+      2. Is the address field non-empty after mapping?
+      3. Do addr_norm values match?
+      4. Is a LSUF_ blocking key generated for each row?
+      5. Did they end up in the same cluster (and at what score)?
+
+    Prints [SMOKE]-prefixed lines to stdout so they appear in the Streamlit
+    processing log without affecting any output file.
+    """
+    from src.legal_keywords import strip_legal_suffixes
+
+    preprocessed_df = result.get("preprocessed_df")
+    if preprocessed_df is None or "name_norm" not in preprocessed_df.columns:
+        return
+
+    b_lab_rows = preprocessed_df.filter(
+        pl.col("name_norm").str.contains("b lab")
+    )
+    if len(b_lab_rows) < 2:
+        return  # No B LAB variant rows — smoke check not applicable
+
+    addr_col_mapped = mapping.get("address", "")
+    output_cluster_map = result.get("output_cluster_map") or result.get("cluster_map") or {}
+    output_match_pcts = result.get("output_match_pcts") or {}
+
+    print(
+        f"[SMOKE] B LAB variant rows found: {len(b_lab_rows)}  "
+        f"(address column mapped to: {addr_col_mapped!r})",
+        flush=True,
+    )
+
+    row_infos: list[dict] = []
+    for row in b_lab_rows.iter_rows(named=True):
+        nn = row.get("name_norm", "") or ""
+        addr = row.get("addr_norm", "") or ""
+        rid = row.get("row_id")
+        stripped, _ = strip_legal_suffixes(nn)
+        has_lsuf = bool(
+            stripped and stripped != nn and len(stripped.split()) >= 2
+        )
+        lsuf_key = f"LSUF_{stripped[:12]}" if has_lsuf else None
+        cluster = output_cluster_map.get(rid)
+        pct = output_match_pcts.get(cluster) if cluster is not None else None
+        print(
+            f"[SMOKE]   row_id={rid}  name_norm={nn!r}  addr_norm={addr!r}  "
+            f"lsuf_key={lsuf_key!r}  cluster={cluster}  match_pct={pct}",
+            flush=True,
+        )
+        row_infos.append(
+            {"nn": nn, "addr": addr, "rid": rid,
+             "cluster": cluster, "pct": pct, "lsuf_key": lsuf_key}
+        )
+
+    # 2. Address field check
+    addrs = [r["addr"] for r in row_infos]
+    non_empty_addrs = [a for a in addrs if a]
+    if not non_empty_addrs:
+        print(
+            "[SMOKE] ⚠️  addr_norm is EMPTY for all B LAB rows — "
+            "address column not mapped or address data is blank",
+            flush=True,
+        )
+    elif len(set(non_empty_addrs)) == 1 and len(non_empty_addrs) == len(addrs):
+        print(f"[SMOKE] ✅ addr_norm is consistent: {non_empty_addrs[0]!r}", flush=True)
+    else:
+        print(
+            f"[SMOKE] ⚠️  addr_norm values differ across B LAB rows: {addrs}",
+            flush=True,
+        )
+
+    # 3. LSUF_ key check
+    lsuf_keys = [r["lsuf_key"] for r in row_infos]
+    unique_lsuf = set(k for k in lsuf_keys if k)
+    if len(unique_lsuf) == 1:
+        print(f"[SMOKE] ✅ LSUF_ key matches across rows: {list(unique_lsuf)[0]!r}", flush=True)
+    else:
+        print(f"[SMOKE] ⚠️  LSUF_ keys: {lsuf_keys}", flush=True)
+
+    # 4. Cluster outcome
+    clusters = [r["cluster"] for r in row_infos if r["cluster"] is not None]
+    unique_clusters = set(clusters)
+    if clusters and len(unique_clusters) == 1:
+        pcts = [r["pct"] for r in row_infos if r["pct"] is not None]
+        print(
+            f"[SMOKE] ✅ Clustered together: cluster={clusters[0]}  scores={pcts}",
+            flush=True,
+        )
+    else:
+        print("[SMOKE] ❌ B LAB rows NOT in the same cluster", flush=True)
 
 
 def auto_detect_columns(columns):
