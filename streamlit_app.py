@@ -88,11 +88,13 @@ if uploaded is not None:
     try:
         buf = io.BytesIO(uploaded.getvalue())
         if uploaded.name.lower().endswith(".csv"):
-            _preview_df = pl.read_csv(buf, n_rows=1, infer_schema_length=0)
+            _preview_df = pl.read_csv(buf, n_rows=500, infer_schema_length=500)
         else:
-            _preview_df = pl.read_excel(buf)
+            _tmp_df = pl.read_excel(buf)
+            _preview_df = _tmp_df.head(500)
         _detected_cols = _preview_df.columns
-        _preview_mapping = auto_detect_columns(_detected_cols)
+        # Pass sample data so scoring can penalise columns with numeric ID prefixes.
+        _preview_mapping = auto_detect_columns(_detected_cols, sample_df=_preview_df)
     except Exception as _exc:
         _detected_cols = []
         _preview_mapping = {}

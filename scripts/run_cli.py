@@ -95,8 +95,9 @@ def main():
         with open(args.mapping) as f:
             mapping = json.load(f)
     else:
-        # Auto-detect common column names
-        mapping = auto_detect_columns(df.columns)
+        # Auto-detect common column names, using data-quality scoring when
+        # sample rows are available to pick the cleanest supplier-name column.
+        mapping = auto_detect_columns(df.columns, sample_df=df)
         print(f"Auto-detected mapping: {mapping}", flush=True)
 
     # Warn if the selected supplier-name column contains numeric ERP/vendor-ID
@@ -508,6 +509,109 @@ def _smoke_check_b_lab(result: dict, mapping: dict) -> None:
         print("[SMOKE] ❌ B LAB rows NOT in the same cluster", flush=True)
 
 
+# ── Supplier-name column selection helpers ────────────────────────────────
+# These are module-level so they can be imported and tested independently.
+
+_SUPPLIER_NAME_KEYWORDS = frozenset({
+    "name", "vendor", "supplier", "company", "legal",
+    "payee", "organisation", "organization", "partner",
+})
+
+# Shared regex for both scoring and the post-select diagnostic check.
+_SUPPLIER_ID_PREFIX_RE = re.compile(r'^\d{6,}[\s\-_:]+')
+_PURELY_NUMERIC_RE = re.compile(r'^\d+$')
+
+# Column-name compacts that earn a bonus in data-quality scoring.
+_CLEAN_NAME_COMPACTS = frozenset({
+    "commonname", "suppliername", "vendorname", "name",
+    "companyname", "legalname", "payeename",
+    "businesspartnername", "organisationname", "organizationname",
+    "supplierlegalname", "vendorlegalname",
+    "supplierofficialname", "vendorofficialname",
+})
+
+# Ordered fallback priority used when no sample data is available.
+_EXACT_NAME_PRIORITY = [
+    "commonname", "common name", "common_name",
+    "suppliername", "supplier name", "supplier_name",
+    "vendorname", "vendor name", "vendor_name",
+    "legalname", "legal name", "legal_name",
+    "companyname", "company name", "company_name",
+    "payeename", "payee name", "payee_name",
+    "businesspartnername", "business partner name",
+    "organisationname", "organisation name", "organisation_name",
+    "organizationname", "organization name", "organization_name",
+    "name",
+]
+
+
+def _is_id_column(col_lower: str) -> bool:
+    """Return True if the column name suggests it is an ID/code column, not a name column.
+
+    Rejects: "Supplier ID", "Vendor ID", "Internal ID", "Entity ID",
+             "legalEntityId", "clusterId", "Vendor Code", "Supplier Number", etc.
+    """
+    if re.search(
+        r'\b(?:id|ids|identifier|identifiers|code|codes|number|num|pk|key|ref|reference)\b',
+        col_lower,
+    ):
+        return True
+    # CamelCase endings: "legalEntityId", "clusterId", "vendorId"
+    compact = re.sub(r'[\s_\-]', '', col_lower)
+    if compact.endswith("id") and len(compact) > 4:
+        return True
+    return False
+
+
+def _find_supplier_name_candidates(col_lower: dict) -> list:
+    """Return column names that could be supplier names, excluding ID/code columns."""
+    result = []
+    for lower, orig in col_lower.items():
+        if not any(kw in lower for kw in _SUPPLIER_NAME_KEYWORDS):
+            continue
+        if _is_id_column(lower):
+            continue
+        # Skip secondary/tertiary name columns (Name2, Name 3, etc.)
+        if re.search(r"name\s*[23456789]", lower):
+            continue
+        result.append(orig)
+    return result
+
+
+def _score_name_column(col_name: str, sample_values: list) -> float:
+    """Score a column as a supplier-name candidate.  Higher is better.
+
+    Penalties:  numeric ERP/vendor-ID prefix values, purely-numeric values,
+                high blank-row fraction.
+    Bonuses:    exact clean column names (CommonName, Vendor Name, …).
+    """
+    col_compact = re.sub(r"[\s_\-]", "", col_name.lower())
+    score = 0.5 if col_compact in _CLEAN_NAME_COMPACTS else 0.0
+
+    if not sample_values:
+        return score - 2.0
+
+    non_null = [str(v).strip() for v in sample_values if v is not None and str(v).strip()]
+    if not non_null:
+        return score - 2.0
+
+    n = len(non_null)
+    total = len(sample_values)
+
+    # Penalty: blank rows
+    score -= (1.0 - n / total) * 1.5
+
+    # Heavy penalty: numeric ERP/vendor-ID prefix (breaks clustering)
+    prefix_pct = sum(1 for v in non_null if _SUPPLIER_ID_PREFIX_RE.match(v)) / n
+    score -= prefix_pct * 3.0
+
+    # Penalty: purely numeric values (stored IDs, not names)
+    numeric_pct = sum(1 for v in non_null if _PURELY_NUMERIC_RE.match(v)) / n
+    score -= numeric_pct * 2.0
+
+    return score
+
+
 def _check_supplier_name_id_prefixes(df: pl.DataFrame, mapping: dict) -> float:
     """Return the fraction of non-null supplier-name values that start with a
     numeric ERP/vendor-ID prefix (e.g. '0020276471-').  Samples up to 500 rows
@@ -516,50 +620,54 @@ def _check_supplier_name_id_prefixes(df: pl.DataFrame, mapping: dict) -> float:
     col = mapping.get("supplier_name", "")
     if not col or col not in df.columns:
         return 0.0
-    _prefix_re = re.compile(r'^\d{6,}[\s\-_:]+')
     sample = df[col].drop_nulls().head(500).to_list()
     if not sample:
         return 0.0
-    matches = sum(1 for v in sample if isinstance(v, str) and _prefix_re.match(v.strip()))
+    matches = sum(
+        1 for v in sample
+        if isinstance(v, str) and _SUPPLIER_ID_PREFIX_RE.match(v.strip())
+    )
     return matches / len(sample)
 
 
-def auto_detect_columns(columns):
-    """Auto-detect common supplier column names."""
+def auto_detect_columns(columns, sample_df=None):
+    """Auto-detect common supplier column names.
+
+    When *sample_df* is supplied, data-quality scoring is used to prefer the
+    cleanest supplier-name column (penalises numeric ERP/vendor-ID prefixes,
+    purely-numeric values, and high blank-row fractions).
+
+    When *sample_df* is not available (e.g. tests that pass column names only),
+    falls back to a column-name priority list — backward-compatible behaviour.
+    """
+    if not columns:
+        return {}
     col_lower = {c.lower(): c for c in columns}
+    mapping = {"supplier_name": columns[0]}  # absolute fallback
 
-    mapping = {"supplier_name": columns[0]}  # Default to first column
+    # ── Supplier name ──────────────────────────────────────────────────────
+    candidates = _find_supplier_name_candidates(col_lower)
+    if not candidates:
+        candidates = [columns[0]]
 
-    # Priority 1: Prefer unambiguous stand-alone name columns over composite
-    # column names like "Supplier Common Name".  This ensures "CommonName" is
-    # preferred over "Supplier Common Name" when both are present in the file.
-    _EXACT_NAME_PRIORITY = [
-        "commonname", "common name", "common_name",
-        "suppliername", "supplier name", "supplier_name",
-        "vendorname", "vendor name", "vendor_name",
-        "name",
-        "companyname", "company name", "company_name",
-        "organisationname", "organisation name", "organisation_name",
-        "organizationname", "organization name", "organization_name",
-    ]
-    _found_name = False
-    for _ecol in _EXACT_NAME_PRIORITY:
-        if _ecol in col_lower:
-            mapping["supplier_name"] = col_lower[_ecol]
-            _found_name = True
-            break
-
-    if not _found_name:
-        # Priority 2: Pattern-based fallback for less common column names.
-        name_patterns = ["name", "vendor", "supplier", "company", "organization", "organisation"]
-        for pattern in name_patterns:
-            for lower, orig in col_lower.items():
-                if pattern in lower and "2" not in lower and "3" not in lower and "4" not in lower:
-                    mapping["supplier_name"] = orig
-                    _found_name = True
-                    break
-            if _found_name:
+    if len(candidates) == 1:
+        mapping["supplier_name"] = candidates[0]
+    elif sample_df is not None:
+        # Data-quality path: score every candidate and pick the winner.
+        def _get_score(col: str) -> float:
+            vals = sample_df[col].head(500).to_list() if col in sample_df.columns else []
+            return _score_name_column(col, vals)
+        mapping["supplier_name"] = max(candidates, key=_get_score)
+    else:
+        # Column-name-only fallback: use priority list, restricted to actual candidates.
+        found = False
+        for exact in _EXACT_NAME_PRIORITY:
+            if exact in col_lower and col_lower[exact] in candidates:
+                mapping["supplier_name"] = col_lower[exact]
+                found = True
                 break
+        if not found:
+            mapping["supplier_name"] = candidates[0]
 
     # Address
     for lower, orig in col_lower.items():
