@@ -225,6 +225,9 @@ GENERIC_ROOT_TOKENS: Set[str] = {
     "engineers", "logistics", "transport", "transportation", "shipping", "freight", "forwarding", "chain",
     "group", "global", "international", "industry", "industries", "industrial", "enterprise", "enterprises",
     "industria",
+    # Business/industrial generic descriptors — never a distinctive brand anchor by themselves.
+    # See BUSINESS_GENERIC_TOKENS below for the full documented set.
+    "equipment", "equipments",
     "company", "corporation", "corp", "co", "office", "center", "centre", "general", "management", "national",
     "holding", "holdings", "partners", "associates", "agency", "agencies", "business", "commercial",
     "supplies", "supply", "supplier", "distribution", "distributors", "distributor", "wholesale", "retail",
@@ -301,6 +304,33 @@ GENERIC_ROOT_TOKENS: Set[str] = {
     # "ventures" is an investment/startup arm suffix — non-discriminating alone.
     "ventures",
 }
+
+# Documented set of business/industrial generic tokens requested in Phase 6.
+# ALL of these are present in GENERIC_ROOT_TOKENS (some with plural/variant forms).
+# They are non-bridge: if the only shared identity tokens are from this set and
+# there is no tax/domain/address anchor, the pair must NOT reach 85%.
+#
+# This constant exists for:
+#   • test assertions (verify every token is covered by guardrails)
+#   • documentation (single source of truth for the business-generic policy)
+#   • future extension (add new tokens here + to GENERIC_ROOT_TOKENS)
+BUSINESS_GENERIC_TOKENS: FrozenSet[str] = frozenset({
+    "equipment",      # equipment dealers/renters/manufacturers — non-distinctive alone
+    "services",       # universal business descriptor
+    "solutions",      # universal tech/business descriptor
+    "industrial",     # sector descriptor
+    "industries",     # sector descriptor
+    "systems",        # IT/engineering descriptor
+    "technology",     # IT descriptor
+    "engineering",    # sector descriptor
+    "logistics",      # sector descriptor
+    "chemical",       # sector descriptor
+    "production",     # operations descriptor
+    "management",     # management companies — too broad alone
+    "global",         # geographic scope word
+    "advanced",       # quality/tier descriptor
+    "food",           # sector descriptor
+})
 
 # SLDs that are too short or too generic to serve as standalone brand evidence.
 # When domain_sld_a == domain_sld_b but the SLD is in this guard, same_sld

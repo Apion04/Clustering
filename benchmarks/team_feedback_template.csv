@@ -1,0 +1,3 @@
+client_file,supplier_name,address,city,country,cluster_number,match_percentage,issue_type,expected_result,comments,reviewer,date_reviewed
+example_file.csv,Example Supplier A,123 Main Street,London,GB,1,98%,Wrong 98,Should be blank,These are two unrelated companies with the same trading name in different industries,J.Smith,2026-01-15
+example_file.csv,Example Supplier B,,,,,"",Missing 85,Should be 85%,Same parent company as Supplier C — known from contract data,J.Smith,2026-01-15

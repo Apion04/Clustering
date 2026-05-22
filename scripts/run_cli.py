@@ -563,13 +563,28 @@ def _is_id_column(col_lower: str) -> bool:
     return False
 
 
+# Location/geographic column indicators — reject these even when they contain a
+# supplier_name keyword (e.g. "Supplier Origin Country", "Supplier City").
+_LOCATION_COLUMN_TERMS = re.compile(
+    r'\b(?:country|city|region|state|province|territory|postal|zip|postcode|'
+    r'origin|destination|location|site|address|street|building|floor|room)\b'
+)
+
+
+def _is_location_column(col_lower: str) -> bool:
+    """Return True when the column name signals geographic/address data, not a supplier name."""
+    return bool(_LOCATION_COLUMN_TERMS.search(col_lower))
+
+
 def _find_supplier_name_candidates(col_lower: dict) -> list:
-    """Return column names that could be supplier names, excluding ID/code columns."""
+    """Return column names that could be supplier names, excluding ID/code and location columns."""
     result = []
     for lower, orig in col_lower.items():
         if not any(kw in lower for kw in _SUPPLIER_NAME_KEYWORDS):
             continue
         if _is_id_column(lower):
+            continue
+        if _is_location_column(lower):
             continue
         # Skip secondary/tertiary name columns (Name2, Name 3, etc.)
         if re.search(r"name\s*[23456789]", lower):
@@ -582,7 +597,8 @@ def _score_name_column(col_name: str, sample_values: list) -> float:
     """Score a column as a supplier-name candidate.  Higher is better.
 
     Penalties:  numeric ERP/vendor-ID prefix values, purely-numeric values,
-                high blank-row fraction.
+                high blank-row fraction, very short average value length
+                (< 4 chars → likely country codes or other non-name data).
     Bonuses:    exact clean column names (CommonName, Vendor Name, …).
     """
     col_compact = re.sub(r"[\s_\-]", "", col_name.lower())
@@ -608,6 +624,12 @@ def _score_name_column(col_name: str, sample_values: list) -> float:
     # Penalty: purely numeric values (stored IDs, not names)
     numeric_pct = sum(1 for v in non_null if _PURELY_NUMERIC_RE.match(v)) / n
     score -= numeric_pct * 2.0
+
+    # Penalty: very short average value length (< 4 chars → likely country codes,
+    # 2-letter codes, or other non-name data that slipped through column-name filtering).
+    avg_len = sum(len(v) for v in non_null) / n
+    if avg_len < 4.0:
+        score -= 2.5
 
     return score
 

@@ -30,6 +30,8 @@ DEFAULT_GENERIC_BY_CATEGORY: Dict[str, Set[str]] = {
         "production", "packaging", "cargo", "express", "energy", "power",
         "water", "environment", "green", "global", "international",
         "national",
+        # Business/industrial generic descriptors (Phase 6 addition)
+        "equipment", "equipments",
     },
     "german": {
         "gesellschaft", "unternehmen", "gruppe", "holding", "verein",
