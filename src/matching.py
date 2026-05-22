@@ -30,6 +30,7 @@ from src.config import (
 from src.matching_types import MatchResult
 from src.guardrails import apply_guardrails
 from src.preprocessing import extract_supplier_identity_core, _extract_domain_sld
+from src.legal_keywords import strip_legal_suffixes as _legal_strip
 from src.brand_families import AliasEvidence, get_alias_tables, _resolve_row_to_brand
 
 # Stopwords and legal stops for acronym generation (not the same as generic root tokens)
@@ -818,6 +819,32 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             {"name": _name_a0, "addr": _addr_a0},
             needs_review=False, review_reason="",
         ))
+
+    # PASS 0B: same-address legal-suffix-variant duplicate.
+    # Fires when addr_norm is identical but name_norm differ only by a legal-suffix
+    # variant whose stripping was reverted by the "too-generic" protection during
+    # preprocessing (e.g. "b lab co" vs "b lab company" — both cores are "b lab",
+    # but legal stripping was reverted because "b" and "lab" look generic individually).
+    # The identical address is the deterministic identity anchor.
+    #
+    # Guard: stripped core must have ≥2 tokens to block single-generic-word false
+    # positives ("services inc" vs "services llc" → core "services", 1 token → skip).
+    if (_name_a0 and _name_b0 and _name_a0 != _name_b0
+            and _addr_a0 and _addr_b0 and _addr_a0 == _addr_b0):
+        _lstrip_a0 = _legal_strip(_name_a0)[0] or _name_a0
+        _lstrip_b0 = _legal_strip(_name_b0)[0] or _name_b0
+        if _lstrip_a0 == _lstrip_b0 and len(_lstrip_a0.split()) >= 2:
+            _addr_cnt_0b = max(address_counts.get(_addr_a0, 0), address_counts.get(_addr_b0, 0))
+            _review_0b = bool(_addr_cnt_0b > config.max_companies_per_address)
+            return R(MatchResult(
+                True,
+                85.0 if _review_0b else 98.0,
+                "name_address_exact",
+                {"name_core": _lstrip_a0, "addr": _addr_a0,
+                 "legal_variant": True, "addr_company_count": _addr_cnt_0b},
+                needs_review=_review_0b,
+                review_reason="Legal-suffix variant at high-traffic address; review advised" if _review_0b else "",
+            ))
 
     name_a, name_b = row_a.get("name_norm", ""), row_b.get("name_norm", "")
     addr_a, addr_b = row_a.get("addr_norm", ""), row_b.get("addr_norm", "")
