@@ -843,8 +843,17 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
     _sld_b = str(row_b.get("domain_sld", "") or "")
     _sld_guarded = (not _sld_a or not _sld_b or _sld_a in _GENERIC_SLD_GUARD or _sld_b in _GENERIC_SLD_GUARD
                     or len(_sld_a) < 3 or len(_sld_b) < 3)
+    # SLDs that are medical/topic words or generic terms (e.g. "melanoma", "cancer",
+    # "health", "research") are not distinctive brand identifiers and must not serve
+    # as the sole same-SLD bridge for an 85% cluster.
+    _sld_is_topic_or_generic = bool(
+        _sld_a and (
+            _sld_a in MEDICAL_TOPIC_TOKENS
+            or _sld_a in GENERIC_ROOT_TOKENS
+        )
+    )
     same_sld = bool(
-        not same_domain and not _sld_guarded
+        not same_domain and not _sld_guarded and not _sld_is_topic_or_generic
         and _sld_a == _sld_b
         and _sld_a not in _ignored_slds
         and _sld_b not in _ignored_slds
@@ -1129,6 +1138,18 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             score = 88.0
             needs_review = True
             reason = "Cross-country/address supplier group without strong support; review advised"
+        # Determine whether the shared trusted-core token LEADS both cores.
+        # "Eastman Chemical Jaeger" → core "eastman jaeger" → first token "eastman" ∈ trusted ✓
+        # "Gene Oracle"             → core "gene oracle"    → first token "gene"    ∉ trusted ✗
+        # If the trusted token is non-initial in either core the pair may be a different company
+        # that merely references the brand (e.g. "Gene Oracle" referencing Oracle's platform).
+        _core_a_toks = (supplier_identity.get("core_a") or "").split()
+        _core_b_toks = (supplier_identity.get("core_b") or "").split()
+        _trusted_set = set(supplier_identity.get("shared_trusted_core_tokens") or [])
+        _trusted_core_leads_both = bool(
+            _core_a_toks and _core_a_toks[0] in _trusted_set
+            and _core_b_toks and _core_b_toks[0] in _trusted_set
+        )
         evidence = {
             "supplier_identity_core_a": supplier_identity.get("core_a", ""),
             "supplier_identity_core_b": supplier_identity.get("core_b", ""),
@@ -1147,7 +1168,18 @@ def evaluate_pair(row_a: Dict[str, Any], row_b: Dict[str, Any], address_counts: 
             "broad_global_supplier_core": broad_global_core,
             "ambiguous_review_core": ambiguous_review_core,
             "protected_identity_phrase": supplier_identity.get("protected_identity_phrase", ""),
-            "main_cluster_allowed": bool((exact_core or trusted_core) and not (ambiguous_review_core and not (same_domain or address_supported or tax_match))),
+            "main_cluster_allowed": bool(
+                (exact_core or trusted_core)
+                and not (ambiguous_review_core and not (same_domain or address_supported or tax_match))
+                # Trusted-core partial overlap where the trusted token is NOT the leading
+                # token in one of the cores (e.g. "Gene Oracle" / "Oracle America") without
+                # any deterministic support is review-only — prevents false clusters.
+                # Does NOT fire when the trusted token leads both cores (e.g. "Eastman" /
+                # "Eastman Chemical Jaeger" → "eastman" leads both → legitimate family).
+                and not (trusted_core and not exact_core
+                         and not same_domain and not address_supported and not tax_match
+                         and not _trusted_core_leads_both)
+            ),
             "route": "LLM_REVIEW" if score <= 70.0 or (ambiguous_review_core and not (same_domain or address_supported or tax_match)) else ("AUTO_CONFIDENT" if score >= 93 else "MANUAL_REVIEW"),
             "score_reason": reason,
         }
